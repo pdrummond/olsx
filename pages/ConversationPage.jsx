@@ -8,5 +8,9 @@ ConversationPage = React.createClass({
                 <MessageListContainer/>
             </div>
         );
+    },
+
+    boom() {
+        console.log("WHOOOA");
     }
 });

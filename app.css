@@ -170,3 +170,17 @@ main {
     outline:none;
     border-radius:5px;
 }
+
+.message-item {
+    padding:10px;
+}
+
+.message-content {
+    position:relative;
+    top:-10px;
+}
+
+.message-created-at {
+    font-size:12px;
+    color:gray;
+}

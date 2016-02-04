@@ -5,7 +5,9 @@ Message = React.createClass({
 
     render() {
        return (
-           <li><b>{this.props.message.createdBy}</b>: {this.props.message.content} - {this.props.message.createdAt}</li>
+           <li className="message-item"><b>{this.props.message.createdBy}</b> <span className="message-created-at"> {this.props.message.createdAt}</span>
+           <div className="message-content">{this.props.message.content}</div>
+           </li>
        )
     }
 });

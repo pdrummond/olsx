@@ -23,3 +23,7 @@ reactive-dict
 react
 kadira:flow-router
 kadira:react-layout
+yuukan:streamy
+chrismbeckett:toastr
+accounts-ui
+accounts-password

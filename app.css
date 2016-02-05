@@ -50,6 +50,8 @@ h2 {
     border-bottom: 1px solid #abe;
     font-family: sans-serif;
     font-weight: 100;
+    margin-top:10px;
+    margin-bottom:-15px;
 }
 
 input[name="message"] {
@@ -157,7 +159,7 @@ main {
 }
 
 .message-list {
-    height: calc(100% - 250px);
+    height: calc(100% - 150px);
     overflow-y: auto;
 }
 
@@ -165,19 +167,16 @@ main {
     border: 2px solid lightgray;
     background-color: whitesmoke;
     width: calc(100% - 30px);
-    height:50px;
+    height:80px;
     resize:none;
     outline:none;
     border-radius:5px;
 }
 
 .message-item {
-    padding:10px;
-}
-
-.message-content {
-    position:relative;
-    top:-10px;
+    min-height: 45px;
+    line-height: normal;
+    text-align:justify;
 }
 
 .message-created-at {
@@ -187,4 +186,45 @@ main {
 
 .hide {
     display:none;
+}
+
+.hidden {
+    visibility: hidden;
+}
+
+#login-buttons {
+    position: absolute;
+    padding: 5px;
+    right: 5px;
+}
+
+#login-dropdown-list {
+    right: 20px;
+    left: auto;
+    top: 30px;
+}
+
+#incoming-messages-toast {
+    position: relative;
+    background: red;
+    padding: 5px;
+    color: white;
+    border-radius: 10px;
+    font-weight: bold;
+    font-size: 12px;
+    width: 110px;
+    text-align: center;
+    margin: auto auto;
+    top: -10px;
+}
+
+#incoming-messages-toast :hover {
+    cursor:pointer;
+}
+
+.message-list-page-icon {
+    margin: auto;
+    width: 100%;
+    text-align: center;
+    color: gray;
 }

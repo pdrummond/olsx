@@ -2,25 +2,53 @@
 const DEFAULT_PAGE_SIZE = 30;
 
 MessageListContainer = React.createClass({
+    mixins: [ReactMeteorData],
+
+    getMeteorData() {
+        var self = this;
+        Streamy.on('incomingMessage', function(msg) {
+            console.log("incoming message received: " + JSON.stringify(msg, null, 4));
+            var incomingMessageCount = 0;
+            if(self.isInScrollBack() && msg.createdBy != Meteor.user().username) {
+                incomingMessageCount = self.state.incomingMessageCount || 0;
+                self.setState({ incomingMessageCount: incomingMessageCount+1});
+            } else {
+                self.setState({messages: self.state.messages.concat([msg])});
+                self.scrollBottom();
+            }
+        });
+        return {};
+    },
 
     getInitialState() {
         return {
-            messages: []
+            messages: [],
+            incomingMessageCount:0,
         }
     },
 
     render() {
+        console.log('render: state is ' + JSON.stringify(this.state, null, 4));
         return (
             <MessageList
                 ref="messageList"
                 messages = {this.state.messages}
                 showForwardLink = {this.state.showForwardLink}
                 showBackwardLink = {this.state.showBackwardLink}
+                incomingMessageCount = {this.state.incomingMessageCount}
                 onMessageAdded = {this.onMessageAdded}
                 onLoadOlderLinkClicked = {this.onLoadOlderLinkClicked}
                 onLoadNewerLinkClicked = {this.onLoadNewerLinkClicked}
+                onIncomingMessageToastClicked = {this.onIncomingMessageToastClicked}
             />
         )
+    },
+
+    onIncomingMessageToastClicked: function() {
+        if(this.getHistoryMode() != 'latest') {
+            FlowRouter.go('conversationPageLatest', {historyMode: 'latest'});
+        }
+        this.scrollBottom();
     },
 
     getHistoryMode() {
@@ -42,7 +70,7 @@ MessageListContainer = React.createClass({
     componentDidMount: function() {
         console.trace("componentDidMount");
         this.loadMessages();
-        this.refs.messageList.scrollBottom();
+        this.scrollBottom();
     },
 
     componentDidUpdate: function() {
@@ -78,26 +106,16 @@ MessageListContainer = React.createClass({
             historyTs,
             historyLimit,
             historyMode
-        }, function (err, messages) {
+        }, function (err, result) {
             if (err) {
-                alert("Error loading messages: " + err.reason);
+                toastr.error('Error loading messages', err.reason);
             } else {
                 ClientMessages._collection.remove({});
-                _.each(messages, function (message) {
+                _.each(result.messages, function (message) {
                     ClientMessages.insert(message);
                 });
                 var clientMessages = ClientMessages.find({}, {sort: {createdAt: 1}}).fetch();
-                var showForwardLink = true;
-                var showBackwardLink = true;
-                if(clientMessages.length < historyLimit) {
-                    if(historyMode == 'forward') {
-                        showForwardLink = false;
-                    } else if(historyMode == 'back') {
-                        showBackwardLink = false;
-                    }
-                }
-
-                self.setState({messages: clientMessages, showBackwardLink, showForwardLink});
+                self.setState({messages: clientMessages, showBackwardLink: result.showBackwardLink, showForwardLink: result.showForwardLink});
                 if(callback) {
                     callback();
                 }
@@ -106,16 +124,22 @@ MessageListContainer = React.createClass({
     },
 
     onMessageAdded:function(content) {
-        let message = this.insertClientMessage(content);
-        Meteor.call('saveMessage', message);
-        FlowRouter.go('conversationPageLatest');
-        this.setState({messages: ClientMessages.find({}, {sort: {createdAt: 1}}).fetch()});
-        this.refs.messageList.scrollBottom();
+        let msg = this.insertClientMessage(content);
+        Meteor.call('saveMessage',msg, function(err, result) {
+            if(err) {
+                toastr.error('Something went wrong saving message', err.reason);
+            }
+            Streamy.broadcast('incomingMessage', msg);
+        });
+        if(this.getHistoryMode() != 'latest') {
+            FlowRouter.go('conversationPageLatest', {historyMode: 'latest'});
+        }
+        this.setState({incomingMessageCount: 0});
     },
 
     insertClientMessage(content) {
         var message = {
-            createdBy: 'pdrummond',
+            createdBy: Meteor.user().username,
             createdAt: new Date().getTime(),
             content: content
         };
@@ -123,5 +147,21 @@ MessageListContainer = React.createClass({
         return _.extend(message, {_id: messageId});
     },
 
+    isInScrollBack: function() {
+        var inScrollBack = this.getHistoryMode() != 'latest';
+        if(!inScrollBack) {
+           /*
+                If showing latest messages, but user has scrolled up then
+                this is also considered 'scroll back' so check for this here
+           */
+            inScrollBack = !this.refs.messageList.isScrollBottom();
+        }
+        return inScrollBack;
+    },
 
-})
+    scrollBottom: function() {
+        this.refs.messageList.scrollBottom();
+        this.setState({showForwardLink: false, incomingMessageCount:0});
+    }
+
+});

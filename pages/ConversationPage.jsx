@@ -5,12 +5,17 @@ ConversationPage = React.createClass({
                 <header>
                     <h2>Conversation One</h2>
                 </header>
-                <MessageListContainer/>
+                <MessageListContainer ref="messageListContainer"/>
             </div>
         );
     },
 
-    boom() {
-        console.log("WHOOOA");
-    }
+    componentDidMount: function() {
+        console.trace("ConversationPage.componentDidMount");
+    },
+
+    componentDidUpdate: function() {
+        console.trace("ConversationPage.componentDidUpdate");
+        this.refs.messageListContainer.loadMessages();
+    },
 });

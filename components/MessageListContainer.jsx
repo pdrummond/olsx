@@ -21,6 +21,16 @@ MessageListContainer = React.createClass({
         )
     },
 
+    getHistoryMode() {
+        var historyMode = FlowRouter.getParam('historyMode');
+        return historyMode?historyMode:'latest';
+    },
+
+    getHistoryTs() {
+        var historyTs =  FlowRouter.getParam('historyTs');
+        return historyTs ? parseInt(historyTs) : null;
+    },
+
     getHistoryLimit() {
         let historyLimit = FlowRouter.getParam('historyLimit');
         historyLimit = historyLimit ? parseInt(historyLimit) : DEFAULT_PAGE_SIZE;
@@ -29,10 +39,7 @@ MessageListContainer = React.createClass({
 
     componentDidMount: function() {
         console.trace("componentDidMount");
-        let historyTs = FlowRouter.getParam('historyTs');
-        historyTs = historyTs ? parseInt(historyTs) : null;
-        let historyLimit = this.getHistoryLimit();
-        this.loadMessages(historyTs, historyLimit, 'back');
+        this.loadMessages();
     },
 
     componentDidUpdate: function() {
@@ -44,27 +51,29 @@ MessageListContainer = React.createClass({
         var newestMessage = this.state.messages.pop();
         let historyTs = newestMessage.createdAt;
         let historyLimit = this.getHistoryLimit();
-        FlowRouter.go('conversationPageFrom', {historyTs: historyTs, historyLimit: historyLimit});
+        FlowRouter.go('conversationPageFrom', {historyMode: 'forward', historyTs: historyTs, historyLimit: historyLimit});
+        /*
         this.loadMessages(historyTs, historyLimit, 'forward', function() {
             self.refs.messageList.scrollBottom();
         });
-
+        */
     },
 
     onLoadOlderLinkClicked() {
         var oldestMessage = this.state.messages[0];
         let historyTs = oldestMessage.createdAt;
         let historyLimit = this.getHistoryLimit();
-        FlowRouter.go('conversationPageFrom', {historyTs: historyTs, historyLimit: historyLimit});
-        this.loadMessages(historyTs, historyLimit, 'back');
+        FlowRouter.go('conversationPageFrom', {historyMode: 'back', historyTs: historyTs, historyLimit: historyLimit});
     },
 
-    loadMessages(historyTs, historyLimit, direction, callback) {
+    loadMessages(callback) {
+
+        console.log("loadMessages");
         var self = this;
         Meteor.call('loadMessages', {
-            historyTs: historyTs,
-            historyLimit: historyLimit,
-            direction: direction,
+            historyTs: this.getHistoryTs(),
+            historyLimit:this.getHistoryLimit(),
+            historyMode:this.getHistoryMode(),
         }, function (err, messages) {
             if (err) {
                 alert("Error loading messages: " + err.reason);

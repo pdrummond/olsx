@@ -32,14 +32,14 @@ MessageListContainer = React.createClass({
         return (
             <MessageList
                 ref="messageList"
-                messages = {this.state.messages}
-                showForwardLink = {this.state.showForwardLink}
-                showBackwardLink = {this.state.showBackwardLink}
-                incomingMessageCount = {this.state.incomingMessageCount}
-                onMessageAdded = {this.onMessageAdded}
-                onLoadOlderLinkClicked = {this.onLoadOlderLinkClicked}
-                onLoadNewerLinkClicked = {this.onLoadNewerLinkClicked}
-                onIncomingMessageToastClicked = {this.onIncomingMessageToastClicked}
+                messages={this.state.messages}
+                showForwardLink={this.state.showForwardLink}
+                showBackwardLink={this.state.showBackwardLink}
+                incomingMessageCount={this.state.incomingMessageCount}
+                onMessageAdded={this.onMessageAdded}
+                onLoadOlderLinkClicked={this.onLoadOlderLinkClicked}
+                onLoadNewerLinkClicked={this.onLoadNewerLinkClicked}
+                onIncomingMessageToastClicked={this.onIncomingMessageToastClicked}
             />
         )
     },
@@ -49,6 +49,10 @@ MessageListContainer = React.createClass({
             FlowRouter.go('conversationPageLatest', {historyMode: 'latest'});
         }
         this.scrollBottom();
+    },
+
+    getConversationId() {
+        return FlowRouter.getParam('conversationId');
     },
 
     getHistoryMode() {
@@ -101,8 +105,10 @@ MessageListContainer = React.createClass({
         var historyTs = this.getHistoryTs();
         var historyLimit =this.getHistoryLimit();
         var historyMode = this.getHistoryMode();
+        var conversationId = this.getConversationId();
         var self = this;
         Meteor.call('loadMessages', {
+            conversationId: conversationId,
             historyTs,
             historyLimit,
             historyMode
@@ -139,7 +145,11 @@ MessageListContainer = React.createClass({
 
     insertClientMessage(content) {
         var message = {
-            createdBy: Meteor.user().username,
+            conversationId: this.getConversationId(),
+            createdBy: Meteor.userId(),
+            createdByName: Meteor.user().username,
+            updatedBy: Meteor.userId(),
+            updatedByName: Meteor.user().username,
             createdAt: new Date().getTime(),
             content: content
         };

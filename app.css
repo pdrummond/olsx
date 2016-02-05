@@ -159,7 +159,7 @@ main {
 }
 
 .message-list {
-    height: calc(100% - 150px);
+    height: calc(100% - 180px);
     overflow-y: auto;
 }
 
@@ -227,4 +227,50 @@ main {
     width: 100%;
     text-align: center;
     color: gray;
+}
+
+@media(max-width: 1218px) {
+    .conversation-list {
+        display:none;
+    }
+}
+
+.conversation-list-container {
+    position: absolute;
+    left: 0px;
+    top:0px;
+    padding: 10px;
+    width:300px;
+}
+
+.conversation {
+    padding:10px;
+    vertical-align: middle;
+}
+
+.conversation:hover {
+    background-color:whitesmoke;
+    cursor:pointer;
+}
+
+.conversation.active {
+    background-color:whitesmoke;
+}
+
+input {
+    padding:10px;
+    border-radius:5px;
+    border:1px solid lightgray;
+}
+
+.conversation-input {
+    width:300px;
+}
+
+.empty-conversation-list {
+    width: 400px;
+    margin: auto auto;
+    margin-top: 200px;
+    color: gray;
+    text-align:center;
 }

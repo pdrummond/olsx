@@ -2,9 +2,17 @@
 MessageList = React.createClass({
 
     renderMessages() {
-      return this.props.messages.map((message) => {
-         return <Message key={message._id} message={message} />;
-      });
+        if(this.props.messages == null || this.props.messages.length == 0) {
+            return (
+                <div>
+                    <p style={{padding:'30px'}}><i>There are no Messages in this conversation</i></p>
+                </div>
+            );
+        } else {
+            return this.props.messages.map((message) => {
+                return <Message key={message._id} message={message}/>;
+            });
+        }
     },
 
     render() {

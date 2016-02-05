@@ -14,6 +14,8 @@ MessageListContainer = React.createClass({
             <MessageList
                 ref="messageList"
                 messages = {this.state.messages}
+                showForwardLink = {this.state.showForwardLink}
+                showBackwardLink = {this.state.showBackwardLink}
                 onMessageAdded = {this.onMessageAdded}
                 onLoadOlderLinkClicked = {this.onLoadOlderLinkClicked}
                 onLoadNewerLinkClicked = {this.onLoadNewerLinkClicked}
@@ -40,10 +42,14 @@ MessageListContainer = React.createClass({
     componentDidMount: function() {
         console.trace("componentDidMount");
         this.loadMessages();
+        this.refs.messageList.scrollBottom();
     },
 
     componentDidUpdate: function() {
         console.trace("componentDidUpdate");
+        if(this.getHistoryMode() == 'forward') {
+            this.refs.messageList.scrollBottom();
+        }
     },
 
     onLoadNewerLinkClicked() {
@@ -52,11 +58,6 @@ MessageListContainer = React.createClass({
         let historyTs = newestMessage.createdAt;
         let historyLimit = this.getHistoryLimit();
         FlowRouter.go('conversationPageFrom', {historyMode: 'forward', historyTs: historyTs, historyLimit: historyLimit});
-        /*
-        this.loadMessages(historyTs, historyLimit, 'forward', function() {
-            self.refs.messageList.scrollBottom();
-        });
-        */
     },
 
     onLoadOlderLinkClicked() {
@@ -69,11 +70,14 @@ MessageListContainer = React.createClass({
     loadMessages(callback) {
 
         console.log("loadMessages");
+        var historyTs = this.getHistoryTs();
+        var historyLimit =this.getHistoryLimit();
+        var historyMode = this.getHistoryMode();
         var self = this;
         Meteor.call('loadMessages', {
-            historyTs: this.getHistoryTs(),
-            historyLimit:this.getHistoryLimit(),
-            historyMode:this.getHistoryMode(),
+            historyTs,
+            historyLimit,
+            historyMode
         }, function (err, messages) {
             if (err) {
                 alert("Error loading messages: " + err.reason);
@@ -82,7 +86,18 @@ MessageListContainer = React.createClass({
                 _.each(messages, function (message) {
                     ClientMessages.insert(message);
                 });
-                self.setState({messages: ClientMessages.find({}, {sort: {createdAt: 1}}).fetch()});
+                var clientMessages = ClientMessages.find({}, {sort: {createdAt: 1}}).fetch();
+                var showForwardLink = true;
+                var showBackwardLink = true;
+                if(clientMessages.length < historyLimit) {
+                    if(historyMode == 'forward') {
+                        showForwardLink = false;
+                    } else if(historyMode == 'back') {
+                        showBackwardLink = false;
+                    }
+                }
+
+                self.setState({messages: clientMessages, showBackwardLink, showForwardLink});
                 if(callback) {
                     callback();
                 }

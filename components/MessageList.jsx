@@ -12,9 +12,9 @@ MessageList = React.createClass({
         return (
             <div className="message-list-wrapper">
                 <ul className="message-list" ref="messageList">
-                    <a href='' onClick={this.props.onLoadOlderLinkClicked}>Load older messages</a>
+                    <a className={this.props.showBackwardLink ? '':'hide'} href='' onClick={this.props.onLoadOlderLinkClicked}>Load older messages</a>
                     {this.renderMessages()}
-                    <a href='' onClick={this.props.onLoadNewerLinkClicked}>Load newer messages</a>
+                    <a className={this.props.showForwardLink ? '':'hide'} href='' onClick={this.props.onLoadNewerLinkClicked}>Load newer messages</a>
                 </ul>
                 <MessageBox onMessageAdded={this.props.onMessageAdded} />
             </div>

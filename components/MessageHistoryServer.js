@@ -5,12 +5,12 @@ if(Meteor.isServer) {
     Meteor.methods({
         loadMessages: function(opts) {
             console.log('loadMessages: ' + JSON.stringify(opts, null, 4));
-            if(opts && opts.historyTs && opts.direction === 'back') {
+            if(opts && opts.historyTs && opts.historyMode === 'back') {
                 return ServerMessages.find({createdAt: {$lt: opts.historyTs}}, {
                     limit: opts.historyLimit,
                     sort: {createdAt: -1}
                 }).fetch();
-            } else if(opts && opts.historyTs && opts.direction === 'forward') {
+            } else if(opts && opts.historyTs && opts.historyMode === 'forward') {
                     return ServerMessages.find({createdAt: {$gt: opts.historyTs}}, {
                         limit: opts.historyLimit,
                         sort: {createdAt: 1}

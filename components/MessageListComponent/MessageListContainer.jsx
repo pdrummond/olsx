@@ -28,7 +28,7 @@ MessageListContainer = React.createClass({
     },
 
     render() {
-        console.log('render: state is ' + JSON.stringify(this.state, null, 4));
+        //console.log('render: state is ' + JSON.stringify(this.state, null, 4));
         return (
             <MessageList
                 ref="messageList"
@@ -72,13 +72,13 @@ MessageListContainer = React.createClass({
     },
 
     componentDidMount: function() {
-        console.trace("componentDidMount");
+        console.trace("MessageListContainer.componentDidMount");
         this.loadMessages();
         this.scrollBottom();
     },
 
     componentDidUpdate: function() {
-        console.trace("componentDidUpdate");
+        console.trace("MessageListContainer.componentDidUpdate");
         if(this.getHistoryMode() == 'forward') {
             this.refs.messageList.scrollBottom();
         }
@@ -89,14 +89,14 @@ MessageListContainer = React.createClass({
         var newestMessage = this.state.messages.pop();
         let historyTs = newestMessage.createdAt;
         let historyLimit = this.getHistoryLimit();
-        FlowRouter.go('conversationPageFrom', {historyMode: 'forward', historyTs: historyTs, historyLimit: historyLimit});
+        FlowRouter.go('conversationPageFrom', {conversationId: this.getConversationId(), historyMode: 'forward', historyTs: historyTs, historyLimit: historyLimit});
     },
 
     onLoadOlderLinkClicked() {
         var oldestMessage = this.state.messages[0];
         let historyTs = oldestMessage.createdAt;
         let historyLimit = this.getHistoryLimit();
-        FlowRouter.go('conversationPageFrom', {historyMode: 'back', historyTs: historyTs, historyLimit: historyLimit});
+        FlowRouter.go('conversationPageFrom', {conversationId: this.getConversationId(), historyMode: 'back', historyTs: historyTs, historyLimit: historyLimit});
     },
 
     loadMessages(callback) {

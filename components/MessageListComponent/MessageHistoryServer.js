@@ -4,55 +4,63 @@ if(Meteor.isServer) {
 
     Meteor.methods({
         loadMessages: function(opts) {
+            console.log('> loadMessages(' + JSON.stringify(opts) + ')');
             var result = {
                 showBackwardLink: false,
                 showForwardLink: false,
                 messages: []
             };
-            var getLatest = false;
-
-            if(opts && opts.historyMode == 'latest') {
-                getLatest = true;
-            }
-            console.log('loadMessages: ' + JSON.stringify(opts, null, 4));
             if(opts && opts.historyTs && opts.historyMode === 'back') {
+                console.log('-- getting older messages');
                 result.messages = ServerMessages.find({conversationId: opts.conversationId, createdAt: {$lt: opts.historyTs}}, {
                     limit: opts.historyLimit,
                     sort: {createdAt: -1}
                 }).fetch();
-
+                console.log('-- found ' + result.messages.length + ' messages');
                 if(result.messages.length > 0) {
-                    result.showBackwardLink = ServerMessages.find({conversationId: opts.conversationId, createdAt: {$lt: result.messages[0].createdAt}}).count() > 0;
-                    result.showForwardLink = true;
+                    var olderMessagesCount = ServerMessages.find({
+                        conversationId: opts.conversationId,
+                        createdAt: {$lt: result.messages.pop().createdAt}
+                    }).count();
+                    result.showBackwardLink = olderMessagesCount > 0;
+                    console.log('-- detected ' + olderMessagesCount + ' older messages so showBackwardLink is ' + result.showBackwardLink);
                 } else {
-                    getLatest = true;
+                    result.showBackwardLink = false;
                 }
+                result.showForwardLink = true;
             } else if(opts && opts.historyTs && opts.historyMode === 'forward') {
+                console.log('-- getting newer messages');
                 result.messages = ServerMessages.find({conversationId: opts.conversationId, createdAt: {$gt: opts.historyTs}}, {
                     limit: opts.historyLimit,
                     sort: {createdAt: 1}
                 }).fetch();
-
+                console.log('-- found ' + result.messages.length + ' messages');
                 if(result.messages.length > 0) {
                     result.showBackwardLink = true;
-                    result.showForwardLink = ServerMessages.find({conversationId: opts.conversationId, createdAt: {$gt: result.messages.pop().createdAt}}).count() > 0;
+                    var newerMessagesCount = ServerMessages.find({conversationId: opts.conversationId, createdAt: {$gt: result.messages.pop().createdAt}}).count();
+                    result.showForwardLink = newerMessagesCount > 0;
+                    console.log('-- detected ' + newerMessagesCount + ' newer messages so showForwardLink is ' + result.showForwardLink);
                 } else {
-                    getLatest = true;
+                    result.showForwardLink = false;
                 }
-            }
-            if(getLatest) {
-                console.log('getting latest');
+                result.showBackwardLink = true;
+            } else {
+                console.log('-- getting latest messages');
                 result.messages = ServerMessages.find({conversationId: opts.conversationId}, {limit: opts.historyLimit, sort: {createdAt: -1}}).fetch();
+                console.log('-- found ' + result.messages.length + ' messages');
                 if(result.messages.length > 0) {
-                    result.showBackwardLink = ServerMessages.find({
-                            conversationId: opts.conversationId,
-                            createdAt: {$lt: result.messages[0].createdAt}
-                        }).count() > 0;
+                    var olderMessagesCount = ServerMessages.find({
+                        conversationId: opts.conversationId,
+                        createdAt: {$lt: result.messages.pop().createdAt}
+                    }).count();
+                    result.showBackwardLink = olderMessagesCount > 0;
+                    console.log('-- detected ' + olderMessagesCount + ' older messages so showBackwardLink is ' + result.showBackwardLink);
                 } else {
                     result.showBackwardLink = false;
                 }
                 result.showForwardLink = false;
             }
+            console.log('< loadMessages()');
             return result;
         },
 

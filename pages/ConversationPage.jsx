@@ -1,23 +1,28 @@
 /*
-    This component is currently used to ensure the messages are loaded
-    when the page changes through componentDidUpdate().
+ This component has two jobs.  Firstly, it manages the subscription
+ to the current conversation for the page.  Secondly, it ensures
+ messages are loaded when the page changes through componentDidUpdate().
  */
 ConversationPage = React.createClass({
     mixins: [ReactMeteorData],
 
     getMeteorData() {
-        return {
-           conversationId: FlowRouter.getParam('conversationId')
-        };
+        var data = {};
+        var currentConversationId = FlowRouter.getParam('conversationId');
+        var handle = Meteor.subscribe('currentConversation', currentConversationId);
+        if(handle.ready) {
+            data.currentConversation = Conversations.findOne(currentConversationId);
+        }
+        return data;
     },
 
     render() {
-        if(this.data.conversationId) {
+        if(this.data.currentConversation) {
             return (
                 <div className="container">
-                    <ConversationListContainer/>
+                    <ConversationListContainer />
                     <header>
-                        <h2>{this.data.conversationId}</h2>
+                        <h2>{this.data.currentConversation.title}</h2>
                     </header>
                     <MessageListContainer ref="messageListContainer"/>
                 </div>
@@ -25,7 +30,7 @@ ConversationPage = React.createClass({
         } else {
             return (
                 <div className="container">
-                    <ConversationListContainer/>
+                    <ConversationListContainer />
                     <div className="empty-conversation-list">
                         <p><b>Welcome to OpenLoops</b></p>
                         <div><i className="fa fa-smile-o" style={{'fontSize':'20em'}}></i></div>
@@ -42,6 +47,10 @@ ConversationPage = React.createClass({
 
     componentDidUpdate: function() {
         console.trace("ConversationPage.componentDidUpdate");
-        this.refs.messageListContainer.loadMessages();
+        if(this.data.currentConversation) {
+            this.refs.messageListContainer.loadMessages();
+        } else {
+            console.log("SHOULD THIS EVER HAPPEN?");
+        }
     },
 });

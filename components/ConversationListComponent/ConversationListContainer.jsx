@@ -1,4 +1,15 @@
 ConversationListContainer = React.createClass({
+    mixins: [ReactMeteorData],
+
+    getMeteorData() {
+        var data = {};
+        var handle = Meteor.subscribe('conversations');
+        if(handle.ready) {
+            data.conversationList = Conversations.find({}).fetch();
+        }
+        return data;
+    },
+
     render() {
         return (
             <div className="conversation-list-container">
@@ -8,7 +19,8 @@ ConversationListContainer = React.createClass({
                            ref="textInput"
                            placeholder="Type here to start a conversation" />
                 </form>
-                <ConversationList onConversationClicked={this.onConversationClicked} />
+                <ConversationList
+                    conversationList={this.data.conversationList} onConversationClicked={this.onConversationClicked} />
             </div>
         )
     },

@@ -4,8 +4,17 @@ if(Meteor.isServer) {
     Meteor.startup(function() {
         //ServerMessages.remove({});
         if(ServerMessages.find().count() == 0) {
+            Conversations.insert({
+                _id: '1',
+                title: 'Test Conversation',
+                createdBy: 'pdrummond',
+                updatedBy: 'pdrummond',
+                createdByName: 'pdrummond',
+                updatedByName: 'pdrummond'
+            });
             for(let i=0; i<5000; i++) {
                 ServerMessages.insert({
+                    conversationId: '1',
                     createdBy: 'pdrummond',
                     createdAt: new Date().getTime() + i,
                     content: 'Message ' + i

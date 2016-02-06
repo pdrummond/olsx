@@ -51,7 +51,7 @@ h2 {
     font-family: sans-serif;
     font-weight: 100;
     margin-top:10px;
-    margin-bottom:-15px;
+    margin-bottom:0px;
 }
 
 input[name="message"] {
@@ -174,7 +174,7 @@ main {
 }
 
 .message-item {
-    min-height: 45px;
+    padding:5px;
     line-height: normal;
     text-align:justify;
 }
@@ -229,8 +229,8 @@ main {
     color: gray;
 }
 
-@media(max-width: 1218px) {
-    .conversation-list {
+@media(max-width: 1285px) {
+    .conversation-list-container {
         display:none;
     }
 }
@@ -240,7 +240,7 @@ main {
     left: 0px;
     top:0px;
     padding: 10px;
-    width:300px;
+    width:200px;
 }
 
 .conversation {
@@ -264,7 +264,7 @@ input {
 }
 
 .conversation-input {
-    width:300px;
+    width:100%;
 }
 
 .empty-conversation-list {

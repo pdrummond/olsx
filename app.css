@@ -159,7 +159,7 @@ main {
 }
 
 .message-list {
-    height: calc(100% - 180px);
+    height: calc(100% - 200px);
     overflow-y: auto;
 }
 

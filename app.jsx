@@ -2,8 +2,13 @@
 if(Meteor.isServer) {
 
     Meteor.startup(function() {
-        //ServerMessages.remove({});
-        if(ServerMessages.find().count() == 0) {
+        console.log('OpenLoops is booting..');
+        var resetTestConversation = false;
+        if(resetTestConversation) {
+            Counters.remove({});
+            ServerMessages.remove({});
+            Conversations.remove({});
+
             Conversations.insert({
                 _id: '1',
                 title: 'Test Conversation',
@@ -12,15 +17,25 @@ if(Meteor.isServer) {
                 createdByName: 'pdrummond',
                 updatedByName: 'pdrummond'
             });
-            for(let i=0; i<5000; i++) {
-                ServerMessages.insert({
+
+            var now = new Date();
+            for (let i = 1; i <= 5000; i++) {
+                Meteor.call('saveMessage', {
                     conversationId: '1',
                     createdBy: 'pdrummond',
-                    createdAt: new Date().getTime() + i,
+                    updatedBy: 'pdrummond',
+                    createdByName: 'pdrummond',
+                    updatedByName: 'pdrummond',
+                    createdAt: now,
                     content: 'Message ' + i
                 });
+                now.setSeconds(now.getSeconds() + 1);
             }
+            console.log("Test Conversation reset. " + ServerMessages.find().count() + " test messages added.");
+        } else {
+            console.log('OpenLoops booted - total message count is ' + ServerMessages.find().count() + '.');
         }
+
     });
 }
 

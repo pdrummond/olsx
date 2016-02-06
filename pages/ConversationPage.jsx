@@ -12,6 +12,8 @@ ConversationPage = React.createClass({
         var handle = Meteor.subscribe('currentConversation', currentConversationId);
         if(handle.ready) {
             data.currentConversation = Conversations.findOne(currentConversationId);
+            data.startMessageSeq = parseInt(FlowRouter.getParam('startMessageSeq')) || 0;
+            data.messagesCountLimit = parseInt(FlowRouter.getParam('messagesCountLimit')) || 30;
         }
         return data;
     },
@@ -24,7 +26,11 @@ ConversationPage = React.createClass({
                     <header>
                         <h2>{this.data.currentConversation.title}</h2>
                     </header>
-                    <MessageListContainer ref="messageListContainer"/>
+                    <MessageListContainer
+                        ref="messageListContainer"
+                        conversationId={this.data.currentConversation._id}
+                        startMessageSeq={this.data.startMessageSeq}
+                        messagesCountLimit={this.data.messagesCountLimit}/>
                 </div>
             );
         } else {

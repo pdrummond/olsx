@@ -25,24 +25,30 @@ MessageList = React.createClass({
                 </ul>
                 <div id="incoming-messages-toast"
                      onClick={this.props.onIncomingMessageToastClicked}
-                     className={this.props.incomingMessageCount == 0? 'hidden':''}><i className="fa fa-caret-down"></i> {this.props.incomingMessageCount} New Messages</div>
+                     className={this.props.incomingMessageCount == 0? 'hidden':''}>
+                    <i className="fa fa-caret-down"></i> {this.props.incomingMessageCount} {this.props.incomingMessageCount == 1 ? 'New Message' : 'New Messages'}</div>
                 <MessageBox onMessageAdded={this.props.onMessageAdded} />
             </div>
         )
     },
 
-    scrollBottom() {
+    scrollBottom(callback) {
         var self = this;
         setTimeout(function() {
             let node = ReactDOM.findDOMNode(self.refs.messageList);
             node.scrollTop = node.scrollHeight;
+            if(callback) {
+                callback();
+            }
         }, 20);
     },
 
     isScrollBottom() {
         let node = ReactDOM.findDOMNode(this.refs.messageList);
         let atBottom = node.scrollHeight == node.scrollTop + node.clientHeight;
+        console.log('isScrollBottom: ' + atBottom);
         return atBottom;
+
     }
 
 });

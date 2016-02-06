@@ -148,9 +148,8 @@ MessageListContainer = React.createClass({
         return inScrollBack;
     },
 
-    scrollBottom: function() {
-        this.refs.messageList.scrollBottom();
-        this.setState({showForwardLink: false, incomingMessageCount:0});
+    scrollBottom: function(callback) {
+        this.refs.messageList.scrollBottom(callback);
     }
 
 });

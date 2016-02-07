@@ -2,6 +2,7 @@
 MessageList = React.createClass({
 
     renderMessages() {
+        console.log('> renderMessage');
         if(this.props.messages == null || this.props.messages.length == 0) {
             return (
                 <div>
@@ -9,17 +10,22 @@ MessageList = React.createClass({
                 </div>
             );
         } else {
+            var key = 0;
             return this.props.messages.map((message) => {
+                key++;
                 if(message.messageType && message.messageType == Ols.MESSAGE_TYPE_CUSTOM) {
                     var componentFn = Ols.Command.getComponent(message.customMessageType);
                     var component = componentFn(message);
+                    component.key = "{key}";
                     return component;
                 } else {
-                    var message = <Message key={message._id} message={message}/>;
+                    var message = <Message key={key} message={message}/>;
                     return message;
                 }
             });
         }
+
+        console.log('< renderMessage');
     },
 
     render() {

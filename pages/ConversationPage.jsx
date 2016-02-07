@@ -25,7 +25,7 @@ ConversationPage = React.createClass({
                     <ConversationListContainer />
                     <header>
                         <h2>{this.data.currentConversation.title}</h2>
-                        <div style={{float:'right', position: 'relative', top: '-25px;'}}>
+                        <div style={{float:'right', position: 'relative', top: '-25px'}}>
                             <a style={{color:'gray', textDecoration:'none'}} onClick={this.onDeleteLinkClicked} href=""><i className="fa fa-trash"></i> Delete</a>
                         </div>
                     </header>

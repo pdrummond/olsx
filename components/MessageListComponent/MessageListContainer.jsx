@@ -13,8 +13,26 @@ MessageListContainer = React.createClass({
                 incomingMessageCount = self.state.incomingMessageCount || 0;
                 self.setState({ incomingMessageCount: incomingMessageCount+1});
             } else {
-                self.setState({incomingMessageCount: 0, messages: self.state.messages.concat([msg])});
-                self.scrollBottom();
+                /*
+                    Might need to improve this - it works for now but not ideal.
+
+                    Basically, we want to add the incoming message if it wasn't a chat message
+                    created by the current user, because in that situation the message is added by the user
+                    instantly before the server round-trip.  But if the chat message is from another user we
+                    want to add it, and if the message is NOT a chat message then we want to add it.
+
+                    But "not a chat message" isn't really the correct logic.  Really, we want to distinguish between
+                    messages that originated on the client and messages that originate on the server.  If on the server
+                    we want to display them, if on the client, then the client will take care of adding them so we
+                    don't have to do it here.
+
+                    Need to think about this some more as I work on the app, then at some point hopefully I'll do the
+                    right thing here.
+                 */
+                if(msg.messageType != Ols.MESSAGE_TYPE_CHAT || msg.createdBy != Meteor.userId()) {
+                    self.setState({incomingMessageCount: 0, messages: self.state.messages.concat([msg])});
+                    self.scrollBottom();
+                }
             }
         });
         return {};

@@ -25,6 +25,9 @@ ConversationPage = React.createClass({
                     <ConversationListContainer />
                     <header>
                         <h2>{this.data.currentConversation.title}</h2>
+                        <div style={{float:'right', position: 'relative', top: '-25px;'}}>
+                            <a style={{color:'gray', textDecoration:'none'}} onClick={this.onDeleteLinkClicked} href=""><i className="fa fa-trash"></i> Delete</a>
+                        </div>
                     </header>
                     <MessageListContainer
                         ref="messageListContainer"
@@ -59,4 +62,12 @@ ConversationPage = React.createClass({
             console.log("SHOULD THIS EVER HAPPEN?");
         }
     },
+
+    onDeleteLinkClicked() {
+        Meteor.call('removeConversation', this.data.currentConversation._id, function(err) {
+            if(err) {
+                toastr.error("Unable to delete conversation", err.reason);
+            }
+        });
+    }
 });

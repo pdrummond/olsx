@@ -30,6 +30,7 @@ Meteor.methods({
             updatedByName: Meteor.user().username,
             messageId: messageId,
             projectId: project._id,
+            projectType: Ols.PROJECT_TYPE_CONVERSATION_DEFAULT,
             conversationId: conversationId,
             seq: seq,
             key: key

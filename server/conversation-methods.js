@@ -26,6 +26,10 @@ Meteor.methods({
     },
 
     removeConversation(conversationId) {
+        //remove all conversation-specific tasks - if the tasks was created in a conversation but belongs to a
+        //project, then we don't remove it just because the conversation is being removed.
+        Tasks.remove({conversationId:conversationId, projectType:Ols.PROJECT_TYPE_CONVERSATION_DEFAULT});
+        ServerMessages.remove({conversationId:conversationId});
         Conversations.remove(conversationId);
     },
 });

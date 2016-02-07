@@ -65,6 +65,7 @@ npm-bcrypt@0.7.8_2
 npm-mongo@1.4.39_1
 observe-sequence@1.0.7
 ols:lib@0.0.1
+ols:project-command@0.0.1
 ols:task-command@0.0.1
 ordered-dict@1.0.4
 osv:mongo-counter@0.2.1
@@ -96,4 +97,5 @@ underscore@1.0.4
 url@1.0.5
 webapp@1.2.3
 webapp-hashing@1.0.5
+yasaricli:slugify@0.0.7
 yuukan:streamy@1.3.0

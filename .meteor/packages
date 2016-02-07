@@ -30,3 +30,5 @@ osv:mongo-counter
 ols:task-command
 ols:lib
 jparker:gravatar
+ols:project-command
+yasaricli:slugify

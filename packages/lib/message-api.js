@@ -1,8 +1,12 @@
 MessageApi = function() {
 };
 
-MessageApi.prototype.systemMessage = function(conversationId, errMsg) {
+MessageApi.prototype.systemErrorMessage = function(conversationId, errMsg) {
     Meteor.call('systemErrorMessage', conversationId, errMsg);
+};
+
+MessageApi.prototype.systemSuccessMessage = function(conversationId, msg) {
+    Meteor.call('systemSuccessMessage', conversationId, msg);
 };
 
 MessageApi.prototype.saveCustomMessage = function(customMessageType, conversationId, attrs) {

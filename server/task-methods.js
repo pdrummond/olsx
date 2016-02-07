@@ -1,7 +1,13 @@
 Meteor.methods({
-    addTask: function(title, messageId) {
+    addTask: function(title, conversationId, messageId) {
 
-        var project = Projects.findOne(Meteor.user().defaultProjectId);
+        var conversation = Conversations.findOne(conversationId);
+
+        if(conversation == null) {
+            throw Meteor.Error('Error adding task', 'invalid conversation ID: ' + conversationId);
+        }
+
+        var project = Projects.findOne(conversation.defaultProjectId);
 
         if(project == null) {
             throw Meteor.Error('Unable to find user default project for user ' + Meteor.user().username)
@@ -15,7 +21,7 @@ Meteor.methods({
             key = seq;
         }
 
-        Tasks.insert({
+        var task = {
             title: title,
             status: 'new',
             createdBy: Meteor.userId(),
@@ -24,8 +30,13 @@ Meteor.methods({
             updatedByName: Meteor.user().username,
             messageId: messageId,
             projectId: project._id,
+            conversationId: conversationId,
             seq: seq,
             key: key
-        });
+        };
+
+        var taskId = Tasks.insert(task);
+        task._id = taskId;
+        return task;
     }
 });

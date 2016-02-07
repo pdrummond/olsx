@@ -179,6 +179,10 @@ main {
     text-align:justify;
 }
 
+.message-item.error {
+    color:red;
+}
+
 .message-created-at {
     font-size:12px;
     color:gray;
@@ -273,4 +277,23 @@ input {
     margin-top: 200px;
     color: gray;
     text-align:center;
+}
+
+.message-item table {
+    width:90%;
+    border: 1px solid gray;
+    border-collapse:collapse;
+}
+
+.message-item tr {
+    border:1px solid lightgray;
+}
+.message-item td {
+    padding:5px;
+    border:1px solid lightgray;
+}
+
+.message-item th {
+    padding:5px;
+    border:1px solid lightgray;
 }

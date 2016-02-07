@@ -27,3 +27,6 @@ chrismbeckett:toastr
 accounts-ui
 accounts-password
 osv:mongo-counter
+ols:task-command
+ols:lib
+jparker:gravatar

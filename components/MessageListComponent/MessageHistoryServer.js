@@ -72,19 +72,59 @@ if(Meteor.isServer) {
                 result.showForwardLink = newerMessagesCount > 0;
             }
 
-
             console.log("< loadMessages()");
             return result;
         },
 
         saveMessage: function(message) {
             console.log("> saveMessage(" + JSON.stringify(message, null, 2) + ")");
+
+            var commandName;
+
+            if(message.content && message.content.startsWith('/')) {
+                var commandData = message.content.split(" ");
+                var commandName = commandData[0];
+
+                console.log("-- command '" + commandName + "' detected");
+                message.isCommand = Ols.Command.commandExists(commandName);
+            }
+
+            Meteor.call('insertAndBroadcastMessage', message);
+
+            if(commandName != null) {
+
+                if(message.isCommand) {
+                    console.log('-- executing command "' + commandName + "'");
+                    Ols.Command.executeCommand(commandName, commandData, message);
+                } else {
+                    Meteor.call('systemErrorMessage', message.conversationId, 'Invalid command: "' + commandName + "'");
+                }
+            }
+
+            console.log("< saveMessage()")
+        },
+
+        systemErrorMessage: function(conversationId, content) {
+           Meteor.call('insertAndBroadcastMessage', {
+               conversationId: conversationId,
+               createdBy: Ols.SYSTEM_USERID,
+               createdByName: Ols.SYSTEM_USERNAME,
+               updatedBy: Ols.SYSTEM_USERID,
+               updatedByName: Ols.SYSTEM_USERNAME,
+               createdAt: new Date(),
+               content: content,
+               isSystem: true,
+               isError: true
+           });
+        },
+
+        insertAndBroadcastMessage: function(message) {
             message.seq = incrementCounter('counters', message.conversationId);
             console.log("-- message seq is " + message.seq);
-            ServerMessages.insert(message);
+            var messageId = ServerMessages.insert(message);
+            message._id = messageId;
             console.log("-- broadcasted new message " + message.seq + " to all clients");
             Streamy.broadcast('incomingMessage', message);
-            console.log("< saveMessage()")
         }
     });
 }

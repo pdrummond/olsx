@@ -10,7 +10,14 @@ MessageList = React.createClass({
             );
         } else {
             return this.props.messages.map((message) => {
-                return <Message key={message._id} message={message}/>;
+                if(message.messageType == Ols.MESSAGE_TYPE_CHAT) {
+                    var message = <Message key={message._id} message={message}/>;
+                    return message;
+                } else {
+                    var componentFn = Ols.Command.getComponent(message.customMessageType);
+                    var component = componentFn(message);
+                    return component;
+                }
             });
         }
     },

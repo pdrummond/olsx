@@ -91,7 +91,7 @@ ConversationPage = React.createClass({
     },
 
     onDeleteLinkClicked() {
-        Meteor.call('removeConversation', this.data.currentConversation._id, function(err) {
+        Conversations.methods.removeConversation.call({conversationId: this.data.currentConversation._id}, function(err) {
             if(err) {
                 toastr.error("Unable to delete conversation", err.reason);
             }

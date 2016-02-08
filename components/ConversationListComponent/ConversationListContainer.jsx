@@ -26,7 +26,7 @@ ConversationListContainer = React.createClass({
     },
 
     onConversationClicked(conv) {
-      FlowRouter.go('conversationPageLatest', {conversationId: conv._id, historyMode: 'latest'});
+      FlowRouter.go('conversationPageLatest', {conversationId: conv._id}, {scrollBottom:true});
     },
 
     handleSubmit(event) {

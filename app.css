@@ -176,7 +176,6 @@ main {
 .message-item {
     padding:5px;
     line-height: normal;
-    text-align:justify;
 }
 
 .message-item.error {
@@ -239,7 +238,7 @@ main {
     color: gray;
 }
 
-@media(max-width: 1285px) {
+@media(max-width: 1380px) {
     .conversation-list-container {
         display:none;
     }

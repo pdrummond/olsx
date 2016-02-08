@@ -41,6 +41,7 @@ nav a:hover {
 
 #login-buttons {
     font-weight: 400;
+    z-index:1;
 }
 #login-buttons a {
     text-decoration: none;
@@ -242,6 +243,9 @@ main {
     .conversation-list-container {
         display:none;
     }
+    .member-list-container {
+        display:none;
+    }
 }
 
 .conversation-list-container {
@@ -249,7 +253,10 @@ main {
     left: 0px;
     top:0px;
     padding: 10px;
-    width:250px;
+    width:280px;
+    background-color:whitesmoke;
+    height:100%;
+    border-right:1px solid lightgray;
 }
 
 .conversation {
@@ -273,7 +280,7 @@ input {
 }
 
 .conversation-input {
-    width:100%;
+    width:90%;
 }
 
 .empty-conversation-list {
@@ -305,4 +312,25 @@ input {
 
 .full-height {
     height:100%;
+}
+
+.new-member-input {
+    width:90%;
+}
+
+.member-list-container {
+    position: absolute;
+    right: 0px;
+    top: 0px;
+    padding: 10px;
+    width: 280px;
+    padding-top: 50px;
+    background: whitesmoke;
+    height: 100%;
+    border-left:1px solid lightgray;
+}
+
+.member {
+    padding:10px;
+    vertical-align: middle;
 }

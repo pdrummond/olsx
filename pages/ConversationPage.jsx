@@ -68,7 +68,7 @@ ConversationPage = React.createClass({
         } else {
             return (
                 <div className="container">
-                    <ConversationListContainer />
+                    <ConversationListContainer conversationList={this.data.conversationList}/>
                     <div className="empty-conversation-list">
                         <p><b>Welcome to OpenLoops</b></p>
                         <div><i className="fa fa-smile-o" style={{'fontSize':'20em'}}></i></div>

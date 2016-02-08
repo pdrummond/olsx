@@ -1,6 +1,5 @@
 
 if(Meteor.isServer) {
-    Counters = new Mongo.Collection('counters');
     ServerMessages = new Meteor.Collection('messages');
 
     Meteor.methods({

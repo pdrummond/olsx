@@ -31,14 +31,14 @@ ConversationListContainer = React.createClass({
 
     handleSubmit(event) {
         event.preventDefault();
-        var title = ReactDOM.findDOMNode(this.refs.textInput).value.trim();
+        var subject = ReactDOM.findDOMNode(this.refs.textInput).value.trim();
 
-        Meteor.call('addConversation', title, function(err) {
+        Conversations.methods.addConversation.call({subject}, (err) => {
             if(err) {
-                toastr.error('Something went wrong creating conversation', err.reason);
+                toastr.error('Oops! Something went wrong creating conversation - please try again.');
+                console.error('Error creating conversation: ' + err.reason);
             }
         });
-
         ReactDOM.findDOMNode(this.refs.textInput).value = "";
     }
 });

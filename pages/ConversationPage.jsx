@@ -27,13 +27,13 @@ ConversationPage = React.createClass({
     },
 
     getContent() {
-        return <div>
+        return <div className="full-height">
             {this.data.canShow? this.renderPage() : this.noAuthMessage() }
         </div>;
     },
 
     render() {
-        return <div>
+        return <div className="full-height">
             {this.data.authInProcess?  <p>Loading...</p> : this.getContent()}
         </div>;
     },
@@ -44,7 +44,7 @@ ConversationPage = React.createClass({
                 <div className="container">
                     <ConversationListContainer />
                     <header>
-                        <h2>{this.data.currentConversation.title}</h2>
+                        <h2>{this.data.currentConversation.subject}</h2>
                         <div style={{float:'right', position: 'relative', top: '-25px'}}>
                             <a style={{color:'gray', textDecoration:'none'}} onClick={this.onDeleteLinkClicked} href=""><i className="fa fa-trash"></i> Delete</a>
                         </div>

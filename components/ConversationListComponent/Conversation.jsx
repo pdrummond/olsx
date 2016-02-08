@@ -1,7 +1,7 @@
 Conversation = React.createClass({
     render() {
         return (
-            <li onClick={this.onClick} className="conversation">{this.props.conv.title}</li>
+            <li onClick={this.onClick} className="conversation">{this.props.conv.subject}</li>
         )
     },
 

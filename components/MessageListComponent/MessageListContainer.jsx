@@ -63,9 +63,7 @@ MessageListContainer = React.createClass({
     },
 
     onIncomingMessageToastClicked: function() {
-        /*if(this.getHistoryMode() != 'latest') {
-            FlowRouter.go('conversationPageLatest', {historyMode: 'latest'});
-        }*/
+        FlowRouter.go('conversationPageLatest', {conversationId: this.props.conversationId}, {scrollBottom: true});
         this.scrollBottom();
     },
 
@@ -169,6 +167,7 @@ MessageListContainer = React.createClass({
 
     scrollBottom: function(callback) {
         this.refs.messageList.scrollBottom(callback);
+        this.setState({ incomingMessageCount: 0});
     }
 
 });

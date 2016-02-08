@@ -16,6 +16,7 @@ ConversationPage = React.createClass({
             data.currentConversation = Conversations.findOne(currentConversationId);
             data.startMessageSeq = parseInt(FlowRouter.getParam('startMessageSeq')) || 0;
             data.messagesCountLimit = parseInt(FlowRouter.getParam('messagesCountLimit')) || 30;
+            data.doScrollBottom = FlowRouter.getQueryParam('scrollBottom') != null;
         }
         return data;
     },
@@ -76,8 +77,14 @@ ConversationPage = React.createClass({
 
     componentDidUpdate: function() {
         console.trace("ConversationPage.componentDidUpdate");
+
+        var self = this;
         if(this.data.currentConversation) {
-            this.refs.messageListContainer.loadMessages();
+            this.refs.messageListContainer.loadMessages(function() {
+                if(self.data.doScrollBottom) {
+                    self.refs.messageListContainer.scrollBottom();
+                }
+            });
         } else {
             console.log("SHOULD THIS EVER HAPPEN?");
         }

@@ -222,7 +222,7 @@ main {
     border-radius: 10px;
     font-weight: bold;
     font-size: 12px;
-    width: 110px;
+    width: 150px;
     text-align: center;
     margin: auto auto;
     top: -10px;
@@ -250,7 +250,7 @@ main {
     left: 0px;
     top:0px;
     padding: 10px;
-    width:200px;
+    width:250px;
 }
 
 .conversation {

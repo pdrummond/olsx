@@ -9,16 +9,36 @@ if(Meteor.isServer) {
             ServerMessages.remove({});
             Conversations.remove({});
 
+            var now = new Date();
+            Projects.insert({
+                _id: '1',
+                title: 'Test Project',
+                type: Ols.PROJECT_TYPE_CONVERSATION_DEFAULT,
+                createdAt: now,
+                updatedAt: now,
+                createdBy: 'pdrummond',
+                updatedBy: 'pdrummond',
+                createdByName: 'pdrummond',
+                updatedByName: 'pdrummond'
+            }, (err) => {
+                if(err) {
+                    console.error('Error adding default project for conversation: ' + err);
+                    throw new Meteor.Error("Conversations.methods.addConversation.add-default-project-failed", err);
+                }
+            });
+
             Conversations.insert({
                 _id: '1',
-                title: 'Test Conversation',
+                subject: 'Test Conversation',
+                defaultProjectId: '1',
+                createdAt: now,
+                updatedAt: now,
                 createdBy: 'pdrummond',
                 updatedBy: 'pdrummond',
                 createdByName: 'pdrummond',
                 updatedByName: 'pdrummond'
             });
 
-            var now = new Date();
             for (let i = 1; i <= 5000; i++) {
                 Meteor.call('saveMessage', {
                     conversationId: '1',
@@ -27,6 +47,7 @@ if(Meteor.isServer) {
                     createdByName: 'pdrummond',
                     updatedByName: 'pdrummond',
                     createdAt: now,
+                    updatedAt: now,
                     content: 'Message ' + i
                 });
                 now.setSeconds(now.getSeconds() + 1);

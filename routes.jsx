@@ -25,3 +25,9 @@ FlowRouter.route('/conversation/:conversationId/start-message/:startMessageSeq/l
         ReactLayout.render(MainLayout, {content: <ConversationPage />});
     }
 });
+
+FlowRouter.notFound = {
+    action: function() {
+        ReactLayout.render(MainLayout, {content: <NotFoundPage />});
+    }
+}

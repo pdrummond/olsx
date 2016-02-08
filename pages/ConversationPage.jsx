@@ -11,6 +11,8 @@ ConversationPage = React.createClass({
         var currentConversationId = FlowRouter.getParam('conversationId');
         var handle = Meteor.subscribe('currentConversation', currentConversationId);
         if(handle.ready) {
+            data.authInProcess = Meteor.loggingIn();
+            data.canShow = !!Meteor.user();
             data.currentConversation = Conversations.findOne(currentConversationId);
             data.startMessageSeq = parseInt(FlowRouter.getParam('startMessageSeq')) || 0;
             data.messagesCountLimit = parseInt(FlowRouter.getParam('messagesCountLimit')) || 30;
@@ -18,7 +20,25 @@ ConversationPage = React.createClass({
         return data;
     },
 
+    noAuthMessage() {
+        return <p>
+            {"You are not authorized to view this page."}
+        </p>;
+    },
+
+    getContent() {
+        return <div>
+            {this.data.canShow? this.renderPage() : this.noAuthMessage() }
+        </div>;
+    },
+
     render() {
+        return <div>
+            {this.data.authInProcess?  <p>Loading...</p> : this.getContent()}
+        </div>;
+    },
+
+    renderPage() {
         if(this.data.currentConversation) {
             return (
                 <div className="container">

@@ -32,3 +32,6 @@ ols:lib
 jparker:gravatar
 ols:project-command
 yasaricli:slugify
+mdg:validated-method
+aldeed:simple-schema
+aldeed:collection2

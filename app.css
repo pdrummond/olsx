@@ -182,7 +182,6 @@ main {
 .message-item.error {
     color:red;
     font-style: italic;
-    font-weight:bold;
 }
 
 .message-item.success {

@@ -1,7 +1,9 @@
 Conversation = React.createClass({
     render() {
         return (
-            <li onClick={this.onClick} className="conversation">{this.props.conv.subject}</li>
+            <li
+                onClick={this.onClick}
+                className={this.props.isActive?'conversation active':'conversation'}>{this.props.conv.subject}</li>
         )
     },
 

@@ -9,7 +9,9 @@ ConversationListContainer = React.createClass({
                            placeholder="Type here to start a conversation" />
                 </form>
                 <ConversationList
-                    conversationList={this.props.conversationList} onConversationClicked={this.onConversationClicked} />
+                    currentConversationId={this.props.currentConversationId}
+                    conversationList={this.props.conversationList}
+                    onConversationClicked={this.onConversationClicked} />
             </div>
         )
     },

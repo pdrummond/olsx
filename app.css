@@ -255,8 +255,13 @@ main {
     padding: 10px;
     width:280px;
     background-color:whitesmoke;
-    height:100%;
+    height:calc(100% - 20px);
     border-right:1px solid lightgray;
+}
+
+.conversation-list {
+    overflow-y:auto;
+    height: calc(100% - 70px);
 }
 
 .conversation {
@@ -265,12 +270,12 @@ main {
 }
 
 .conversation:hover {
-    background-color:whitesmoke;
+    background-color: lightgray;
     cursor:pointer;
 }
 
 .conversation.active {
-    background-color:whitesmoke;
+    background-color: lightgray;
 }
 
 input {
@@ -326,8 +331,13 @@ input {
     width: 280px;
     padding-top: 50px;
     background: whitesmoke;
-    height: 100%;
+    height: calc(100% - 60px);
     border-left:1px solid lightgray;
+}
+
+.member-list {
+    overflow-y:auto;
+    height: calc(100% - 70px);
 }
 
 .member {

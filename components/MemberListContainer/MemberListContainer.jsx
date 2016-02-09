@@ -15,18 +15,31 @@ MemberListContainer = React.createClass({
         )
     },
 
-    onMemberClicked(member) {
-        alert("Member clicked: " + JSON.stringify(member));
+    onMemberClicked(memberToRemove) {
+        var currentMember = Members.findOne({userId: Meteor.userId()});
+        if(currentMember.role == Ols.ROLE_ADMIN) {
+            if(confirm("Do you wish to remove this member from the conversation?")) {
+                Members.methods.removeMember.call({memberId: memberToRemove._id}, (err) => {
+                    if (err) {
+                        toastr.error('Unable to remove member: ' + err.reason);
+                    } else {
+                        Ols.Message.systemSuccessMessage(this.props.conversationId, Meteor.user().username + " removed " + memberToRemove.username + " from this conversation");
+                    }
+                });
+            }
+        }
     },
 
     handleSubmit(event) {
         event.preventDefault();
         var emailOrUsername = ReactDOM.findDOMNode(this.refs.textInput).value.trim();
 
-        Members.methods.addMember.call({emailOrUsername, conversationId: this.props.conversationId, role:Ols.ROLE_USER}, (err) => {
+        Members.methods.addMember.call({emailOrUsername, conversationId: this.props.conversationId, role:Ols.ROLE_USER}, (err, member) => {
             if(err) {
-                toastr.error('Oops! Something went wrong adding member - please try again.');
+                toastr.error('Unable to add member: ' + err.reason);
                 console.error('Error adding member: ' + JSON.stringify(err, null, 2));
+            } else {
+                Ols.Message.systemSuccessMessage(this.props.conversationId, Meteor.user().username + " added " + member.username + " to this conversation");
             }
         });
         ReactDOM.findDOMNode(this.refs.textInput).value = "";

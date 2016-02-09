@@ -104,6 +104,7 @@ if(Meteor.isServer) {
         },
 
         systemSuccessMessage: function(conversationId, content) {
+            console.log('> systemSuccessMessage(conversationId=' + conversationId + ', content=' + content + ')');
             Meteor.call('insertAndBroadcastMessage', {
                 conversationId: conversationId,
                 createdBy: Ols.SYSTEM_USERID,
@@ -118,6 +119,7 @@ if(Meteor.isServer) {
         },
 
         systemErrorMessage: function(conversationId, content) {
+            console.log('> systemErrorMessage(conversationId=' + conversationId + ', content=' + content + ')');
            Meteor.call('insertAndBroadcastMessage', {
                conversationId: conversationId,
                createdBy: Ols.SYSTEM_USERID,

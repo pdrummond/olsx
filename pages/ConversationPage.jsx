@@ -9,6 +9,7 @@ ConversationPage = React.createClass({
     getMeteorData() {
         console.log("ConversationPage.getMeteorData()");
         var data = {};
+        data.conversationList = [];
         var usersHandle = Meteor.subscribe('allUsernames');
         var conversationsHandle = Meteor.subscribe('conversations');
         if(conversationsHandle.ready() && usersHandle.ready()) {
@@ -45,6 +46,5 @@ ConversationPage = React.createClass({
             );
 
         }
-    },
-
+    }
 });

@@ -27,6 +27,7 @@ MessageBox = React.createClass({
         // ENTER_KEY_CODE handled by onKeyDown
         if (event.target.value !== "\n") {
             this.setState({content: event.target.value});
+            this.props.onUserIsTyping();
         }
     },
 

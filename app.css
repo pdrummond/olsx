@@ -161,8 +161,12 @@ main {
 }
 
 .message-list {
-    height: calc(100% - 200px);
+    height: calc(100% - 205px);
     overflow-y: auto;
+}
+
+.message-box {
+    padding-top:20px;
 }
 
 .message-box textarea {
@@ -226,7 +230,7 @@ main {
     width: 150px;
     text-align: center;
     margin: auto auto;
-    top: -10px;
+    top: -130px;
 }
 
 #incoming-messages-toast :hover {
@@ -370,4 +374,16 @@ input {
     font-size: 12px;
     font-weight: bold;
     border-radius: 4px;
+}
+
+.user-is-typing {
+    position:relative;
+    height:10px;
+    font-size:12px;
+    font-weight:bold;
+    color:gray;
+}
+
+.message-list-wrapper {
+    position:relative;
 }

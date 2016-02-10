@@ -2,6 +2,8 @@
 const DEFAULT_PAGE_SIZE = 30;
 
 MessageListContainer = React.createClass({
+    mixins: [ReactMeteorData],
+
     propTypes: {
         conversationId: React.PropTypes.string,
         startMessageSeq: React.PropTypes.number,
@@ -10,7 +12,22 @@ MessageListContainer = React.createClass({
         onOtherConversationNewMessage: React.PropTypes.func
     },
 
-    mixins: [ReactMeteorData],
+    getInitialState() {
+        return {
+            userIsTypingMsg: '',
+        }
+    },
+
+    componentDidMount() {
+        var self = this;
+        this.userIsTypingTimeout = setInterval(function() {
+            self.setState({'userIsTypingMsg': ''});
+        }, 2000);
+    },
+
+    componentWillUnmount() {
+        clearInterval(this.userIsTypingTimeout);
+    },
 
     getMeteorData() {
         var self = this;
@@ -47,6 +64,13 @@ MessageListContainer = React.createClass({
                 self.props.onOtherConversationNewMessage(msg);
             }
         });
+        Streamy.on('userIsTyping', function(ctx) {
+            if(ctx.userId != Meteor.userId()) {
+                if(ctx.conversationId == self.props.conversationId) {
+                   self.setState({'userIsTypingMsg': ctx.username + " is typing.."});
+                }
+            }
+        });
         return {};
     },
 
@@ -66,7 +90,9 @@ MessageListContainer = React.createClass({
                 showForwardLink={this.state.showForwardLink}
                 showBackwardLink={this.state.showBackwardLink}
                 incomingMessageCount={this.state.incomingMessageCount}
+                userIsTypingMsg={this.state.userIsTypingMsg}
                 onMessageAdded={this.onMessageAdded}
+                onUserIsTyping={this.onUserIsTyping}
                 onLoadOlderLinkClicked={this.onLoadOlderLinkClicked}
                 onLoadNewerLinkClicked={this.onLoadNewerLinkClicked}
                 onIncomingMessageToastClicked={this.onIncomingMessageToastClicked}
@@ -125,6 +151,14 @@ MessageListContainer = React.createClass({
                     callback();
                 }
             }
+        });
+    },
+
+    onUserIsTyping: function() {
+        Streamy.broadcast('userIsTyping', {
+            userId: Meteor.userId(),
+            username: Meteor.user().username,
+            conversationId: this.props.conversationId
         });
     },
 

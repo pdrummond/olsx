@@ -1,4 +1,3 @@
-
 MessageList = React.createClass({
 
     renderMessages() {
@@ -39,11 +38,14 @@ MessageList = React.createClass({
                     {this.renderMessages()}
                     <a className={this.props.showForwardLink ? '':'hide'} href='' onClick={this.props.onLoadNewerLinkClicked}><i className="message-list-page-icon fa-2x fa fa-arrow-circle-o-down"></i></a>
                 </ul>
+                <MessageBox
+                    onUserIsTyping={this.props.onUserIsTyping}
+                    onMessageAdded={this.props.onMessageAdded} />
+                <div style={{height:'10px'}} className='user-is-typing'>{this.props.userIsTypingMsg}</div>
                 <div id="incoming-messages-toast"
                      onClick={this.props.onIncomingMessageToastClicked}
                      className={this.props.incomingMessageCount == 0? 'hidden':''}>
                     <i className="fa fa-caret-down"></i> {this.props.incomingMessageCount} {this.props.incomingMessageCount == 1 ? 'New Message' : 'New Messages'}</div>
-                <MessageBox onMessageAdded={this.props.onMessageAdded} />
             </div>
         )
     },

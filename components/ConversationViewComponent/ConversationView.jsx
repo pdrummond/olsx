@@ -53,7 +53,8 @@ ConversationView = React.createClass({
                         ref="messageListContainer"
                         conversationId={this.data.currentConversation._id}
                         startMessageSeq={this.data.startMessageSeq}
-                        messagesCountLimit={this.data.messagesCountLimit}/>
+                        messagesCountLimit={this.data.messagesCountLimit}
+                        onOtherConversationNewMessage={this.props.onOtherConversationNewMessage} />
                 </div>
             );
         } else {

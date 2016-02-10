@@ -1,4 +1,12 @@
 ConversationListContainer = React.createClass({
+    propTypes: {
+        currentConversationId: React.PropTypes.string,
+        conversationList: React.PropTypes.array,
+        incomingMessages: React.PropTypes.array,
+
+        onConversationClicked: React.PropTypes.func
+    },
+
     render() {
         return (
             <div className="conversation-list-container">
@@ -11,13 +19,10 @@ ConversationListContainer = React.createClass({
                 <ConversationList
                     currentConversationId={this.props.currentConversationId}
                     conversationList={this.props.conversationList}
-                    onConversationClicked={this.onConversationClicked} />
+                    onConversationClicked={this.props.onConversationClicked}
+                    incomingMessages={this.props.incomingMessages} />
             </div>
         )
-    },
-
-    onConversationClicked(conv) {
-      FlowRouter.go('conversationPageLatest', {conversationId: conv._id}, {scrollBottom:true});
     },
 
     handleSubmit(event) {

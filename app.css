@@ -3,7 +3,8 @@ html, body {
 }
 
 body {
-    width: 800px;
+    padding-left: 320px;
+    padding-right: 320px;
     margin: 0 auto;
     font-family: sans-serif;
     color: #333;
@@ -240,6 +241,10 @@ main {
 }
 
 @media(max-width: 1380px) {
+    body {
+        padding-left: 10px;
+        padding-right:10px;
+    }
     .conversation-list-container {
         display:none;
     }
@@ -343,4 +348,15 @@ input {
 .member {
     padding:10px;
     vertical-align: middle;
+}
+
+.conversation-new-messages-badge {
+    float: right;
+    background: red;
+    width: 20px;
+    text-align: center;
+    color: white;
+    font-size: 12px;
+    font-weight: bold;
+    border-radius: 4px;
 }

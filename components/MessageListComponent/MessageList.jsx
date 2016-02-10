@@ -18,8 +18,11 @@ MessageList = React.createClass({
                     var component = componentFn(message);
                     component.key = "{key}";
                     return component;
+                } else if(message.isSystem) {
+                    var message = <SystemMessage key={key} message={message}/>;
+                    return message;
                 } else {
-                    var message = <Message key={key} message={message}/>;
+                    var message = <ChatMessage key={key} message={message}/>;
                     return message;
                 }
             });

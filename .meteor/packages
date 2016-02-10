@@ -36,3 +36,4 @@ mdg:validated-method
 aldeed:simple-schema
 aldeed:collection2
 peerlibrary:reactive-publish
+momentjs:moment

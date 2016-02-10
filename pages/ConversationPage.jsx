@@ -6,6 +6,12 @@
 ConversationPage = React.createClass({
     mixins: [ReactMeteorData],
 
+    getInitialState() {
+        return {
+            incomingMessages: []
+        };
+    },
+
     getMeteorData() {
         console.log("ConversationPage.getMeteorData()");
         var data = {};
@@ -39,12 +45,27 @@ ConversationPage = React.createClass({
             return (
                 <div className="container">
                     <ConversationListContainer
+                        incomingMessages={this.state.incomingMessages}
                         currentConversationId={this.data.currentConversationId}
+                        onConversationClicked={this.onConversationClicked}
                         conversationList={this.data.conversationList}/>
-                    <ConversationView/>
+                    <ConversationView onOtherConversationNewMessage={this.onOtherConversationNewMessage}/>
                 </div>
             );
 
         }
-    }
+    },
+
+    onOtherConversationNewMessage: function(msg) {
+        this.setState({'incomingMessages': this.state.incomingMessages.concat([msg])});
+    },
+
+    onConversationClicked(conv) {
+        //When a conversation is selected, reset its incoming messages to zero
+        this.setState({'incomingMessages': this.state.incomingMessages.filter(function(msg) {
+            return msg.conversationId != conv._id;
+        })});
+        FlowRouter.go('conversationPageLatest', {conversationId: conv._id}, {scrollBottom:true});
+    },
+
 });

@@ -17,8 +17,9 @@ ConversationPage = React.createClass({
         var data = {};
         data.conversationList = [];
         var usersHandle = Meteor.subscribe('allUsernames');
+        var userStatusHandle = Meteor.subscribe('userStatus');
         var conversationsHandle = Meteor.subscribe('conversations');
-        if(conversationsHandle.ready() && usersHandle.ready()) {
+        if(conversationsHandle.ready() && usersHandle.ready() && userStatusHandle.ready()) {
             data.conversationList = Conversations.find({}, {sort: {updatedAt: -1}}).fetch();
             data.authInProcess = Meteor.loggingIn();
             data.currentConversationId = FlowRouter.getParam('conversationId');
@@ -61,6 +62,7 @@ ConversationPage = React.createClass({
     },
 
     onConversationClicked(conv) {
+        Meteor.call('updateUserSetCurrentConversation', Meteor.userId(), conv._id);
         //When a conversation is selected, reset its incoming messages to zero
         this.setState({'incomingMessages': this.state.incomingMessages.filter(function(msg) {
             return msg.conversationId != conv._id;

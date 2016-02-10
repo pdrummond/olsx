@@ -346,8 +346,19 @@ input {
 }
 
 .member {
-    padding:10px;
+    padding:5px;
     vertical-align: middle;
+}
+.member .viewing {
+    color: green;
+}
+
+.member .online {
+    color: orange;
+}
+
+.member .offline {
+    color: red;
 }
 
 .conversation-new-messages-badge {

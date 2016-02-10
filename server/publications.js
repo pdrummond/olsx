@@ -26,7 +26,12 @@ Meteor.publish("currentConversationMembers", function (conversationId) {
 Meteor.publish("allUsernames", function () {
     return Meteor.users.find({}, {fields: {
         "username": 1,
-        "profileImage": 1
+        "profileImage": 1,
+        "currentConversationId": 1
     }});
+});
+
+Meteor.publish("userStatus", function() {
+    return Meteor.users.find({ "status.online": true }, { fields: { "username": 1, "status":1 } });
 });
 

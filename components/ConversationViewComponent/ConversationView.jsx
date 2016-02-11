@@ -4,6 +4,7 @@ ConversationView = React.createClass({
     getMeteorData() {
         console.log("getMeteorData()");
         var data = {};
+        data.currentConversation = {};
         var currentConversationId = FlowRouter.getParam('conversationId');
         var currentConversationHandle = Meteor.subscribe('currentConversation', currentConversationId);
         var membersHandle = Meteor.subscribe('currentConversationMembers', currentConversationId);
@@ -16,7 +17,7 @@ ConversationView = React.createClass({
             data.membersList = Members.find({conversationId: currentConversationId}, {sort: {createdAt: 1}}).fetch();
 
             data.startMessageSeq = parseInt(FlowRouter.getParam('startMessageSeq')) || 0;
-            data.messagesCountLimit = parseInt(FlowRouter.getParam('messagesCountLimit')) || 30;
+            data.messagesCountLimit = parseInt(FlowRouter.getParam('messagesCountLimit')) || Ols.DEFAULT_PAGE_SIZE;
             data.doScrollBottom = FlowRouter.getQueryParam('scrollBottom') != null;
             data.isLoading = false;
         }
@@ -24,11 +25,7 @@ ConversationView = React.createClass({
     },
 
     render() {
-        if(this.data.isLoading) {
-           return (
-               <p>Loading..</p>
-           );
-        } else if(this.data.canShow == false) {
+        if(this.data.canShow == false) {
             return (
                 <div className="container">
                     <div className="empty-conversation-list">
@@ -43,9 +40,9 @@ ConversationView = React.createClass({
                 <div className="container">
                     <MemberListContainer conversationId={this.data.currentConversation._id} memberList={this.data.membersList}/>
                     <header>
-                        <h2>{this.data.currentConversation.subject}</h2>
-                        <div style={{float:'right', position: 'relative', top: '-25px'}}>
-                            <a style={{color:'gray', textDecoration:'none'}} onClick={this.onDeleteLinkClicked} href=""><i
+                        <h2><i className="fa fa-comments-o"></i> {this.data.currentConversation.subject}</h2>
+                        <div className="header-buttons">
+                            <a style={{color:'white;font-size:12px', textDecoration:'none'}} onClick={this.onDeleteLinkClicked} href=""><i
                                 className="fa fa-trash"></i> Delete</a>
                         </div>
                     </header>
@@ -55,16 +52,6 @@ ConversationView = React.createClass({
                         startMessageSeq={this.data.startMessageSeq}
                         messagesCountLimit={this.data.messagesCountLimit}
                         onOtherConversationNewMessage={this.props.onOtherConversationNewMessage} />
-                </div>
-            );
-        } else {
-            return (
-                <div className="container">
-                    <div className="empty-conversation-list">
-                        <p><b>Welcome to OpenLoops</b></p>
-                        <div><i className="fa fa-comments-o" style={{'fontSize':'20em', 'color': '#703470'}}></i></div>
-                        <p>Create or select a conversation to get started</p>
-                    </div>
                 </div>
             );
         }

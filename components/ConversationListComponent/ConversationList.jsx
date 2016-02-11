@@ -1,4 +1,5 @@
 ConversationList = React.createClass({
+
     propTypes: {
         currentConversationId: React.PropTypes.string,
         conversationList: React.PropTypes.array,

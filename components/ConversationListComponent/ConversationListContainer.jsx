@@ -1,10 +1,17 @@
 ConversationListContainer = React.createClass({
+    mixins: [ReactMeteorData],
+
     propTypes: {
-        currentConversationId: React.PropTypes.string,
         conversationList: React.PropTypes.array,
         incomingMessages: React.PropTypes.array,
 
         onConversationClicked: React.PropTypes.func
+    },
+
+   getMeteorData() {
+        return {
+            currentConversationId: FlowRouter.getParam('conversationId'),
+        }
     },
 
     render() {
@@ -17,7 +24,7 @@ ConversationListContainer = React.createClass({
                            placeholder="Type here to start a conversation" />
                 </form>
                 <ConversationList
-                    currentConversationId={this.props.currentConversationId}
+                    currentConversationId={this.data.currentConversationId}
                     conversationList={this.props.conversationList}
                     onConversationClicked={this.props.onConversationClicked}
                     incomingMessages={this.props.incomingMessages} />

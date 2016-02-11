@@ -1,6 +1,4 @@
 
-const DEFAULT_PAGE_SIZE = 30;
-
 MessageListContainer = React.createClass({
     mixins: [ReactMeteorData],
 

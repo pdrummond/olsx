@@ -16,23 +16,23 @@ ConversationPage = React.createClass({
         console.log("ConversationPage.getMeteorData()");
         var data = {};
         data.conversationList = [];
+        var conversationsHandle = Meteor.subscribe('conversations');
         var usersHandle = Meteor.subscribe('allUsernames');
         var userStatusHandle = Meteor.subscribe('userStatus');
-        var conversationsHandle = Meteor.subscribe('conversations');
+
         if(conversationsHandle.ready() && usersHandle.ready() && userStatusHandle.ready()) {
             data.conversationList = Conversations.find({}, {sort: {updatedAt: -1}}).fetch();
             data.authInProcess = Meteor.loggingIn();
-            data.currentConversationId = FlowRouter.getParam('conversationId');
         }
         return data;
     },
 
     render() {
-        if(this.data.authInProcess) {
+        /*if(this.data.authInProcess) {
             return (
                 <p>Loading...</p>
             );
-        } else if(Meteor.userId() == null) {
+        } else */if(Meteor.userId() == null) {
            return (
                <div className="container">
                    <div className="empty-conversation-list">
@@ -47,7 +47,7 @@ ConversationPage = React.createClass({
                 <div className="container">
                     <ConversationListContainer
                         incomingMessages={this.state.incomingMessages}
-                        currentConversationId={this.data.currentConversationId}
+                        //currentConversationId={this.data.currentConversationId}
                         onConversationClicked={this.onConversationClicked}
                         conversationList={this.data.conversationList}/>
                     <ConversationView onOtherConversationNewMessage={this.onOtherConversationNewMessage}/>

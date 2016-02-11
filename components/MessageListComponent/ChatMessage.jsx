@@ -10,8 +10,11 @@ ChatMessage = React.createClass({
     styles: {
         profileImage: {
             float: 'left',
-            width: '35px',
-            borderRadius: '20px'
+            width: '30px',
+            borderRadius: '20px',
+            position:'relative',
+            top:'5px'
+
         }
     },
 
@@ -24,7 +27,7 @@ ChatMessage = React.createClass({
                         <span
                             className="message-created-at"> {moment(this.props.message.createdAt).fromNow()} </span>
                     </div>
-                    <div className="message-content" style={{marginTop: '5px'}}>{this.props.message.content}</div>
+                    <div className="message-content" style={{marginTop: '0px'}}>{this.props.message.content}</div>
                 </div>
             </li>
         );

@@ -1,12 +1,12 @@
 html, body {
     height:100%;
-    overflow-y: hidden;
+    overflow: auto;
 }
 
 body {
     font-family: 'Open Sans', sans-serif;
-    padding-left: 320px;
-    padding-right: 320px;
+    padding-left: 280px;
+    padding-right: 280px;
     margin: 0 auto;
     color: #333;
 }
@@ -49,11 +49,11 @@ nav a:hover {
 }
 
 h2 {
-    border-bottom: 1px solid #abe;
     font-family: sans-serif;
     font-weight: 100;
     margin-top:10px;
     margin-bottom:0px;
+    font-size:30px;
 }
 
 input[name="message"] {
@@ -161,7 +161,7 @@ main {
 }
 
 .message-list {
-    height: calc(100% - 205px);
+    height: calc(100% - 260px);
     overflow-y: auto;
 }
 
@@ -172,7 +172,7 @@ main {
 .message-box textarea {
     border: 2px solid lightgray;
     background-color: whitesmoke;
-    width: calc(100% - 30px);
+    width: 98%;
     height:80px;
     resize:none;
     outline:none;
@@ -180,6 +180,7 @@ main {
 }
 
 .message-item {
+    margin-top:20px;
     padding:5px;
     line-height: normal;
 }
@@ -268,7 +269,7 @@ main {
 
 .conversation-list {
     overflow-y:auto;
-    height: calc(100% - 70px);
+    height: calc(100% - 80px);
 }
 
 .conversation {
@@ -389,4 +390,21 @@ input {
 
 .message-list-wrapper {
     position:relative;
+    padding:20px;
+    transition: background .2s;
+}
+
+header {
+    padding: 20px;
+    background: #0079BF;
+    border-bottom: 5px solid #01588A;
+    color: white;
+    font-weight: bold;
+}
+
+.header-buttons {
+    float: right;
+    position: relative;
+    top: -60px;
+    right: 10px;
 }

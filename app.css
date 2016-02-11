@@ -1,14 +1,14 @@
 html, body {
     height:100%;
+    overflow-y: hidden;
 }
 
 body {
+    font-family: 'Open Sans', sans-serif;
     padding-left: 320px;
     padding-right: 320px;
     margin: 0 auto;
-    font-family: sans-serif;
     color: #333;
-    font-weight: 100;
 }
 input, textarea, keygen, select, button {
     font-size:14px;
@@ -190,7 +190,7 @@ main {
 }
 
 .message-item.success {
-    color:green;
+    color:gray;
     font-style: italic;
 }
 
@@ -210,13 +210,13 @@ main {
 #login-buttons {
     position: absolute;
     padding: 5px;
-    right: 5px;
+    left: 5px;
+    bottom: 5px;
 }
 
 #login-dropdown-list {
-    right: 20px;
-    left: auto;
-    top: 30px;
+    left: 50px;
+    top: -110px;
 }
 
 #incoming-messages-toast {
@@ -261,11 +261,9 @@ main {
     position: absolute;
     left: 0px;
     top:0px;
-    padding: 10px;
     width:280px;
-    background-color:whitesmoke;
-    height:calc(100% - 20px);
-    border-right:1px solid lightgray;
+    height:100%;
+    box-shadow: 0 0px 6px rgba(0,0,0,0.35);
 }
 
 .conversation-list {
@@ -276,25 +274,31 @@ main {
 .conversation {
     padding:10px;
     vertical-align: middle;
+    transition: background .2s;
+    color: #7089A9;
 }
 
 .conversation:hover {
-    background-color: lightgray;
+    background-color: #e7edf3;
     cursor:pointer;
 }
 
 .conversation.active {
-    background-color: lightgray;
+    background-color: #e7edf3;
 }
 
 input {
     padding:10px;
-    border-radius:5px;
     border:1px solid lightgray;
+    border-radius:0;
+    outline:none;
 }
 
 .conversation-input {
-    width:90%;
+    width:240px;
+    position:relative;
+    top:5px;
+    margin-left:10px;
 }
 
 .empty-conversation-list {
@@ -338,9 +342,8 @@ input {
     top: 0px;
     padding: 10px;
     width: 280px;
-    padding-top: 50px;
     background: whitesmoke;
-    height: calc(100% - 60px);
+    height: calc(100% - 20px);
     border-left:1px solid lightgray;
 }
 

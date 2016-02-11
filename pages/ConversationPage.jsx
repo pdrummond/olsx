@@ -62,6 +62,11 @@ ConversationPage = React.createClass({
     },
 
     onConversationClicked(conv) {
+        Conversations.methods.markAsSeen.call({conversationId: conv._id, userId: Meteor.userId()}, (err) => {
+            if(err) {
+                console.error("Error marking conversation as seen: " + err);
+            }
+        });
         Meteor.call('updateUserSetCurrentConversation', Meteor.userId(), conv._id);
         //When a conversation is selected, reset its incoming messages to zero
         this.setState({'incomingMessages': this.state.incomingMessages.filter(function(msg) {

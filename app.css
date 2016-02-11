@@ -161,8 +161,9 @@ main {
 }
 
 .message-list {
-    height: calc(100% - 260px);
+    height: calc(100% - 230px);
     overflow-y: auto;
+    margin: 0;
 }
 
 .message-box {
@@ -211,13 +212,13 @@ main {
 #login-buttons {
     position: absolute;
     padding: 5px;
-    left: 5px;
-    bottom: 5px;
+    right: 5px;
+    top: 5px;
 }
 
 #login-dropdown-list {
-    left: 50px;
-    top: -310px;
+    left: -200px;
+    top: 30px;
 }
 
 #incoming-messages-toast {
@@ -288,6 +289,14 @@ main {
     background-color: #e7edf3;
 }
 
+.conversation .conversation-subject {
+    font-weight:bold;
+}
+
+.conversation.seen .conversation-subject {
+    font-weight:normal;
+}
+
 input {
     padding:10px;
     border:1px solid lightgray;
@@ -311,7 +320,7 @@ input {
 }
 
 .message-item table {
-    width:90%;
+    width:98%;
     border: 1px solid gray;
     border-collapse:collapse;
 }
@@ -342,10 +351,12 @@ input {
     right: 0px;
     top: 0px;
     padding: 10px;
+    padding-top:50px;
     width: 280px;
     background: whitesmoke;
-    height: calc(100% - 20px);
+    height: calc(100% - 60px);
     border-left:1px solid lightgray;
+    overflow-y:auto;
 }
 
 .member-list {
@@ -390,7 +401,8 @@ input {
 
 .message-list-wrapper {
     position:relative;
-    padding:20px;
+    padding-left:20px;
+    padding-right:20px;
     transition: background .2s;
 }
 

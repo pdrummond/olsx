@@ -10,7 +10,7 @@ Conversation = React.createClass({
         return (
             <li
                 onClick={this.onClick}
-                className={this.props.isActive?'conversation active':'conversation'}>
+                className={this.getClassName()}>
                 <i style={{float:'left', color:'#7089A9'}} className="fa fa-2x fa-comments-o"></i>
                 <div style={{paddingLeft:'40px'}}>
                     <span className="conversation-subject">{this.props.conv.subject}</span>
@@ -21,6 +21,17 @@ Conversation = React.createClass({
 
             </li>
         )
+    },
+
+    getClassName() {
+        var className = 'conversation';
+        if(this.props.isActive) {
+            className += ' active';
+        }
+        if(this.props.isSeen) {
+            className += ' seen';
+        }
+        return className;
     },
 
     onClick: function() {

@@ -13,6 +13,7 @@ ConversationList = React.createClass({
             return (
                 <Conversation
                     numNewMessages={this.numNewMessages(conv._id)}
+                    isSeen={this.isSeen(conv)}
                     isActive={conv._id == this.props.currentConversationId}
                     onClick={this.props.onConversationClicked} key={conv._id} conv={conv}/>
             );
@@ -27,6 +28,10 @@ ConversationList = React.createClass({
            }
         });
         return count;
+    },
+
+    isSeen: function(conv) {
+        return conv.seenList && conv.seenList.indexOf(Meteor.userId()) != -1;
     },
 
     render() {

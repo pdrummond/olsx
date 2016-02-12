@@ -320,6 +320,7 @@ input {
 }
 
 .message-item table {
+    font-size:14px;
     width:98%;
     border: 1px solid gray;
     border-collapse:collapse;
@@ -419,4 +420,26 @@ header {
     position: relative;
     top: -60px;
     right: 10px;
+}
+
+.markdown-content p:first-child{
+    margin:0;
+}
+
+.markdown-content code {
+    background-color: #f5f5f5;
+    font-family: Consolas, Monaco, Lucida Console, Liberation Mono, DejaVu Sans Mono, Bitstream Vera Sans Mono, Courier New, 'Bitstream Vera Sans Mono', Consolas, Courier, monospace;
+    padding: 2px 4px;
+    font-size: 90%;
+    color: #c7254e;
+    border-radius: 4px;
+}
+
+.markdown-content blockquote {
+    border-left: 2px solid #aaa;
+    padding: 10px;
+    padding-left: 20px;
+    margin: 0;
+    color: #aaa;
+    font-style: italic;
 }

@@ -10,7 +10,8 @@ Package.onUse(function(api) {
     'lib.js',
     'command-api.js',
     'message-api.js',
-    'filter-api.js'
+    'filter-api.js',
+    'stringutils-api.js'
   ]);
   api.export(['Ols']);
 });

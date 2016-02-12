@@ -79,6 +79,8 @@ ConversationView = React.createClass({
         Conversations.methods.removeConversation.call({conversationId: this.data.currentConversation._id}, function (err) {
             if (err) {
                 toastr.error("Unable to delete conversation", err.reason);
+            } else {
+                FlowRouter.go('homePage');
             }
         });
     }

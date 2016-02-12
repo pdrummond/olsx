@@ -16,8 +16,8 @@ MessageApi.prototype.saveCustomMessage = function(customMessageType, conversatio
         customMessageType: customMessageType,
         createdBy: Meteor.userId(),
         updatedBy: Meteor.userId(),
-        createdByUsername: Meteor.user().username,
-        updatedByUsername: Meteor.user().username
+        createdByName: Meteor.user().username,
+        updatedByName: Meteor.user().username
     }));
 };
 

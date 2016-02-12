@@ -63,53 +63,49 @@ Ols.Command.defineCommand('/task', function(ctx) {
                 Ols.Message.systemErrorMessage(ctx.conversationId, 'Invalid arguments for task set command. Type /task help for more info.');
             }
             break;
+        case 'refs': { //example: /task refs 42
+            var filter = {};
+            if (args.length > 2) {
+                var taskKey = parseInt(args[2]);
+                if (taskKey) {
+                    var refList = Refs.find({taskKey: taskKey}).fetch();
+                    console.log("/task refList: " + JSON.stringify(refList, null, 2));
+                    Ols.Message.saveCustomMessage('/task.refs', ctx.conversationId, {
+                        taskKey: taskKey,
+                        refs: refList
+                    });
+                } else {
+                    Ols.Message.systemErrorMessage(ctx.conversationId, 'Error running task refs command. Type /task help for more info.');
+                }
+            } else {
+                Ols.Message.systemErrorMessage(ctx.conversationId, 'Invalid arguments for task refs command. Type /task help for more info.');
+            }
+            break;
+        }
+        /* TODO: This will need to be implemented as a client-side command.
+           case 'jump': { //example: /msg jump 5664
+            if(args.length > 2) {
+                var msgSeq = parseInt(args[2]);
+                if(msgSeq) {
+                    FlowRouter.go('conversationPageStartSeq', {startMessageSeq: msgSeq});
+                } else {
+                    Ols.Message.systemErrorMessage(ctx.conversationId, 'Error running msg jump command. Type /msg help for more info.');
+                }
+            } else {
+                Ols.Message.systemErrorMessage(ctx.conversationId, 'Invalid arguments for msg jump command. Type /msg help for more info.');
+            }
+            break;
+        }*/
         default:
             Ols.Message.systemErrorMessage(ctx.conversationId, 'Invalid arguments for task command.  Type /task help for more info.');
             break;
     }
 });
 
-MessageListComponent = React.createClass({
-    render() {
-        //console.log("MessageListComponent render(" + JSON.stringify(this.props, null, 2) + ")");
-        if(this.props.ctx.tasks.length > 0) {
-            var key=400;
-            return (
-                <li className="message-item">
-                    <table>
-                        <tbody>
-                        <tr>
-                            <th>Key</th>
-                            <th>Status</th>
-                            <th>Created</th>
-                            <th>Description</th>
-                        </tr>
-                        {this.props.ctx.tasks.map(function (task) {
-                            return (
-                                <tr>
-                                    <td>{task.key}</td>
-                                    <td>{task.status}</td>
-                                    <td>by {task.createdByName} {moment(task.createdAt).fromNow()}</td>
-                                    <td>{task.description}</td>
-                                </tr>
-                            )
-                        })}
-                        </tbody>
-                    </table>
-                </li>
-            );
-        } else {
-            return (
-              <li>
-                  <i>You have no tasks - use <code>'/task add'</code> to create one.</i>
-              </li>
-            );
-
-        }
-    }
-});
-
 Ols.Command.defineComponent('/task.list', function(ctx) {
-    return <MessageListComponent key={ctx.key} ctx={ctx}/>;
+    return <TaskListMessage key={ctx.key} ctx={ctx}/>;
 });
 
+Ols.Command.defineComponent('/task.refs', function(ctx) {
+    return <RefListMessage key={ctx.key} ctx={ctx}/>;
+});

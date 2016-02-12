@@ -14,6 +14,7 @@
         <item url="file://$USER_HOME$/.meteor/packages/momentjs_moment/2.11.2/web.browser/meteor/export.js" />
         <item url="file://$USER_HOME$/.meteor/packages/ecmascript-runtime/0.2.6/web.browser/.npm/package/node_modules/meteor-ecmascript-runtime/client.js" />
         <item url="file://$USER_HOME$/.meteor/packages/momentjs_moment/2.11.2/web.browser/moment.js" />
+        <item url="file://$USER_HOME$/.meteor/packages/themeteorchef_commonmark/1.1.0/web.browser/packages/themeteorchef_commonmark.js" />
         <item url="file://$USER_HOME$/.meteor/packages/ejson/1.0.7/web.browser/packages/ejson.js" />
         <item url="file://$USER_HOME$/.meteor/packages/srp/1.0.4/web.browser/packages/srp.js" />
         <item url="file://$USER_HOME$/.meteor/packages/es5-shim/4.1.14/web.browser/import_globals.js" />
@@ -146,6 +147,7 @@
       <root url="file://$USER_HOME$/.meteor/packages/momentjs_moment/2.11.2/web.browser/meteor/export.js" />
       <root url="file://$USER_HOME$/.meteor/packages/ecmascript-runtime/0.2.6/web.browser/.npm/package/node_modules/meteor-ecmascript-runtime/client.js" />
       <root url="file://$USER_HOME$/.meteor/packages/momentjs_moment/2.11.2/web.browser/moment.js" />
+      <root url="file://$USER_HOME$/.meteor/packages/themeteorchef_commonmark/1.1.0/web.browser/packages/themeteorchef_commonmark.js" />
       <root url="file://$USER_HOME$/.meteor/packages/ejson/1.0.7/web.browser/packages/ejson.js" />
       <root url="file://$USER_HOME$/.meteor/packages/srp/1.0.4/web.browser/packages/srp.js" />
       <root url="file://$USER_HOME$/.meteor/packages/es5-shim/4.1.14/web.browser/import_globals.js" />

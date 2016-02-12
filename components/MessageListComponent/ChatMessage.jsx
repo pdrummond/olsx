@@ -27,9 +27,15 @@ ChatMessage = React.createClass({
                         <span
                             className="message-created-at"> {moment(this.props.message.createdAt).fromNow()} </span>
                     </div>
-                    <div className="message-content" style={{marginTop: '0px'}}>{this.props.message.content}</div>
+                    <div className="message-content markdown-content" style={{marginTop: '0px'}} dangerouslySetInnerHTML={ this.getHtmlContent( this.props.message.content ) } />
                 </div>
             </li>
         );
+    },
+
+    getHtmlContent: function(content) {
+        if ( content ) {
+            return { __html: parseMarkdown(content) };
+        }
     }
 });

@@ -189,6 +189,7 @@ MessageListContainer = React.createClass({
             updatedBy: Meteor.userId(),
             updatedByName: Meteor.user().username,
             createdAt: new Date(),
+            updatedAt: new Date(),
             content: content,
             messageType: Ols.MESSAGE_TYPE_CHAT
         };

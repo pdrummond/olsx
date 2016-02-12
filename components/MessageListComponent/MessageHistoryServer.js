@@ -1,7 +1,5 @@
 
 if(Meteor.isServer) {
-    ServerMessages = new Meteor.Collection('messages');
-
     Meteor.methods({
         loadMessages: function(opts) {
             console.log('> loadMessages(' + JSON.stringify(opts) + ')');
@@ -88,7 +86,9 @@ if(Meteor.isServer) {
                 message.isCommand = Ols.Command.commandExists(commandName);
             }
 
-            Meteor.call('insertAndBroadcastMessage', message);
+            message = Meteor.call('insertAndBroadcastMessage', message);
+
+            Meteor.call('detectRefsInMessage', message);
 
             if(commandName != null) {
 
@@ -113,6 +113,7 @@ if(Meteor.isServer) {
                 updatedByName: Ols.SYSTEM_USERNAME,
                 createdAt: new Date(),
                 content: content,
+                messageType: Ols.MESSAGE_TYPE_SYSTEM,
                 isSystem: true,
                 isSuccess: true
             });
@@ -128,23 +129,63 @@ if(Meteor.isServer) {
                updatedByName: Ols.SYSTEM_USERNAME,
                createdAt: new Date(),
                content: content,
+               messageType: Ols.MESSAGE_TYPE_SYSTEM,
                isSystem: true,
                isError: true
            });
         },
 
         insertAndBroadcastMessage: function(message) {
+            var now = new Date();
+            message.createdAt = now;
+            message.updatedAt = now;
             message.seq = incrementCounter('counters', message.conversationId);
             console.log("-- message seq is " + message.seq);
             var messageId = ServerMessages.insert(message);
+            console.log("-- >>> saved message:" + JSON.stringify(message, null, 2));
             message._id = messageId;
             console.log("-- broadcasted new message " + message.seq + " to all clients");
             Streamy.broadcast('incomingMessage', message);
+            return message;
+        },
+
+        detectRefsInMessage: function(message) {
+            console.log("> detectRefsInMessage");
+            var re = /#([\d]+)/g;
+            var matches;
+
+            do {
+                matches = re.exec(message.content);
+                if (matches) {
+                    var key = parseInt(matches[1]);
+                    if(key != null) {
+                        var task = Tasks.findOne({conversationId: message.conversationId, key: key});
+                        if (task != null) {
+                            console.log("DETECTED REF IN MESSAGE to task #" + key);
+                            console.log("task found: " + task.key + " (" + task._id + ")");
+                            Refs.methods.addRef.call({
+                                messageId: message._id,
+                                messageSeq: message.seq,
+                                messageContent: message.content,
+                                taskId: task._id,
+                                taskKey: key
+
+                            }, (err) => {
+                                if (err) {
+                                    if (err.message) {
+                                        console.error("Error adding ref: " + err.message);
+                                    } else {
+                                        console.error("- Error adding ref: " + err.reason);
+                                    }
+                                }
+                            });
+                        }
+                    }
+                }
+            } while (matches);
+            console.log("< detectRefsInMessage");
         }
     });
 }
 
-if(Meteor.isClient) {
-    ClientMessages = new Meteor.Collection(null);
-}
 

@@ -12,17 +12,22 @@ MessageList = React.createClass({
             var key = 0;
             return this.props.messages.map((message) => {
                 key++;
-                if(message.messageType && message.messageType == Ols.MESSAGE_TYPE_CUSTOM) {
+                switch(message.messageType) {
+                    case Ols.MESSAGE_TYPE_CUSTOM:
                     var componentFn = Ols.Command.getComponent(message.customMessageType);
                     var component = componentFn(message);
                     component.key = "{key}";
                     return component;
-                } else if(message.isSystem) {
+                    case Ols.MESSAGE_TYPE_SYSTEM:
                     var message = <SystemMessage key={key} message={message}/>;
                     return message;
-                } else {
+                    case Ols.MESSAGE_TYPE_CHAT:
                     var message = <ChatMessage key={key} message={message}/>;
                     return message;
+                    default: {
+                        console.error("Unrecognised message type: " + message.messageType);
+                        break;
+                    }
                 }
             });
         }

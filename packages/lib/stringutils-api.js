@@ -12,7 +12,7 @@ Ols.StringUtils = {
      */
     truncate: function(str, maxLength, opts) {
         opts = opts || {ellipsis:true};
-        if(str.length > maxLength) {
+        if(str && str.length > maxLength) {
             str = str.substring(0, maxLength);
             if(opts.ellipsis) {
                 str += "...";

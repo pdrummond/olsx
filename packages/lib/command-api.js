@@ -33,11 +33,19 @@ Command.prototype.componentExists = function(componentName) {
     return componentName in this._components;
 };
 Command.prototype.executeCommand = function(commandName, args, message) {
-    return this._commands[commandName]({
+    console.log("-- COMMAND_API: executing command '" + message.content + "'");
+    var result = this._commands[commandName]({
         args,
         conversationId: message.conversationId,
         message
     });
+    if (typeof result === "undefined") {
+        console.error("-- COMMAND_API: ERROR! Command '" + message.content + "' executed but no return value provided");
+    } else if(result == true) {
+        console.log("-- COMMAND_API: Command '" + message.content + "' executed SUCCESSFULLY.");
+    } else {
+        console.log("-- COMMAND_API: Command '" + message.content + "' executed and FAILED.");
+    }
 };
 
 Ols.Command = new Command();

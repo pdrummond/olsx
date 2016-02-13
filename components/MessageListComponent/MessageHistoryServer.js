@@ -74,37 +74,114 @@ if(Meteor.isServer) {
         },
 
         saveMessage: function(message) {
-            console.log("> saveMessage(" + JSON.stringify(message, null, 2) + ")");
+            try {
+                console.log("> saveMessage(). "
+                + "messageType=" + message.messageType
+                + ", conversationId=" + message.conversationId
+                + ", content=" + message.content ? Ols.StringUtils.truncate(message.content, 100) : "");
 
-            var commandName;
-
-            if(message.content && message.content.startsWith('/')) {
-                var commandData = message.content.split(" ");
-                var commandName = commandData[0];
-
-                console.log("-- command '" + commandName + "' detected");
-                message.isCommand = Ols.Command.commandExists(commandName);
-            }
-
-            message = Meteor.call('insertAndBroadcastMessage', message);
-
-            Meteor.call('detectRefsInMessage', message);
-
-            if(commandName != null) {
-
-                if(message.isCommand) {
-                    console.log('-- executing command "' + commandName + "'");
-                    Ols.Command.executeCommand(commandName, commandData, message);
-                } else {
-                    Meteor.call('systemErrorMessage', message.conversationId, 'Invalid command: "' + commandName + "'");
+                var commandName;
+                //Need to detect command before saving the message to ensure message.isCommand = true
+                //is persisted.
+                if (message.content && message.content.startsWith('/')) {
+                    console.log("-- message has been recognised as a command (" + message.content + ")");
+                    var commandData = message.content.split(" ");
+                    commandName = commandData[0];
+                    message.isCommand = Ols.Command.commandExists(commandName);
+                    if (message.isCommand) {
+                        console.log("-- message is a recognised command and will be executed after message has been saved");
+                    } else {
+                        console.error("-- message is NOT a recognised command so will just be added as a normal chat message");
+                    }
                 }
-            }
 
-            console.log("< saveMessage()")
+                message = Meteor.call('insertAndBroadcastMessage', message);
+
+                if (message.messageType == Ols.MESSAGE_TYPE_CHAT && message.isCommand == false) {
+                    //Only check for refs if message is a chat message and NOT a command (hashtags are used
+                    // in commands to identify messages, not reference them).
+                    Meteor.call('detectRefsInMessage', message);
+                }
+
+                if (commandName != null) {
+                    console.log("-- command detected (" + message.content + ")");
+                    if (message.isCommand) {
+                        Ols.Command.executeCommand(commandName, commandData, message);
+                    } else {
+                        console.error("-- command is not valid (" + message.content + "). Generating error message...");
+                        Meteor.call('systemErrorMessage', message.conversationId, 'Invalid command: "' + commandName + "'");
+                    }
+                }
+                console.log("< saveMessage()");
+                return message;
+            } catch(err) {
+                console.error("Unexpected exception in MessageHistoryServer.saveMessage: " + err.type);
+                console.error("Error JSON: " + JSON.stringify(err));
+            }
+        },
+
+        insertAndBroadcastMessage: function(message) {
+            var now = new Date();
+            message.createdAt = now;
+            message.updatedAt = now;
+            message.seq = incrementCounter('counters', message.conversationId);
+            console.log("-- saving message " + message.seq + "...");
+            var messageId = ServerMessages.insert(message);
+            console.log("-- message " + message.seq + " saved");
+            message._id = messageId;
+            console.log("-- broadcasting new message " + message.seq + " to all clients");
+            Streamy.broadcast('incomingMessage', message);
+            return message;
+        },
+
+        detectRefsInMessage: function(message) {
+            if(message.content) {
+                var re = /#([\d]+)/g;
+                var matches;
+                console.log("-- checking for refs in message " + message.seq);
+                do {
+                    matches = re.exec(message.content);
+                    if (matches) {
+                        var key = parseInt(matches[1]);
+                        console.log("-- ref to task " + key + " found for message " + message.seq);
+                        if (key != null) {
+                            var task = Tasks.findOne({conversationId: message.conversationId, key: key});
+                            if (task != null) {
+                                console.log("-- task found for key " + key + ".  Adding ref...");
+                                Refs.methods.addRef.call({
+                                    messageId: message._id,
+                                    messageSeq: message.seq,
+                                    messageContent: message.content,
+                                    taskId: task._id,
+                                    taskKey: key
+
+                                }, (err, ref) => {
+                                    if (err) {
+                                        if (err.message) {
+                                            console.error("Error adding ref: " + err.message);
+                                        } else {
+                                            console.error("- Error adding ref: " + err.reason);
+                                        }
+                                    } else {
+                                        console.log("-- ref " + ref._id + " successfully created for task " + key);
+                                    }
+                                });
+
+                            }
+                        } else {
+                            console.log("-- No task found for " + key + ".  Ignoring ref.");
+                        }
+                    } else {
+                        console.log("-- no more refs found");
+                    }
+                } while (matches);
+            } else {
+                console.log("-- Ignoring ref detection in message " + message.seq + " as it has no content field");
+            }
         },
 
         systemSuccessMessage: function(conversationId, content) {
-            console.log('> systemSuccessMessage(conversationId=' + conversationId + ', content=' + content + ')');
+            console.log("-- saving system success message for conversation " + conversationId + ": " + content);
             Meteor.call('insertAndBroadcastMessage', {
                 conversationId: conversationId,
                 createdBy: Ols.SYSTEM_USERID,
@@ -117,83 +194,24 @@ if(Meteor.isServer) {
                 isSystem: true,
                 isSuccess: true
             });
+            console.log("-- system success message saved");
         },
 
         systemErrorMessage: function(conversationId, content) {
-            console.log('> systemErrorMessage(conversationId=' + conversationId + ', content=' + content + ')');
-           Meteor.call('insertAndBroadcastMessage', {
-               conversationId: conversationId,
-               createdBy: Ols.SYSTEM_USERID,
-               createdByName: Ols.SYSTEM_USERNAME,
-               updatedBy: Ols.SYSTEM_USERID,
-               updatedByName: Ols.SYSTEM_USERNAME,
-               createdAt: new Date(),
-               content: content,
-               messageType: Ols.MESSAGE_TYPE_SYSTEM,
-               isSystem: true,
-               isError: true
-           });
-        },
-
-        insertAndBroadcastMessage: function(message) {
-            var now = new Date();
-            message.createdAt = now;
-            message.updatedAt = now;
-            message.seq = incrementCounter('counters', message.conversationId);
-            console.log("-- message seq is " + message.seq);
-            var messageId = ServerMessages.insert(message);
-            console.log("-- >>> saved message:" + JSON.stringify(message, null, 2));
-            message._id = messageId;
-            console.log("-- broadcasted new message " + message.seq + " to all clients");
-            Streamy.broadcast('incomingMessage', message);
-            return message;
-        },
-
-        detectRefsInMessage: function(message) {
-            console.log("> detectRefsInMessage");
-            if(message.content) {
-                var re = /#([\d]+)/g;
-                var matches;
-                console.log("-- detectRefsInMessage 1");
-                do {
-                    console.log("-- detectRefsInMessage 2");
-                    matches = re.exec(message.content);
-                    console.log("-- detectRefsInMessage 3");
-                    if (matches) {
-                        console.log("-- detectRefsInMessage 4");
-                        var key = parseInt(matches[1]);
-                        console.log("-- detectRefsInMessage 5");
-                        if (key != null) {
-                            console.log("-- detectRefsInMessage 6");
-                            var task = Tasks.findOne({conversationId: message.conversationId, key: key});
-                            console.log("-- detectRefsInMessage 7");
-                            if (task != null) {
-                                console.log("DETECTED REF IN MESSAGE to task #" + key);
-                                console.log("task found: " + task.key + " (" + task._id + ")");
-                                Refs.methods.addRef.call({
-                                    messageId: message._id,
-                                    messageSeq: message.seq,
-                                    messageContent: message.content,
-                                    taskId: task._id,
-                                    taskKey: key
-
-                                }, (err) => {
-                                    if (err) {
-                                        if (err.message) {
-                                            console.error("Error adding ref: " + err.message);
-                                        } else {
-                                            console.error("- Error adding ref: " + err.reason);
-                                        }
-                                    }
-                                });
-                            }
-                        }
-                    }
-                } while (matches);
-            } else {
-                console.log("-- Ignoring message as no content field");
-            }
-            console.log("< detectRefsInMessage");
+            console.log("-- saving system ERROR message for conversation " + conversationId + ": " + content);
+            Meteor.call('insertAndBroadcastMessage', {
+                conversationId: conversationId,
+                createdBy: Ols.SYSTEM_USERID,
+                createdByName: Ols.SYSTEM_USERNAME,
+                updatedBy: Ols.SYSTEM_USERID,
+                updatedByName: Ols.SYSTEM_USERNAME,
+                createdAt: new Date(),
+                content: content,
+                messageType: Ols.MESSAGE_TYPE_SYSTEM,
+                isSystem: true,
+                isError: true
+            });
+            console.log("-- system error message saved");
         }
     });
 }

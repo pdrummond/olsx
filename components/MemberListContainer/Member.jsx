@@ -12,8 +12,7 @@ Member = React.createClass({
         switch(data.userStatus) {
             case 'viewing': data.userStatusLabel = 'Viewing this conversation'; break;
             case 'online': data.userStatusLabel = 'Online, elsewhere'; break;
-            case 'offline': data.userStatusLabel = 'Offline, probably slacking off'; break;
-
+            case 'offline': data.userStatusLabel = 'Offline'; break;
         }
 
         return data;

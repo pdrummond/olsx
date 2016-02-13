@@ -151,38 +151,48 @@ if(Meteor.isServer) {
 
         detectRefsInMessage: function(message) {
             console.log("> detectRefsInMessage");
-            var re = /#([\d]+)/g;
-            var matches;
+            if(message.content) {
+                var re = /#([\d]+)/g;
+                var matches;
+                console.log("-- detectRefsInMessage 1");
+                do {
+                    console.log("-- detectRefsInMessage 2");
+                    matches = re.exec(message.content);
+                    console.log("-- detectRefsInMessage 3");
+                    if (matches) {
+                        console.log("-- detectRefsInMessage 4");
+                        var key = parseInt(matches[1]);
+                        console.log("-- detectRefsInMessage 5");
+                        if (key != null) {
+                            console.log("-- detectRefsInMessage 6");
+                            var task = Tasks.findOne({conversationId: message.conversationId, key: key});
+                            console.log("-- detectRefsInMessage 7");
+                            if (task != null) {
+                                console.log("DETECTED REF IN MESSAGE to task #" + key);
+                                console.log("task found: " + task.key + " (" + task._id + ")");
+                                Refs.methods.addRef.call({
+                                    messageId: message._id,
+                                    messageSeq: message.seq,
+                                    messageContent: message.content,
+                                    taskId: task._id,
+                                    taskKey: key
 
-            do {
-                matches = re.exec(message.content);
-                if (matches) {
-                    var key = parseInt(matches[1]);
-                    if(key != null) {
-                        var task = Tasks.findOne({conversationId: message.conversationId, key: key});
-                        if (task != null) {
-                            console.log("DETECTED REF IN MESSAGE to task #" + key);
-                            console.log("task found: " + task.key + " (" + task._id + ")");
-                            Refs.methods.addRef.call({
-                                messageId: message._id,
-                                messageSeq: message.seq,
-                                messageContent: message.content,
-                                taskId: task._id,
-                                taskKey: key
-
-                            }, (err) => {
-                                if (err) {
-                                    if (err.message) {
-                                        console.error("Error adding ref: " + err.message);
-                                    } else {
-                                        console.error("- Error adding ref: " + err.reason);
+                                }, (err) => {
+                                    if (err) {
+                                        if (err.message) {
+                                            console.error("Error adding ref: " + err.message);
+                                        } else {
+                                            console.error("- Error adding ref: " + err.reason);
+                                        }
                                     }
-                                }
-                            });
+                                });
+                            }
                         }
                     }
-                }
-            } while (matches);
+                } while (matches);
+            } else {
+                console.log("-- Ignoring message as no content field");
+            }
             console.log("< detectRefsInMessage");
         }
     });

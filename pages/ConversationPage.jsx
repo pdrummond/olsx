@@ -47,7 +47,6 @@ ConversationPage = React.createClass({
                 <div className="container">
                     <ConversationListContainer
                         incomingMessages={this.state.incomingMessages}
-                        //currentConversationId={this.data.currentConversationId}
                         onConversationClicked={this.onConversationClicked}
                         conversationList={this.data.conversationList}/>
                     <ConversationView onOtherConversationNewMessage={this.onOtherConversationNewMessage}/>

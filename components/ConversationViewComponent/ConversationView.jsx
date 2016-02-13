@@ -5,16 +5,16 @@ ConversationView = React.createClass({
         console.log("getMeteorData()");
         var data = {};
         data.currentConversation = {};
-        var currentConversationId = FlowRouter.getParam('conversationId');
-        var currentConversationHandle = Meteor.subscribe('currentConversation', currentConversationId);
-        var membersHandle = Meteor.subscribe('currentConversationMembers', currentConversationId);
+        data.currentConversationId = FlowRouter.getParam('conversationId');
+        var currentConversationHandle = Meteor.subscribe('currentConversation', data.currentConversationId);
+        var membersHandle = Meteor.subscribe('currentConversationMembers', data.currentConversationId);
         data.isLoading = true;
         if(membersHandle.ready() && currentConversationHandle.ready()) {
             data.authInProcess = Meteor.loggingIn();
             data.canShow = Meteor.user() != null && Members.findOne({userId: Meteor.userId()}) != null;
 
-            data.currentConversation = Conversations.findOne(currentConversationId);
-            data.membersList = Members.find({conversationId: currentConversationId}, {sort: {createdAt: 1}}).fetch();
+            data.currentConversation = Conversations.findOne(data.currentConversationId);
+            data.membersList = Members.find({conversationId: data.currentConversationId}, {sort: {createdAt: 1}}).fetch();
 
             data.startMessageSeq = parseInt(FlowRouter.getParam('startMessageSeq')) || 0;
             data.messagesCountLimit = parseInt(FlowRouter.getParam('messagesCountLimit')) || Ols.DEFAULT_PAGE_SIZE;
@@ -25,7 +25,17 @@ ConversationView = React.createClass({
     },
 
     render() {
-        if(this.data.canShow == false) {
+        if (this.data.currentConversationId == null) {
+            return (
+                <div className="container">
+                    <div className="empty-conversation-list">
+                        <p><b>Welcome to OpenLoops!</b></p>
+                        <div><i className="fa fa-smile-o" style={{'fontSize':'20em', 'color': '#FF7503'}}></i></div>
+                        <p>To get started, either create a new conversation or select an existing one.</p>
+                    </div>
+                </div>
+            );
+        } else if(this.data.canShow == false) {
             return (
                 <div className="container">
                     <div className="empty-conversation-list">
@@ -58,7 +68,7 @@ ConversationView = React.createClass({
     },
 
     componentDidMount: function () {
-       // console.trace("ConversationPage.componentDidMount");
+        // console.trace("ConversationPage.componentDidMount");
     },
 
     componentDidUpdate: function () {

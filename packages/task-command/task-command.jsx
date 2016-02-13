@@ -191,11 +191,10 @@ function taskListSubCommand(ctx) {
 }
 
 function taskRefsSubCommand(ctx) {
-    var ok = false;
-    var args = ctx.args;
     /*
      Command example: /task #2 refs
      */
+    var args = ctx.args;
     var ok = false;
     var filter = {};
     if (args.length > 2) {
@@ -238,9 +237,9 @@ function taskRefsSubCommand(ctx) {
 
 
 Ols.Command.defineComponent('/task.list', function(ctx) {
-    return <TaskListMessage key={ctx.key} ctx={ctx}/>;
+    return <TaskListMessage key={ctx._id} ctx={ctx}/>;
 });
 
 Ols.Command.defineComponent('/task.refs', function(ctx) {
-    return <RefListMessage key={ctx.key} ctx={ctx}/>;
+    return <RefListMessage key={ctx._id} ctx={ctx}/>;
 });

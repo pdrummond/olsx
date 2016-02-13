@@ -2,7 +2,6 @@ TaskListMessage = React.createClass({
     render() {
         var self = this;
         if(this.props.ctx.tasks.length > 0) {
-            var key=400;
             return (
                 <li className="message-item">
                     <table>
@@ -15,7 +14,7 @@ TaskListMessage = React.createClass({
                         </tr>
                         {this.props.ctx.tasks.map(function (task) {
                             return (
-                                <tr>
+                                <tr key={task._id}>
                                     <td>{task.key}</td>
                                     <td>{task.status}</td>
                                     <td>by {task.createdByName} {moment(task.createdAt).fromNow()}</td>

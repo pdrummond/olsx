@@ -14,7 +14,7 @@ RefListMessage = React.createClass({
                         </tr>
                         {this.props.ctx.refs.map(function (ref) {
                             return (
-                                <tr>
+                                <tr key={ref._id}>
                                     <td>{ref.messageSeq}</td>
                                     <td>{ref.createdByName}</td>
                                     <td style={{minWidth:'120px'}}>{moment(ref.createdAt).fromNow()}</td>

@@ -15,7 +15,7 @@ MessageBox = React.createClass({
                               onKeyDown={this.onKeyDown}
                               type="text"
                               name="message"
-                              placeholder="Enter message..."
+                              placeholder="Type here to add message..."
                               value={this.state.content}
                     />
                 </form>

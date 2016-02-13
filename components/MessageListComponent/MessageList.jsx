@@ -5,7 +5,9 @@ MessageList = React.createClass({
         if(this.props.messages == null || this.props.messages.length == 0) {
             return (
                 <div>
-                    <p style={{padding:'30px'}}><i>There are no Messages in this conversation</i></p>
+                    <p style={{padding:'30px', fontSize: '20px', color: 'gray', fontWeight: 100}}>
+                        {this.getRandomEmptyMessage()}
+                    </p>
                 </div>
             );
         } else {
@@ -72,6 +74,29 @@ MessageList = React.createClass({
         console.log('isScrollBottom: ' + atBottom);
         return atBottom;
 
+    },
+
+    getRandomEmptyMessage() {
+        var msgs = [
+            "So this conversation is empty right now, but not for long!",
+            "An empty conversation this is.  Will you be the first to get the discussion moving? :-)",
+            "Who will be the first to add a message to this wonderful new conversation?",
+            "Everyone knows that communication makes a team more productive, so let's get this conversation started!",
+            "Today, we are going to be super productive and this conversation is where it all begins",
+            "42 is the answer, will the question be somewhere in this conversation?"
+        ];
+        return msgs[this.getRandomInt(msgs.length-1)];
+    },
+
+    /**
+     * Returns a random integer between min (inclusive) and max (inclusive)
+     * Using Math.round() will give you a non-uniform distribution!
+     */
+    getRandomInt(max) {
+        var min = 0;
+        var num = Math.floor(Math.random() * (max - min + 1)) + min;
+        console.log("getRandomInt(" + max + ": " + num);
+        return num;
     }
 
 });

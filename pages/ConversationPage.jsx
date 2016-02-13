@@ -22,6 +22,7 @@ ConversationPage = React.createClass({
 
         if(conversationsHandle.ready() && usersHandle.ready() && userStatusHandle.ready()) {
             data.conversationList = Conversations.find({}, {sort: {updatedAt: -1}}).fetch();
+            console.log("ConversationPage.getMeteorData: " + JSON.stringify(data.conversationList));
             data.authInProcess = Meteor.loggingIn();
         }
         return data;
@@ -49,10 +50,11 @@ ConversationPage = React.createClass({
                         incomingMessages={this.state.incomingMessages}
                         onConversationClicked={this.onConversationClicked}
                         conversationList={this.data.conversationList}/>
-                    <ConversationView onOtherConversationNewMessage={this.onOtherConversationNewMessage}/>
+                    <ConversationView
+                        onDeleteLinkClicked={this.onDeleteLinkClicked}
+                        onOtherConversationNewMessage={this.onOtherConversationNewMessage}/>
                 </div>
             );
-
         }
     },
 
@@ -74,4 +76,12 @@ ConversationPage = React.createClass({
         FlowRouter.go('conversationPageLatest', {conversationId: conv._id}, {scrollBottom:true});
     },
 
+    onDeleteLinkClicked(conversationId) {
+        Conversations.methods.removeConversation.call({conversationId: conversationId}, function (err) {
+            if (err) {
+                toastr.error("Unable to delete conversation", err.reason);
+            }
+        });
+        FlowRouter.go('homePage');
+    }
 });

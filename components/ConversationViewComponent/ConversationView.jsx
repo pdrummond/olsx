@@ -67,6 +67,10 @@ ConversationView = React.createClass({
         }
     },
 
+    onDeleteLinkClicked: function() {
+        this.props.onDeleteLinkClicked(this.data.currentConversationId);
+    },
+
     componentDidMount: function () {
         // console.trace("ConversationPage.componentDidMount");
     },
@@ -83,15 +87,5 @@ ConversationView = React.createClass({
                 });
             }
         }
-    },
-
-    onDeleteLinkClicked() {
-        Conversations.methods.removeConversation.call({conversationId: this.data.currentConversation._id}, function (err) {
-            if (err) {
-                toastr.error("Unable to delete conversation", err.reason);
-            } else {
-                FlowRouter.go('homePage');
-            }
-        });
     }
 })

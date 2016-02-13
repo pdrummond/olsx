@@ -21,7 +21,7 @@ ConversationListContainer = React.createClass({
                     <input className="conversation-input"
                            type="text"
                            ref="textInput"
-                           placeholder="Type here to start a conversation" />
+                           placeholder="Type subject to start a conversation" />
                 </form>
                 <ConversationList
                     currentConversationId={this.data.currentConversationId}

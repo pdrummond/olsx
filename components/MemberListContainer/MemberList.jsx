@@ -5,7 +5,9 @@ MemberList = React.createClass({
                 return <Member onClick={this.props.onMemberClicked} key={member._id} member={member}/>;
             });
         } else {
-            return <p>Loading...</p>;
+            return <p style={{textAlign: 'center', color: 'lightgray'}}>
+                <i className="fa fa-spin fa-2x fa-spinner"></i>
+            </p>;
         }
     },
 

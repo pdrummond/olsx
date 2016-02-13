@@ -83,7 +83,7 @@ MessageList = React.createClass({
             "Who will be the first to add a message to this wonderful new conversation?",
             "Everyone knows that communication makes a team more productive, so let's get this conversation started!",
             "Today, we are going to be super productive and this conversation is where it all begins",
-            "42 is the answer, will the question be somewhere in this conversation?"
+            "Let's replace this message with something of more substance shall we? Who's going to be first?"
         ];
         return msgs[this.getRandomInt(msgs.length-1)];
     },

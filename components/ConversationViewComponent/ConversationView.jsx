@@ -49,13 +49,7 @@ ConversationView = React.createClass({
             return (
                 <div className="container">
                     <MemberListContainer conversationId={this.data.currentConversation._id} memberList={this.data.membersList}/>
-                    <header>
-                        <h2><i className="fa fa-comments-o"></i> {this.data.currentConversation.subject}</h2>
-                        <div className="header-buttons">
-                            <a style={{color:'white;font-size:12px', textDecoration:'none'}} onClick={this.onDeleteLinkClicked} href=""><i
-                                className="fa fa-trash"></i> Delete</a>
-                        </div>
-                    </header>
+                    {this.renderHeader()}
                     <MessageListContainer
                         ref="messageListContainer"
                         conversationId={this.data.currentConversation._id}
@@ -63,6 +57,29 @@ ConversationView = React.createClass({
                         messagesCountLimit={this.data.messagesCountLimit}
                         onOtherConversationNewMessage={this.props.onOtherConversationNewMessage} />
                 </div>
+            );
+        }
+    },
+
+    renderHeader() {
+        if(this.isLoading) {
+            return (
+            <header>
+                <h2>
+                    <i className="fa fa-spin fa-2x fa-spinner" style={{color:'#01588A', position:'relative', top:'-10px'}}></i>
+                </h2>
+            </header>
+            );
+        } else {
+            return(
+                <header>
+                    <h2><i className="fa fa-comments-o"></i> {this.data.currentConversation.subject}</h2>
+                    <div className="header-buttons">
+                        <a style={{color:'white;font-size:12px', textDecoration:'none'}} onClick={this.onDeleteLinkClicked} href="">
+                            <i className="fa fa-trash"></i> Delete
+                        </a>
+                    </div>
+                </header>
             );
         }
     },

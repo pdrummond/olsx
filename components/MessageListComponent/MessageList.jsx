@@ -46,7 +46,7 @@ MessageList = React.createClass({
                 <MessageBox
                     onUserIsTyping={this.props.onUserIsTyping}
                     onMessageAdded={this.props.onMessageAdded} />
-                <div style={{height:'10px'}} className='user-is-typing'>{this.props.userIsTypingMsg}</div>
+                <UserIsTypingAlert conversationId={this.props.conversationId}/>
                 <div id="incoming-messages-toast"
                      onClick={this.props.onIncomingMessageToastClicked}
                      className={this.props.incomingMessageCount == 0? 'hidden':''}>

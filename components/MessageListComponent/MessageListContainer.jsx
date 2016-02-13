@@ -10,23 +10,6 @@ MessageListContainer = React.createClass({
         onOtherConversationNewMessage: React.PropTypes.func
     },
 
-    getInitialState() {
-        return {
-            userIsTypingMsg: '',
-        }
-    },
-
-    componentDidMount() {
-        var self = this;
-        this.userIsTypingTimeout = setInterval(function() {
-            self.setState({'userIsTypingMsg': ''});
-        }, 2000);
-    },
-
-    componentWillUnmount() {
-        clearInterval(this.userIsTypingTimeout);
-    },
-
     getMeteorData() {
         var self = this;
         Streamy.on('incomingMessage', function(msg) {
@@ -62,13 +45,6 @@ MessageListContainer = React.createClass({
                 self.props.onOtherConversationNewMessage(msg);
             }
         });
-        Streamy.on('userIsTyping', function(ctx) {
-            if(ctx.userId != Meteor.userId()) {
-                if(ctx.conversationId == self.props.conversationId) {
-                   self.setState({'userIsTypingMsg': ctx.username + " is typing.."});
-                }
-            }
-        });
         return {};
     },
 
@@ -88,7 +64,7 @@ MessageListContainer = React.createClass({
                 showForwardLink={this.state.showForwardLink}
                 showBackwardLink={this.state.showBackwardLink}
                 incomingMessageCount={this.state.incomingMessageCount}
-                userIsTypingMsg={this.state.userIsTypingMsg}
+                conversationId={this.props.conversationId}
                 onMessageAdded={this.onMessageAdded}
                 onUserIsTyping={this.onUserIsTyping}
                 onLoadOlderLinkClicked={this.onLoadOlderLinkClicked}

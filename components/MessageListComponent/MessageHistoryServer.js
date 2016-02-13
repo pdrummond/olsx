@@ -78,7 +78,7 @@ if(Meteor.isServer) {
                 console.log("> saveMessage(). "
                 + "messageType=" + message.messageType
                 + ", conversationId=" + message.conversationId
-                + ", content=" + message.content ? Ols.StringUtils.truncate(message.content, 100) : "");
+                + ", content=" + (message.content ? Ols.StringUtils.truncate(message.content, 100) : ""));
 
                 var commandName;
                 //Need to detect command before saving the message to ensure message.isCommand = true

@@ -11,6 +11,9 @@ if(Meteor.isServer) {
             var conversationMessageCount = ServerMessages.find({conversationId: opts.conversationId}).count();
             console.log('-- Conversation has ' + conversationMessageCount + ' messages in total');
 
+            var firstMessage = ServerMessages.findOne({conversationId: opts.conversationId, seq: 0});
+            console.log('-- First message is ' + JSON.stringify(firstMessage, null, 4));
+
             var latestMessage = ServerMessages.findOne({conversationId: opts.conversationId, seq: conversationMessageCount});
             console.log('-- Latest message is ' + JSON.stringify(latestMessage, null, 4));
 

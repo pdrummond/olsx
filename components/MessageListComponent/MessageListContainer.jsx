@@ -10,6 +10,14 @@ MessageListContainer = React.createClass({
         onOtherConversationNewMessage: React.PropTypes.func
     },
 
+    getInitialState() {
+        return {
+            messages: [],
+            newMessages: [],
+            incomingMessageCount:0
+        }
+    },
+
     getMeteorData() {
         var self = this;
         Streamy.on('incomingMessage', function(msg) {
@@ -18,7 +26,7 @@ MessageListContainer = React.createClass({
                 var incomingMessageCount = 0;
                 if (self.isInScrollBack()/* && msg.createdBy != Meteor.userId()*/) {
                     incomingMessageCount = self.state.incomingMessageCount || 0;
-                    self.setState({incomingMessageCount: incomingMessageCount + 1});
+                    self.setState({newMessages: self.state.newMessages.concat([msg]), incomingMessageCount: incomingMessageCount + 1});
                 } else {
                     /*
                      Might need to improve this - it works for now but not ideal.
@@ -48,13 +56,6 @@ MessageListContainer = React.createClass({
         return {};
     },
 
-    getInitialState() {
-        return {
-            messages: [],
-            incomingMessageCount:0,
-        }
-    },
-
     render() {
         //console.log('render: state is ' + JSON.stringify(this.state, null, 4));
         return (
@@ -76,6 +77,7 @@ MessageListContainer = React.createClass({
 
     onIncomingMessageToastClicked: function() {
         FlowRouter.go('conversationPageLatest', {conversationId: this.props.conversationId}, {scrollBottom: true});
+        this.setState({'messages': this.state.messages.concat(this.state.newMessages), incomingMessageCount: 0});
         this.scrollBottom();
     },
 

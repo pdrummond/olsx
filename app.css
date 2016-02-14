@@ -232,7 +232,7 @@ main {
     width: 150px;
     text-align: center;
     margin: auto auto;
-    top: -130px;
+    top: -135px;
 }
 
 #incoming-messages-toast :hover {

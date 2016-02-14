@@ -29,7 +29,7 @@ RefListMessage = React.createClass({
         } else {
             return (
                 <li className="message-item">
-                    <i>No references found for task {this.props.ctx.taskKey}.  ({this.props.ctx.seq})</i>
+                    <i>No references found for task {this.props.ctx.taskKey}.</i>
                 </li>
             );
 

@@ -29,7 +29,7 @@ TaskListMessage = React.createClass({
         } else {
             return (
                 <li className="message-item">
-                    <i>You have no tasks - use <code>'/task add'</code> to create one. ({this.props.ctx.seq})</i>
+                    <i>You have no tasks - use <code>'/task add'</code> to create one.</i>
                 </li>
             );
 

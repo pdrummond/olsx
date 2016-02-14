@@ -11,13 +11,18 @@ if(Meteor.isServer) {
                 console.log('-- start message is 0 so finding latest page of messages...');
 
                 var latestMessage = ServerMessages.findOne({conversationId: opts.conversationId}, {sort: {createdAt: -1}});
-                var latestSeq = latestMessage.seq;
-                console.log('-- seq for latest message is ' + latestSeq);
-                opts.startMessageSeq = (latestSeq - opts.messagesCountLimit)+1;
-                if(opts.startMessageSeq < 1) {
+                if(latestMessage) {
+                    var latestSeq = latestMessage.seq;
+                    console.log('-- seq for latest message is ' + latestSeq);
+                    opts.startMessageSeq = (latestSeq - opts.messagesCountLimit) + 1;
+                    if (opts.startMessageSeq < 1) {
+                        opts.startMessageSeq = 1;
+                    }
+                    console.log('-- start message seq for latest page is therefore ' + opts.startMessageSeq);
+                } else {
+                    console.log('-- There are no messages in this conversation so the seq is set to 1');
                     opts.startMessageSeq = 1;
                 }
-                console.log('-- start message seq for latest page is therefore ' + opts.startMessageSeq);
             }
 
             /*

@@ -274,7 +274,7 @@ main {
 }
 
 .conversation {
-    padding:10px;
+    padding:5px;
     vertical-align: middle;
     transition: background .2s;
     color: #7089A9;

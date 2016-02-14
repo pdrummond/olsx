@@ -11,12 +11,15 @@ Conversation = React.createClass({
             <li
                 onClick={this.onClick}
                 className={this.getClassName()}>
-                <i style={{float:'left', color:'#7089A9'}} className="fa fa-2x fa-comments-o"></i>
+                <i style={{float:'left', color:'#7089A9', position:'relative', top:'5px'}} className="fa fa-2x fa-comments-o"></i>
                 <div style={{paddingLeft:'40px'}}>
                     <span className="conversation-subject">{this.props.conv.subject}</span>
                     <span className={this.props.numNewMessages == 0 ?"hide conversation-new-messages-badge":"conversation-new-messages-badge"}>
                         {this.props.numNewMessages}
                     </span>
+                    <div style={{fontSize:'12px', color:'gray', position:'relative', top:'-10px'}}>
+                        Created by {this.props.conv.createdByName} {moment(this.props.conv.createdAt).fromNow()}
+                    </div>
                 </div>
 
             </li>

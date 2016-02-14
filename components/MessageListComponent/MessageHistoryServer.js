@@ -98,10 +98,12 @@ if(Meteor.isServer) {
 
                 message = Meteor.call('insertAndBroadcastMessage', message);
 
-                if (message.messageType == Ols.MESSAGE_TYPE_CHAT && message.isCommand == false) {
-                    //Only check for refs if message is a chat message and NOT a command (hashtags are used
+                if (message.messageType == Ols.MESSAGE_TYPE_CHAT && !message.isCommand) {
+                    //Only check for refs/mentions if message is a chat message and NOT a command (hashtags/at-signs are used
                     // in commands to identify messages, not reference them).
                     Meteor.call('detectRefsInMessage', message);
+
+                    Meteor.call('detectMentionsInMessage', message);
                 }
 
                 if (commandName != null) {
@@ -140,6 +142,34 @@ if(Meteor.isServer) {
             console.log("-- broadcasting new message " + message.seq + " to all clients");
             Streamy.broadcast('incomingMessage', message);
             return message;
+        },
+
+        detectMentionsInMessage: function(message) {
+            console.log("> detectMentionsInMessage");
+            var re = /@([\w\.-]+)/g;
+            var matches;
+
+            do {
+                matches = re.exec(message.content);
+                if (matches && matches[1] != 'loopbot') {
+                    var toUser = Meteor.users.findOne({username: matches[1]});
+                    if(toUser != null) {
+                        console.log("MENTION DETECTED: " + JSON.stringify(toUser));
+
+                        var data = {
+                            type: 'new-message-mention',
+                            fromUserId: Meteor.userId(),
+                            fromUsername: Meteor.user().username,
+                            toUserId: toUser._id,
+                            messageId: message._id,
+                            messageContent: message.content
+                        };
+                        Streamy.sessionsForUsers(toUser._id).emit('mention', data);
+                        //Streamy.broadcast('mention', data);
+                    }
+                }
+            } while (matches);
+            console.log("< detectMentionsInMessage");
         },
 
         detectRefsInMessage: function(message) {

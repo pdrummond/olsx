@@ -13,17 +13,20 @@ MessageList = React.createClass({
         } else {
             return this.props.messages.map((message) => {
                 switch(message.messageType) {
+                    case Ols.MESSAGE_TYPE_LOOPBOT:
+                        return <LoopBotMessage key={message._id} message={message}/>;
+                        break;
                     case Ols.MESSAGE_TYPE_CUSTOM:
-                    var componentFn = Ols.Command.getComponent(message.customMessageType);
-                    var component = componentFn(message);
-                    //component.key = "{message._id}";
-                    return component;
+                        var componentFn = Ols.Command.getComponent(message.customMessageType);
+                        var component = componentFn(message);
+                        return component;
+                        break;
                     case Ols.MESSAGE_TYPE_SYSTEM:
-                    var message = <SystemMessage key={message._id} message={message}/>;
-                    return message;
+                        return <SystemMessage key={message._id} message={message}/>;
+                        break;
                     case Ols.MESSAGE_TYPE_CHAT:
-                    var message = <ChatMessage key={message._id} message={message}/>;
-                    return message;
+                        return <ChatMessage key={message._id} message={message}/>;
+                        break;
                     default: {
                         console.error("Unrecognised message type: " + message.messageType);
                         break;
@@ -93,7 +96,6 @@ MessageList = React.createClass({
     getRandomInt(max) {
         var min = 0;
         var num = Math.floor(Math.random() * (max - min + 1)) + min;
-        console.log("getRandomInt(" + max + ": " + num);
         return num;
     }
 

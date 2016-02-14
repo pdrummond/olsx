@@ -1,6 +1,5 @@
 SystemMessage = React.createClass({
     render() {
-        console.log("SystemMessage key = " + this.props.message._id);
         return (
             <li className={this.props.message.isError?'message-item error':'message-item success'}>
                 <span className="message-content">

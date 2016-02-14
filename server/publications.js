@@ -1,12 +1,8 @@
 Meteor.publish("conversations", function () {
     this.autorun(function(computation) {
-        console.log('> publish conversations');
         var conversationIds = Members.find({userId: this.userId}).map(function (member) {
             return member.conversationId;
         });
-        console.log('conversationIds' + JSON.stringify(conversationIds));
-
-        console.log('< publish conversations');
         return Conversations.find({_id: {$in: conversationIds}});
     });
 });

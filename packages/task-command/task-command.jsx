@@ -75,29 +75,56 @@ Ols.Command.defineCommand('/task', function(ctx) {
 });
 
 function addTaskSubCommand(ctx) {
-    var ok = false;
-    var args = ctx.args;
-    if (args.length > 1) {
-        var description = args.slice().splice(2).join(" ");
-        Tasks.methods.addTask.call({
-            description: description,
-            conversationId: ctx.conversationId,
-            messageId: ctx.message._id
-        }, (err, task) => {
-            if (err) {
-                if (err.reason) {
-                    Ols.Message.systemErrorMessage(ctx.conversationId, "Error adding task: " + err.reason);
-                } else {
-                    Ols.Message.systemErrorMessage(ctx.conversationId, "Error adding task: Unexpected error occurred");
-                    throw Error('Internal error adding task: ' + err.message);
+    try {
+        /*
+         Example Command: /task add <description optional>
+         */
+        var ok = false;
+        var args = ctx.args;
+        if (args.length > 2) {
+            var description = args.slice().splice(2).join(" ");
+            ok = doAddTask(ctx, description);
+        } else {
+            Ols.LoopBot.promptMessage({
+                processName: '/task.add',
+                conversationId: ctx.conversationId,
+                content: "To create this task I need a description.  When ready, type `@loopbot` then your description.",
+                responseHandler: function (message, description) {
+                    Ols.LoopBot.infoMessage({
+                        conversationId: ctx.conversationId,
+                        content: ("Thanks " + message.createdByName + ".  Using `" + Ols.StringUtils.truncate(description, 50) + "` as the description for your new task and creating it now.")
+                    }, function (err, msg) {
+                        ok = doAddTask(ctx, description);
+                    });
                 }
-                ok = false;
-            } else {
-                Ols.Message.systemSuccessMessage(ctx.conversationId, Meteor.user().username + " added task " + task.key + ": " + description);
-                ok = true;
-            }
-        });
+            });
+        }
+    } catch(wha) {
+        console.log("whaaaaa?" + wha.type);
     }
+    return ok;
+}
+
+function doAddTask(ctx, description) {
+    var ok = false;
+    Tasks.methods.addTask.call({
+        description: description,
+        conversationId: ctx.conversationId,
+        messageId: ctx.message._id
+    }, (err, task) => {
+        if (err) {
+            if (err.reason) {
+                Ols.Message.systemErrorMessage(ctx.conversationId, "Error adding task: " + err.reason);
+            } else {
+                Ols.Message.systemErrorMessage(ctx.conversationId, "Error adding task: Unexpected error occurred");
+                throw Error('Internal error adding task: ' + err.message);
+            }
+            ok = false;
+        } else {
+            Ols.Message.systemSuccessMessage(ctx.conversationId, Meteor.user().username + " added task " + task.key + ": " + description);
+            ok = true;
+        }
+    });
     return ok;
 }
 

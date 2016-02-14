@@ -1,16 +1,16 @@
-Command = function() {
+CommandApi = function() {
     this._commands = {};
     this._components = {};
 };
 
-Command.prototype.defineCommand = function(commandName, fn) {
+CommandApi.prototype.defineCommand = function(commandName, fn) {
     if (this.commandExists(commandName)) {
         throw new Meteor.Error('Error.  There is already a command associated with the name "' + commandName + '".');
     }
     this._commands[commandName] = fn;
 };
 
-Command.prototype.defineComponent = function(componentName, fn) {
+CommandApi.prototype.defineComponent = function(componentName, fn) {
 
     if (this.commandExists(componentName)) {
         throw new Meteor.Error('Error.  There is already a component associated with the name "' + componentName + '".');
@@ -18,21 +18,21 @@ Command.prototype.defineComponent = function(componentName, fn) {
     this._components[componentName] = fn;
 };
 
-Command.prototype.getComponent = function(componentName) {
+CommandApi.prototype.getComponent = function(componentName) {
     if (!this.componentExists(componentName)) {
         throw new Meteor.Error('Error: There is no component associated with the name "' + componentName + '".');
     }
     return this._components[componentName];
 };
 
-Command.prototype.commandExists = function(commandName) {
+CommandApi.prototype.commandExists = function(commandName) {
     return commandName in this._commands;
 };
 
-Command.prototype.componentExists = function(componentName) {
+CommandApi.prototype.componentExists = function(componentName) {
     return componentName in this._components;
 };
-Command.prototype.executeCommand = function(commandName, args, message) {
+CommandApi.prototype.executeCommand = function(commandName, args, message) {
     console.log("-- COMMAND_API: executing command '" + message.content + "'");
     var result = this._commands[commandName]({
         args,
@@ -48,4 +48,4 @@ Command.prototype.executeCommand = function(commandName, args, message) {
     }
 };
 
-Ols.Command = new Command();
+Ols.Command = new CommandApi();

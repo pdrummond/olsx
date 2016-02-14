@@ -11,7 +11,8 @@ Package.onUse(function(api) {
     'command-api.js',
     'message-api.js',
     'filter-api.js',
-    'stringutils-api.js'
+    'stringutils-api.js',
+    'loopbot-api.js'
   ]);
   api.export(['Ols']);
 });

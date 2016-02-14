@@ -5,22 +5,15 @@ if(Meteor.isServer) {
             console.log('> loadMessages(' + JSON.stringify(opts) + ')');
 
             /*
-                First task is to determine the latest page of messages if a start seq isn't provided. The latest
-                page is the total number of messages in the conversation minus the messagesCountLimit.
+                If no start message seq is provided, then we need to return the latest page of results.
              */
-            var conversationMessageCount = ServerMessages.find({conversationId: opts.conversationId}).count();
-            console.log('-- Conversation has ' + conversationMessageCount + ' messages in total');
-
-            var firstMessage = ServerMessages.findOne({conversationId: opts.conversationId, seq: 0});
-            console.log('-- First message is ' + JSON.stringify(firstMessage, null, 4));
-
-            var latestMessage = ServerMessages.findOne({conversationId: opts.conversationId, seq: conversationMessageCount});
-            console.log('-- Latest message is ' + JSON.stringify(latestMessage, null, 4));
-
             if(opts.startMessageSeq == 0) {
                 console.log('-- start message is 0 so finding latest page of messages...');
-                console.log('-- conversation message count is ' + conversationMessageCount);
-                opts.startMessageSeq = (conversationMessageCount - opts.messagesCountLimit)+1;
+
+                var latestMessage = ServerMessages.findOne({conversationId: opts.conversationId}, {sort: {createdAt: -1}});
+                var latestSeq = latestMessage.seq;
+                console.log('-- seq for latest message is ' + latestSeq);
+                opts.startMessageSeq = (latestSeq - opts.messagesCountLimit)+1;
                 if(opts.startMessageSeq < 1) {
                     opts.startMessageSeq = 1;
                 }

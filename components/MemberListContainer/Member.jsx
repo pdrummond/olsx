@@ -34,7 +34,7 @@ Member = React.createClass({
                 <img style={this.styles.profileImage} src={this.data.userProfileImage}/>
                 <div style={{paddingLeft: '50px'}}>
                     <div>{this.props.member.username}</div>
-                    <div style={{position:'relative',top:'-10px',fontSize:'12px',fontWeight:'bold'}} className={this.data.userStatus}>{this.data.userStatusLabel}</div>
+                    <div style={{fontSize:'12px',fontWeight:'bold'}} className={this.data.userStatus}>{this.data.userStatusLabel}</div>
                 </div>
             </li>
         )

@@ -9,9 +9,18 @@ Ols.Command.defineCommand('/task', function(ctx) {
             if(args.length > 2) {
                 var subSubCommand = args[2];
                 switch (subSubCommand) {
-                    case 'delete'   : { ok = deleteTaskSubCommand(ctx);   break; }
-                    case 'done'     : { ok = taskDoneSubCommand(ctx);     break; }
-                    case 'refs'     : { ok = taskRefsSubCommand(ctx);     break; }
+                    case 'delete'     : { ok = deleteTaskSubCommand(ctx);   break; }
+                    case 'archive'    : { ok = archiveTaskSubCommand(ctx);  break; }
+                    case 'restore'    : { ok = restoreTaskSubCommand(ctx);  break; }
+
+                    case 'assign-to' : {
+                        ok = taskAssignSubCommand(ctx);   break;
+                    }
+                    case 'accept'    : { ok = taskAcceptSubCommand(ctx);    break; }
+                    case 'start'     : { ok = taskStartSubCommand(ctx);    break; }
+                    case 'stop'      : { ok = taskStopSubCommand(ctx);     break; }
+                    case 'done'      : { ok = taskDoneSubCommand(ctx);     break; }
+                    case 'refs'      : { ok = taskRefsSubCommand(ctx);     break; }
                     default: {
                         console.error("Invalid sub-sub-command: " + subSubCommand);
                         Ols.Message.systemErrorMessage(ctx.conversationId, 'Error: "' + subSubCommand + '" not recognised.  Type /task help for more info.');
@@ -31,6 +40,10 @@ Ols.Command.defineCommand('/task', function(ctx) {
                 case 'list': {
                     ok = taskListSubCommand(ctx);
                     break;
+                }
+                case 'list-archived': {
+                        ok = taskListArchivedSubCommand(ctx);
+                        break;
                 }
                 /* TODO: This will need to be implemented as a client-side command.
                  case 'jump': { //example: /msg jump 5664
@@ -136,6 +149,36 @@ function getTaskKey(ctx) {
     return taskKey;
 }
 
+function taskStartSubCommand(ctx) {
+    taskSetStatusSubCommand(ctx, Ols.Status.IN_PROGRESS, function(err, task) {
+        if (err) {
+            Ols.Message.systemErrorMessage(ctx.conversationId, "Error starting task: " + err.reason);
+        } else {
+            Ols.Message.systemSuccessMessage(ctx.conversationId, Meteor.user().username + " started working on task #" + task.key + ".");
+        }
+    });
+}
+
+function taskAcceptSubCommand(ctx) {
+    taskSetStatusSubCommand(ctx, Ols.Status.OPEN, function(err, task) {
+        if (err) {
+            Ols.Message.systemErrorMessage(ctx.conversationId, "Error accepting task: " + err.reason);
+        } else {
+            Ols.Message.systemSuccessMessage(ctx.conversationId, Meteor.user().username + " accepted task #" + task.key + ".");
+        }
+    });
+}
+
+function taskStopSubCommand(ctx) {
+    taskSetStatusSubCommand(ctx, Ols.Status.PAUSED, function(err, task) {
+        if (err) {
+            Ols.Message.systemErrorMessage(ctx.conversationId, "Error stopping task: " + err.reason);
+        } else {
+            Ols.Message.systemSuccessMessage(ctx.conversationId, Meteor.user().username + " stopped working on task #" + task.key + ".");
+        }
+    });
+}
+
 function taskDoneSubCommand(ctx) {
     taskSetStatusSubCommand(ctx, Ols.Status.DONE, function(err, task) {
         if (err) {
@@ -163,42 +206,87 @@ function taskSetStatusSubCommand(ctx, status, callback) {
     return ok;
 }
 
-function taskSetSubCommand(ctx) {
+function taskAssignSubCommand(ctx) {
     /*
-        Command Example: /task #12 set status:in-progress
+        Command Example: /task #12 assign-to pdrummond
     */
     var ok = false;
     var args = ctx.args;
 
-    if (args.length > 2 && args[3].indexOf(':') != -1) {
+    if (args.length > 2) {
         var key = parseInt(args[1].replace('#', ''));
-        var data = args[3].split(':');
-        var attr = data[0];
-        var value = data[1];
-        if (attr == 'status') {
-            Tasks.methods.updateTaskStatus.call({
-                conversationId: ctx.conversationId,
-                key,
-                value
-            }, (err) => {
-                if (err) {
-                    Ols.Message.systemErrorMessage(ctx.conversationId, "Error changing task status: " + err.reason);
-                    ok = false;
-                } else {
-                    Ols.Message.systemSuccessMessage(ctx.conversationId, Meteor.user().username + " set task #" + key + " status to '" + value + "'");
-                    ok = true;
-                }
-            });
-        } else {
-            Ols.Message.systemErrorMessage(ctx.conversationId, 'Invalid arguments for task set command. ' + attr + 'is not a valid attribute. Type /task help for more info.');
-            ok = false;
-        }
+        var assignee = args[3].trim();
+
+        Tasks.methods.updateTaskAssignee.call({
+            conversationId: ctx.conversationId,
+            key,
+            assignee
+        }, (err) => {
+            if (err) {
+                Ols.Message.systemErrorMessage(ctx.conversationId, "Error changing assignee: " + err.reason);
+                ok = false;
+            } else {
+                Ols.Message.systemSuccessMessage(ctx.conversationId, Meteor.user().username + " assigned task #" + key + " to '" + assignee + "'");
+                ok = true;
+            }
+        });
     } else {
         Ols.Message.systemErrorMessage(ctx.conversationId, 'Invalid arguments for task set command. Type /task help for more info.');
         ok = false;
     }
     return ok;
 }
+
+function archiveTaskSubCommand(ctx) {
+    var ok = false;
+    var args = ctx.args;
+
+    if (args.length > 2) {
+        var key = getTaskKey(ctx);
+        Tasks.methods.archiveTask.call({
+            conversationId: ctx.conversationId,
+            key
+        }, (err) => {
+            if (err) {
+                Ols.Message.systemErrorMessage(ctx.conversationId, "Error archiving task: " + err.reason);
+                ok = false;
+            } else {
+                Ols.Message.systemSuccessMessage(ctx.conversationId, Meteor.user().username + " archived task #" + key + ".");
+                ok = true;
+            }
+        });
+    } else {
+        Ols.Message.systemErrorMessage(ctx.conversationId, 'Invalid arguments for task archive command. Type /task help for more info.');
+        ok = false;
+    }
+    return ok;
+}
+
+function restoreTaskSubCommand(ctx) {
+    var ok = false;
+    var args = ctx.args;
+
+    if (args.length > 2) {
+        var key = getTaskKey(ctx);
+        Tasks.methods.restoreTask.call({
+            conversationId: ctx.conversationId,
+            key
+        }, (err) => {
+            if (err) {
+                Ols.Message.systemErrorMessage(ctx.conversationId, "Error restoring task: " + err.reason);
+                ok = false;
+            } else {
+                Ols.Message.systemSuccessMessage(ctx.conversationId, Meteor.user().username + " restored task #" + key + ".");
+                ok = true;
+            }
+        });
+    } else {
+        Ols.Message.systemErrorMessage(ctx.conversationId, 'Invalid arguments for task restore command. Type /task help for more info.');
+        ok = false;
+    }
+    return ok;
+}
+
 
 function taskListSubCommand(ctx) {
     var ok = false;
@@ -209,6 +297,7 @@ function taskListSubCommand(ctx) {
         filter = Ols.Filter.parseString(args[2]);
     }
     filter.conversationId = ctx.conversationId;
+    filter.isArchived = false;
 
     var customMessageType = '/task.list';
     console.log('-- saving custom message (' + customMessageType + ') for conversation ' + ctx.conversationId);
@@ -228,6 +317,41 @@ function taskListSubCommand(ctx) {
             ok = false;
         } else {
             console.error("-- task list custom message " + msg.seq + " generated successfully.");
+            ok = true;
+        }
+    });
+    return ok;
+}
+
+function taskListArchivedSubCommand(ctx) {
+    var ok = false;
+    var args = ctx.args;
+
+    var filter = {};
+    if (args.length > 2) {
+        filter = Ols.Filter.parseString(args[2]);
+    }
+    filter.conversationId = ctx.conversationId;
+    filter.isArchived = true;
+
+    var customMessageType = '/task.list';
+    console.log('-- saving custom message (' + customMessageType + ') for conversation ' + ctx.conversationId);
+    Meteor.call('saveMessage', {
+        conversationId: ctx.conversationId,
+        messageType: Ols.MESSAGE_TYPE_CUSTOM,
+        customMessageType: customMessageType,
+        tasks: Tasks.find(filter).fetch(),
+        createdBy: Meteor.userId(),
+        updatedBy: Meteor.userId(),
+        createdByName: Meteor.user().username,
+        updatedByName: Meteor.user().username
+    }, function (err, msg) {
+        if (err != null) {
+            console.error("-- error saving archived list custom message " + JSON.stringify(err));
+            Ols.Message.systemErrorMessage(ctx.conversationId, 'Error running task list command. Could not generate task list. Type /task help for more info.');
+            ok = false;
+        } else {
+            console.error("-- archived list custom message " + msg.seq + " generated successfully.");
             ok = true;
         }
     });

@@ -14,6 +14,16 @@ FilterApi.prototype.parseString = function(filterString) {
         remainingText = remainingText.replace(value, '');
         remainingText = remainingText.replace(/:/g, '');
 
+        if(field == 'status') {
+            switch(value) {
+                case 'new': value = Ols.Status.NEW; break;
+                case 'open': value = Ols.Status.OPEN; break;
+                case 'in-progress': value = Ols.Status.IN_PROGRESS; break;
+                case 'paused': value = Ols.Status.IN_PROGRESS; break;
+                case 'done': value = Ols.Status.DONE; break;
+            }
+        }
+
         filter[field] = value;
         match = re.exec(filterString);
     }

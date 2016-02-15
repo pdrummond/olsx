@@ -10,6 +10,7 @@ TaskListMessage = React.createClass({
                             <th>Key</th>
                             <th>Status</th>
                             <th>Created</th>
+                            <th>Assigned To</th>
                             <th>Description</th>
                         </tr>
                         {this.props.ctx.tasks.map(function (task) {
@@ -18,6 +19,7 @@ TaskListMessage = React.createClass({
                                     <td>{task.key}</td>
                                     <td>{Ols.Status.getStatusLabel(task.status)}</td>
                                     <td>by {task.createdByName} {moment(task.createdAt).fromNow()}</td>
+                                    <td>{task.assignee ? task.assignee : ''}</td>
                                     <td className="markdown-content" dangerouslySetInnerHTML={ self.getHtmlContent(task)} />
                                 </tr>
                             )

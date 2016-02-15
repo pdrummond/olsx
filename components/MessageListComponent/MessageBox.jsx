@@ -17,6 +17,7 @@ MessageBox = React.createClass({
                               name="message"
                               placeholder="Type here to add message..."
                               value={this.state.content}
+                              autofocus="autofocus"
                     />
                 </form>
             </div>

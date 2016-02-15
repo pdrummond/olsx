@@ -9,25 +9,10 @@ Ols.Command.defineCommand('/task', function(ctx) {
             if(args.length > 2) {
                 var subSubCommand = args[2];
                 switch (subSubCommand) {
-                    case 'refs':
-                    {
-                        ok = taskRefsSubCommand(ctx);
-                        break;
-                    }
-                    case 'remove':
-                    case 'delete':
-                    case 'del':
-                    {
-                        ok = deleteTaskSubCommand(ctx);
-                        break;
-                    }
-                    case 'set':
-                    {
-                        ok = taskSetSubCommand(ctx);
-                        break;
-                    }
-                    default:
-                    {
+                    case 'delete'   : { ok = deleteTaskSubCommand(ctx);   break; }
+                    case 'done'     : { ok = taskDoneSubCommand(ctx);     break; }
+                    case 'refs'     : { ok = taskRefsSubCommand(ctx);     break; }
+                    default: {
                         console.error("Invalid sub-sub-command: " + subSubCommand);
                         Ols.Message.systemErrorMessage(ctx.conversationId, 'Error: "' + subSubCommand + '" not recognised.  Type /task help for more info.');
                         ok = false;
@@ -75,7 +60,6 @@ Ols.Command.defineCommand('/task', function(ctx) {
 });
 
 function addTaskSubCommand(ctx) {
-    try {
         /*
          Example Command: /task add <description optional>
          */
@@ -99,9 +83,7 @@ function addTaskSubCommand(ctx) {
                 }
             });
         }
-    } catch(wha) {
-        console.log("whaaaaa?" + wha.type);
-    }
+
     return ok;
 }
 
@@ -142,6 +124,41 @@ function deleteTaskSubCommand(ctx) {
                 ok = true;
             }
         });
+    }
+    return ok;
+}
+
+function getTaskKey(ctx) {
+    var taskKey;
+    if (ctx.args.length > 2) {
+        taskKey = parseInt(ctx.args[1].replace('#', ''));
+    }
+    return taskKey;
+}
+
+function taskDoneSubCommand(ctx) {
+    taskSetStatusSubCommand(ctx, Ols.Status.DONE, function(err, task) {
+        if (err) {
+            Ols.Message.systemErrorMessage(ctx.conversationId, "Error completing task: " + err.reason);
+        } else {
+            Ols.Message.systemSuccessMessage(ctx.conversationId, Meteor.user().username + " completed task #" + task.key + ".");
+        }
+    });
+}
+
+function taskSetStatusSubCommand(ctx, status, callback) {
+    var ok = false;
+    var key = getTaskKey(ctx);
+    if(key != null) {
+        Tasks.methods.updateTaskStatus.call({
+            conversationId: ctx.conversationId,
+            key,
+            status
+        }, (err, task) => {
+            callback(err, task);
+        });
+    } else {
+        Ols.Message.systemErrorMessage(ctx.conversationId, 'Invalid arguments for task command.  Type /task help for more info.');
     }
     return ok;
 }
@@ -205,7 +222,7 @@ function taskListSubCommand(ctx) {
         createdByName: Meteor.user().username,
         updatedByName: Meteor.user().username
     }, function (err, msg) {
-        if (err) {
+        if (err != null) {
             console.error("-- error saving task list custom message " + JSON.stringify(err));
             Ols.Message.systemErrorMessage(ctx.conversationId, 'Error running task list command. Could not generate task list. Type /task help for more info.');
             ok = false;

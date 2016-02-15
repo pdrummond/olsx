@@ -12,7 +12,8 @@ Package.onUse(function(api) {
     'message-api.js',
     'filter-api.js',
     'stringutils-api.js',
-    'loopbot-api.js'
+    'loopbot-api.js',
+    'status-type-api.js'
   ]);
   api.export(['Ols']);
 });

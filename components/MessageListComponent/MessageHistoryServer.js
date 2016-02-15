@@ -115,13 +115,11 @@ if(Meteor.isServer) {
                         Meteor.call('systemErrorMessage', message.conversationId, 'Invalid command: "' + commandName + "'");
                     }
                 }
-
                 if(message.content.startsWith("@loopbot")) {
                     console.log("-- Detected @loopbot at start of message " + message.seq);
                     console.log("-- Sending message " + message.seq + " to loopbot for further processing...");
                     Ols.LoopBot.onResponseReceived(message);
                 }
-
                 console.log("< saveMessage()");
                 return message;
             } catch(err) {

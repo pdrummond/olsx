@@ -16,7 +16,7 @@ TaskListMessage = React.createClass({
                             return (
                                 <tr key={task._id}>
                                     <td>{task.key}</td>
-                                    <td>{task.status}</td>
+                                    <td>{Ols.Status.getStatusLabel(task.status)}</td>
                                     <td>by {task.createdByName} {moment(task.createdAt).fromNow()}</td>
                                     <td className="markdown-content" dangerouslySetInnerHTML={ self.getHtmlContent(task)} />
                                 </tr>

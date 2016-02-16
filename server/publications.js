@@ -7,6 +7,10 @@ Meteor.publish("conversations", function () {
     });
 });
 
+Meteor.publish("tasks", function() {
+   return Tasks.find({});
+});
+
 Meteor.publish('currentConversation', function(conversationId) {
     this.autorun(function(computation) {
         var c = Conversations.find(conversationId);

@@ -6,7 +6,7 @@ html, body {
 body {
     font-family: 'Open Sans', sans-serif;
     padding-left: 350px;
-    padding-right: 350px;
+    padding-right: 400px;
     margin: 0 auto;
     color: #333;
 }
@@ -306,6 +306,13 @@ input {
     margin-left:10px;
 }
 
+.filter-task-input {
+    width:360px;
+    position:relative;
+    top:5px;
+    margin-left:10px;
+}
+
 .empty-conversation-list {
     width: 400px;
     margin: auto auto;
@@ -342,15 +349,14 @@ input {
     width:90%;
 }
 
-.member-list-container {
+.right-sidebar-container {
     position: absolute;
     right: 0px;
     top: 0px;
     padding: 10px;
-    padding-top:50px;
-    width: 350px;
+    width: 400px;
     background: whitesmoke;
-    height: calc(100% - 60px);
+    height: calc(100% - 20px);
     border-left:1px solid lightgray;
     overflow-y:auto;
 }
@@ -439,4 +445,19 @@ header {
     margin: 0;
     color: #aaa;
     font-style: italic;
+}
+
+.task-list-component li.task {
+    background-color:white;
+    border:1px solid lightgray;
+    margin-top:5px;
+    margin-bottom:5px;
+}
+
+.task-list-component li.task :hover {
+    background-color:whitesmoke;
+}
+
+.task-list-component li .task-wrapper {
+    padding:10px;
 }

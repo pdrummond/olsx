@@ -14,7 +14,7 @@ ConversationView = React.createClass({
             data.canShow = Meteor.user() != null && Members.findOne({userId: Meteor.userId()}) != null;
 
             data.currentConversation = Conversations.findOne(data.currentConversationId);
-            data.membersList = Members.find({conversationId: data.currentConversationId}, {sort: {createdAt: 1}}).fetch();
+            data.memberList = Members.find({conversationId: data.currentConversationId}, {sort: {createdAt: 1}}).fetch();
 
             data.startMessageSeq = parseInt(FlowRouter.getParam('startMessageSeq')) || 0;
             data.messagesCountLimit = parseInt(FlowRouter.getParam('messagesCountLimit')) || Ols.DEFAULT_PAGE_SIZE;
@@ -48,7 +48,10 @@ ConversationView = React.createClass({
         } else if (this.data.currentConversation) {
             return (
                 <div className="container">
-                    <MemberListContainer conversationId={this.data.currentConversation._id} memberList={this.data.membersList}/>
+                    <RightSidebarComponent
+                        conversationId={this.data.currentConversation._id}
+                        memberList={this.data.memberList}
+                    />
                     {this.renderHeader()}
                     <MessageListContainer
                         ref="messageListContainer"
@@ -73,7 +76,7 @@ ConversationView = React.createClass({
         } else {
             return(
                 <header>
-                    <h2><i className="fa fa-comments-o"></i> {this.data.currentConversation.subject}</h2>
+                    <h2><i className="fa fa-tv"></i> {this.data.currentConversation.subject}</h2>
                     <div className="header-buttons">
                         <a style={{color:'white;font-size:12px', textDecoration:'none'}} onClick={this.onDeleteLinkClicked} href="">
                             <i className="fa fa-trash"></i> Delete

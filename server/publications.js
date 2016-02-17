@@ -7,9 +7,15 @@ Meteor.publish("conversations", function () {
     });
 });
 
-Meteor.publish("tasks", function() {
-   return Tasks.find({});
+Meteor.publish("tasks", function(conversationId) {
+   return Tasks.find({conversationId});
 });
+
+Meteor.publish("refs", function(conversationId) {
+    return Refs.find({conversationId});
+});
+
+
 
 Meteor.publish('currentConversation', function(conversationId) {
     this.autorun(function(computation) {

@@ -12,7 +12,7 @@ Conversation = React.createClass({
                 onClick={this.onClick}
                 className={this.getClassName()}>
                 <div>
-                    <span className="conversation-subject"><i className="fa fa-tv"></i> {this.props.conv.subject}</span>
+                    <span className="conversation-subject"><i className="fa fa-bullseye"></i> {this.props.conv.subject}</span>
                     <div>
                         <div style={{fontSize:'12px', color:'gray', position:'relative'}}>
                             Created by {this.props.conv.createdByName} {moment(this.props.conv.createdAt).fromNow()}

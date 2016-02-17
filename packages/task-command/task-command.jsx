@@ -105,7 +105,8 @@ function doAddTask(ctx, description) {
     Tasks.methods.addTask.call({
         description: description,
         conversationId: ctx.conversationId,
-        messageId: ctx.message._id
+        messageId: ctx.message._id,
+        messageSeq: ctx.message.seq
     }, (err, task) => {
         if (err) {
             if (err.reason) {

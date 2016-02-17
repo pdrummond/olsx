@@ -3,6 +3,8 @@ ChatMessage = React.createClass({
 
     getMeteorData() {
         return {
+            selectStartMessage: FlowRouter.getQueryParam('selectStartMessage') == "true",
+            startMessageSeq: parseInt(FlowRouter.getParam('startMessageSeq')),
             userProfileImage: Meteor.users.findOne(this.props.message.createdBy).profileImage
         };
     },
@@ -20,7 +22,7 @@ ChatMessage = React.createClass({
 
     render() {
         return (
-            <li className='message-item'>
+            <li className={this.getClassName()} onClick={this.onClick}>
                 <img style={this.styles.profileImage} src={this.data.userProfileImage}/>
                 <div style={{paddingLeft:'50px'}}>
                     <div><b>{this.props.message.createdByName}</b>
@@ -35,9 +37,21 @@ ChatMessage = React.createClass({
         );
     },
 
+    getClassName() {
+        if(this.data.selectStartMessage == true && this.data.startMessageSeq == this.props.message.seq) {
+            return 'message-item active';
+        } else {
+            return 'message-item';
+        }
+    },
+
     getHtmlContent: function(content) {
         if ( content ) {
             return { __html: parseMarkdown(content) };
         }
+    },
+
+    onClick: function() {
+        FlowRouter.setQueryParams({selectStartMessage: null});
     }
 });

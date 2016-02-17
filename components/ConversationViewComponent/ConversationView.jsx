@@ -19,6 +19,7 @@ ConversationView = React.createClass({
             data.startMessageSeq = parseInt(FlowRouter.getParam('startMessageSeq')) || 0;
             data.messagesCountLimit = parseInt(FlowRouter.getParam('messagesCountLimit')) || Ols.DEFAULT_PAGE_SIZE;
             data.doScrollBottom = FlowRouter.getQueryParam('scrollBottom') != null;
+            data.doScrollTop = FlowRouter.getQueryParam('scrollTop') != null;
             data.isLoading = false;
         }
         return data;
@@ -27,7 +28,7 @@ ConversationView = React.createClass({
     render() {
         if (this.data.currentConversationId == null) {
             return (
-                <div className="container">
+                <div className="view-container">
                     <div className="empty-conversation-list">
                         <p><b>Welcome to OpenLoops!</b></p>
                         <div><i className="fa fa-smile-o" style={{'fontSize':'20em', 'color': '#FF7503'}}></i></div>
@@ -37,7 +38,7 @@ ConversationView = React.createClass({
             );
         } else if(this.data.canShow == false) {
             return (
-                <div className="container">
+                <div className="view-container">
                     <div className="empty-conversation-list">
                         <p><b>Computer says no!</b></p>
                         <div><i className="fa fa-frown-o" style={{'fontSize':'20em', 'color': '#703470'}}></i></div>
@@ -47,7 +48,7 @@ ConversationView = React.createClass({
             );
         } else if (this.data.currentConversation) {
             return (
-                <div className="container">
+                <div className="view-container">
                     <RightSidebarComponent
                         conversationId={this.data.currentConversation._id}
                         memberList={this.data.memberList}
@@ -76,7 +77,7 @@ ConversationView = React.createClass({
         } else {
             return(
                 <header>
-                    <h2><i className="fa fa-tv"></i> {this.data.currentConversation.subject}</h2>
+                    <h2><i className="fa fa-bullseye"></i> {this.data.currentConversation.subject}</h2>
                     <div className="header-buttons">
                         <a style={{color:'white;font-size:12px', textDecoration:'none'}} onClick={this.onDeleteLinkClicked} href="">
                             <i className="fa fa-trash"></i> Delete
@@ -103,6 +104,8 @@ ConversationView = React.createClass({
                 this.refs.messageListContainer.loadMessages(function () {
                     if (self.data.doScrollBottom) {
                         self.refs.messageListContainer.scrollBottom();
+                    } else if(self.data.doScrollTop) {
+                        self.refs.messageListContainer.scrollTop();
                     }
                 });
             }

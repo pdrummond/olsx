@@ -186,6 +186,7 @@ if(Meteor.isServer) {
                                 console.log("-- task found for key " + key + ".  Adding ref...");
                                 Refs.methods.addRef.call({
                                     messageId: message._id,
+                                    conversationId: message.conversationId,
                                     messageSeq: message.seq,
                                     messageContent: message.content,
                                     taskId: task._id,

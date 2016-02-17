@@ -35,7 +35,7 @@ ConversationPage = React.createClass({
             );
         } else */if(Meteor.userId() == null) {
            return (
-               <div className="container">
+               <div className="main-container">
                    <div className="empty-conversation-list">
                        <p><b>Welcome to OpenLoops</b></p>
                        <div><i className="fa fa-adjust" style={{'fontSize':'20em', 'color': '#703470'}}></i></div>
@@ -45,7 +45,7 @@ ConversationPage = React.createClass({
            );
         } else {
             return (
-                <div className="container">
+                <div className="view-container">
                     <ConversationListContainer
                         incomingMessages={this.state.incomingMessages}
                         onConversationClicked={this.onConversationClicked}

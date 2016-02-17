@@ -69,6 +69,14 @@ MessageList = React.createClass({
         }, 20);
     },
 
+    scrollTop() {
+        var self = this;
+        setTimeout(function() {
+            let node = ReactDOM.findDOMNode(self.refs.messageList);
+            node.scrollTop = 0;
+        }, 20);
+    },
+
     isScrollBottom() {
         let node = ReactDOM.findDOMNode(this.refs.messageList);
         let atBottom = node.scrollHeight == node.scrollTop + node.clientHeight;

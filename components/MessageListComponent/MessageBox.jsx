@@ -1,6 +1,4 @@
 
-const ENTER_KEY_CODE = 13;
-
 MessageBox = React.createClass({
 
     getInitialState: function() {
@@ -34,7 +32,7 @@ MessageBox = React.createClass({
 
     onKeyDown: function(event) {
         // Trap the ENTER_KEY_CODE to send the message
-        if (event.keyCode === ENTER_KEY_CODE && event.shiftKey == false) {
+        if (event.keyCode === Ols.Keys.ENTER_KEY_CODE && event.shiftKey == false) {
             var content = this.state.content.trim();
             if (content) {
                 this.props.onMessageAdded(content);

@@ -219,7 +219,7 @@ if(Meteor.isServer) {
 
         systemSuccessMessage: function(conversationId, content) {
             console.log("-- saving system success message for conversation " + conversationId + ": " + content);
-            Meteor.call('insertAndBroadcastMessage', {
+            return Meteor.call('insertAndBroadcastMessage', {
                 conversationId: conversationId,
                 createdBy: Ols.SYSTEM_USERID,
                 createdByName: Ols.SYSTEM_USERNAME,
@@ -236,7 +236,7 @@ if(Meteor.isServer) {
 
         systemErrorMessage: function(conversationId, content) {
             console.log("-- saving system ERROR message for conversation " + conversationId + ": " + content);
-            Meteor.call('insertAndBroadcastMessage', {
+            return Meteor.call('insertAndBroadcastMessage', {
                 conversationId: conversationId,
                 createdBy: Ols.SYSTEM_USERID,
                 createdByName: Ols.SYSTEM_USERNAME,
@@ -252,5 +252,3 @@ if(Meteor.isServer) {
         }
     });
 }
-
-

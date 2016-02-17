@@ -255,7 +255,7 @@ main {
     .conversation-list-container {
         display:none;
     }
-    .member-list-container {
+    .right-sidebar-container {
         display:none;
     }
 }

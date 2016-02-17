@@ -5,7 +5,7 @@ Package.describe({
 
 Package.onUse(function(api) {
   api.versionsFrom('1.2.1');
-  api.use(['ecmascript', 'meteor-platform']);
+  api.use(['ecmascript', 'meteor-platform', 'osv:mongo-counter']);
   api.addFiles([
     'lib.js',
     'command-api.js',
@@ -13,7 +13,8 @@ Package.onUse(function(api) {
     'filter-api.js',
     'stringutils-api.js',
     'loopbot-api.js',
-    'status-type-api.js'
+    'status-type-api.js',
+    'keys-api.js'
   ]);
   api.export(['Ols']);
 });

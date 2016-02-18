@@ -181,7 +181,7 @@ if(Meteor.isServer) {
                         var key = parseInt(matches[1]);
                         console.log("-- ref to task " + key + " found for message " + message.seq);
                         if (key != null) {
-                            var task = Tasks.findOne({projectId: message.projectId, key: key});
+                            var task = Items.findOne({projectId: message.projectId, key: key});
                             if (task != null) {
                                 console.log("-- task found for key " + key + ".  Adding ref...");
                                 Refs.methods.addRef.call({

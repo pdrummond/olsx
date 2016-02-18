@@ -102,7 +102,7 @@ function addTaskSubCommand(ctx) {
 
 function doAddTask(ctx, description) {
     var ok = false;
-    Tasks.methods.addTask.call({
+    Items.methods.addTask.call({
         description: description,
         projectId: ctx.projectId,
         messageId: ctx.message._id,
@@ -129,7 +129,7 @@ function deleteTaskSubCommand(ctx) {
     var args = ctx.args;
     if (args.length > 1) {
         var key = parseInt(args[1].replace('#', ''));
-        Tasks.methods.removeTask.call({projectId: ctx.projectId, key: key}, (err) => {
+        Items.methods.removeItem.call({projectId: ctx.projectId, key: key}, (err) => {
             if (err) {
                 Ols.Message.systemErrorMessage(ctx.projectId, "Error deleting task: " + err.reason);
                 ok = false;
@@ -194,7 +194,7 @@ function taskSetStatusSubCommand(ctx, status, callback) {
     var ok = false;
     var key = getTaskKey(ctx);
     if(key != null) {
-        Tasks.methods.updateTaskStatus.call({
+        Items.methods.updateTaskStatus.call({
             projectId: ctx.projectId,
             key,
             status
@@ -218,7 +218,7 @@ function taskAssignSubCommand(ctx) {
         var key = parseInt(args[1].replace('#', ''));
         var assignee = args[3].trim();
 
-        Tasks.methods.updateTaskAssignee.call({
+        Items.methods.updateTaskAssignee.call({
             projectId: ctx.projectId,
             key,
             assignee
@@ -244,7 +244,7 @@ function archiveTaskSubCommand(ctx) {
 
     if (args.length > 2) {
         var key = getTaskKey(ctx);
-        Tasks.methods.archiveTask.call({
+        Items.methods.archiveTask.call({
             projectId: ctx.projectId,
             key
         }, (err) => {
@@ -269,7 +269,7 @@ function restoreTaskSubCommand(ctx) {
 
     if (args.length > 2) {
         var key = getTaskKey(ctx);
-        Tasks.methods.restoreTask.call({
+        Items.methods.restoreTask.call({
             projectId: ctx.projectId,
             key
         }, (err) => {
@@ -306,7 +306,7 @@ function taskListSubCommand(ctx) {
         projectId: ctx.projectId,
         messageType: Ols.MESSAGE_TYPE_CUSTOM,
         customMessageType: customMessageType,
-        tasks: Tasks.find(filter).fetch(),
+        tasks: Items.find(filter).fetch(),
         createdBy: Meteor.userId(),
         updatedBy: Meteor.userId(),
         createdByName: Meteor.user().username,
@@ -341,7 +341,7 @@ function taskListArchivedSubCommand(ctx) {
         projectId: ctx.projectId,
         messageType: Ols.MESSAGE_TYPE_CUSTOM,
         customMessageType: customMessageType,
-        tasks: Tasks.find(filter).fetch(),
+        tasks: Items.find(filter).fetch(),
         createdBy: Meteor.userId(),
         updatedBy: Meteor.userId(),
         createdByName: Meteor.user().username,

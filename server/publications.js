@@ -8,14 +8,12 @@ Meteor.publish("projects", function () {
 });
 
 Meteor.publish("tasks", function(projectId) {
-   return Tasks.find({projectId});
+   return Items.find({projectId, type: Ols.Item.ITEM_TYPE_ACTION, subType: Ols.Item.ACTION_SUBTYPE_TASK});
 });
 
 Meteor.publish("refs", function(projectId) {
     return Refs.find({projectId});
 });
-
-
 
 Meteor.publish('currentProject', function(projectId) {
     this.autorun(function(computation) {

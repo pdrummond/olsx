@@ -14,6 +14,7 @@ Package.onUse(function(api) {
     'stringutils-api.js',
     'loopbot-api.js',
     'status-type-api.js',
+    'item-type-api.js',
     'keys-api.js'
   ]);
   api.export(['Ols']);

@@ -35,7 +35,11 @@ Task = React.createClass({
                 <div className="task-wrapper">
                     <i style={this.styles.taskIcon} className="fa fa-exclamation-circle fa-2x"></i>
                     <div style={{paddingLeft: '0px'}}>
-                        <div className="task-description" onClick={this.onDescriptionClicked} style={{fontSize: '14px', fontWeight: 'bold', color:'gray'}}>{this.props.task.key}: {this.props.task.description}</div>
+                        <div onClick={this.onDescriptionClicked}
+                             className="task-description"
+                             style={{fontSize: '14px', fontWeight: 'bold', color:'gray'}}>
+                                {this.renderKey()} {this.props.task.description}
+                        </div>
                         <div style={{fontSize:'12px',color:'gray'}}>{this.props.task.createdByName}</div>
                     </div>
                     {this.renderSelectedLinks()}
@@ -43,6 +47,14 @@ Task = React.createClass({
                 {this.renderRefList()}
             </li>
         )
+    },
+
+    renderKey() {
+        if(this.props.task.key == -1) {
+            return <i className="fa fa-spin fa-spinner"></i>;
+        } else {
+            return this.props.task.key + ": ";
+        }
     },
 
     renderRefList() {

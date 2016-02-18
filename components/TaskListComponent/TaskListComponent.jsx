@@ -14,7 +14,7 @@ TaskListComponent = React.createClass({
         var refsHandle = Meteor.subscribe('refs', this.props.projectId);
 
         if(tasksHandle.ready() && refsHandle.ready()) {
-            data.taskList = Tasks.find(Ols.Filter.parseString(this.state.filterInput), {sort: {updatedAt: -1}}).fetch();
+            data.taskList = Items.find(Ols.Filter.parseString(this.state.filterInput), {sort: {updatedAt: -1}}).fetch();
             data.authInProcess = Meteor.loggingIn();
         }
         return data;
@@ -59,9 +59,11 @@ TaskListComponent = React.createClass({
 
     addTask(description) {
         var self = this;
-        Tasks.methods.addTask.call({
+        Items.methods.addItem.call({
             description: description,
-            projectId: this.props.projectId
+            projectId: this.props.projectId,
+            type: Ols.Item.ITEM_TYPE_ACTION,
+            subType:Ols.Item.ACTION_SUBTYPE_TASK,
         }, (err, task) => {
             if (err) {
                 if (err.reason) {

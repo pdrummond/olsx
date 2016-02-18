@@ -72,7 +72,7 @@ Task = React.createClass({
                     <div className="btn-group" role="group" aria-label="...">
                         <button type="button" className="btn btn-link" onClick={this.onJumpClicked}><i className="fa fa-mail-reply"></i> Jump</button>
                         <button type="button" className="btn btn-link" onClick={this.onRefsClicked}><i className="fa fa-hashtag"></i> References</button>
-                        <button type="button" className="btn btn-link"><i className="fa fa-archive"></i> Archive</button>
+                        <button type="button" className="btn btn-link" onClick={this.onArchivedClicked}><i className="fa fa-archive"></i> {this.renderArchiveLabel()}</button>
                     </div>
                     <div className="pull-right">
                         <div className="dropdown">
@@ -104,6 +104,10 @@ Task = React.createClass({
         }
     },
 
+    renderArchiveLabel: function() {
+        return this.props.task.isArchived? 'Restore':'Archive';
+    },
+
     onDescriptionClicked: function() {
         this.setState({'isSelected': !this.state.isSelected});
     },
@@ -120,5 +124,27 @@ Task = React.createClass({
 
     onRefsClicked: function() {
         this.setState({'showRefList': !this.state.showRefList});
+    },
+
+    onArchivedClicked() {
+        if(this.props.task.isArchived) {
+            Items.methods.restoreItem.call({
+                projectId: this.props.task.projectId,
+                seq: this.props.task.seq,
+            }, (err) => {
+                if (err) {
+                    toastr.error("Error restoring task: " + err.reason);
+                }
+            });
+        } else {
+            Items.methods.archiveItem.call({
+                projectId: this.props.task.projectId,
+                seq: this.props.task.seq,
+            }, (err) => {
+                if (err) {
+                    toastr.error("Error archiving task: " + err.reason);
+                }
+            });
+        }
     }
 });

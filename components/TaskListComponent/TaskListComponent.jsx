@@ -14,7 +14,9 @@ TaskListComponent = React.createClass({
         var refsHandle = Meteor.subscribe('refs', this.props.projectId);
 
         if(tasksHandle.ready() && refsHandle.ready()) {
-            data.taskList = Items.find(Ols.Filter.parseString(this.state.filterInput), {sort: {updatedAt: -1}}).fetch();
+            var inputFilter = Ols.Filter.parseString(this.state.filterInput);
+            var filter = this.props.filter ? _.extend(inputFilter, this.props.filter) : _.extend(inputFilter, {isArchived:false});
+            data.taskList = Items.find(filter, {sort: {updatedAt: -1}}).fetch();
             data.authInProcess = Meteor.loggingIn();
         }
         return data;

@@ -42,6 +42,11 @@ Task = React.createClass({
                         </div>
                         <div style={{fontSize:'12px',color:'gray'}}>{this.renderKey()} Created by {this.props.task.createdByName} {moment(this.props.task.createdAt).fromNow()}</div>
                     </div>
+                    <div className="labels" style={{paddingLeft:'35px'}}>
+                        <span className="label label-default" style={{backgroundColor:Ols.Status.getStatusColor(this.props.task.status)}}><i className="fa fa-circle"></i> {Ols.Status.getStatusLabel(this.props.task.status)}</span>
+                        {/*<span className="label label-default"><i className="fa fa-flag-checkered"></i> Milestone 1</span>
+                        <span className="label label-primary"><i className="fa fa-flag"></i> Sprint 44</span>*/}
+                    </div>
                     {this.renderSelectedLinks()}
                 </div>
                 {this.renderRefList()}
@@ -82,15 +87,16 @@ Task = React.createClass({
                             <ul className="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenu1">
                                 <li><a href="">Show Details</a></li>
                                 <li role="separator" className="divider"></li>
-                                <li><a href="">Set Open - New</a></li>
-                                <li><a href="">Set Open - In Progress</a></li>
-                                <li><a href="">Set Open - Blocked</a></li>
-                                <li><a href="">Set Open - In Test</a></li>
+                                <li><a href="" onClick={this.onStatusNewClicked}>Set status to New</a></li>
+                                <li><a href="" onClick={this.onStatusOpenClicked}>Set status to Open</a></li>
+                                <li><a href="" onClick={this.onStatusInProgressClicked}>Set status to In Progress</a></li>
+                                <li><a href="" onClick={this.onStatusBlockedClicked}>Set status to Blocked</a></li>
+                                <li><a href="" onClick={this.onStatusInTestClicked}>Set status to In Test</a></li>
                                 <li role="separator" className="divider"></li>
-                                <li><a href="">Set Closed - Done</a></li>
-                                <li><a href="">Set Closed - Rejected</a></li>
-                                <li><a href="">Set Closed - Duplicate</a></li>
-                                <li><a href="">Set Closed - Out of Scope</a></li>
+                                <li><a href="" onClick={this.onStatusDoneClicked}>Set status to Done</a></li>
+                                <li><a href="" onClick={this.onStatusRejectedClicked}>Set status to Rejected</a></li>
+                                <li><a href="" onClick={this.onStatusDuplicateClicked}>Set status to Duplicate</a></li>
+                                <li><a href="" onClick={this.onStatusOutOfScopeClicked}>Set status to Out of Scope</a></li>
                                 <li role="separator" className="divider"></li>
                                 <li><a href="">Delete</a></li>
                             </ul>
@@ -146,5 +152,54 @@ Task = React.createClass({
                 }
             });
         }
+    },
+
+    onStatusNewClicked() {
+        this.updateTaskStatus(Ols.Status.NEW);
+    },
+
+    onStatusOpenClicked() {
+        this.updateTaskStatus(Ols.Status.OPEN);
+    },
+
+    onStatusInProgressClicked() {
+        this.updateTaskStatus(Ols.Status.IN_PROGRESS);
+    },
+
+    onStatusBlockedClicked() {
+        this.updateTaskStatus(Ols.Status.BLOCKED);
+    },
+
+    onStatusInTestClicked() {
+        this.updateTaskStatus(Ols.Status.IN_TEST);
+    },
+
+    onStatusDoneClicked() {
+        this.updateTaskStatus(Ols.Status.DONE);
+    },
+
+    onStatusRejectedClicked() {
+        this.updateTaskStatus(Ols.Status.REJECTED);
+    },
+
+    onStatusDuplicateClicked() {
+        this.updateTaskStatus(Ols.Status.DUPLICATE);
+    },
+
+    onStatusOutOfScopeClicked() {
+        this.updateTaskStatus(Ols.Status.OUT_OF_SCOPE);
+    },
+
+
+    updateTaskStatus(status) {
+        Items.methods.updateItemStatus.call({
+            projectId: this.props.task.projectId,
+            seq:this.props.task.seq,
+            status
+        }, (err) => {
+            if(err) {
+                toastr.error("Error updating task status: " + err.reason);
+            }
+        });
     }
 });

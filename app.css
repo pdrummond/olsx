@@ -493,3 +493,7 @@ header {
 .ref-item {
     margin-top:5px;
 }
+
+.task-wrapper .labels .label {
+    margin-right:5px;
+}

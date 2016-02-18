@@ -19,8 +19,12 @@ FilterApi.prototype.parseString = function(filterString) {
                 case 'new': value = Ols.Status.NEW; break;
                 case 'open': value = Ols.Status.OPEN; break;
                 case 'in-progress': value = Ols.Status.IN_PROGRESS; break;
-                case 'paused': value = Ols.Status.IN_PROGRESS; break;
+                case 'blocked': value = Ols.Status.BLOCKED; break;
+                case 'in-test': value = Ols.Status.IN_TEST; break;
                 case 'done': value = Ols.Status.DONE; break;
+                case 'rejected': value = Ols.Status.REJECTED; break;
+                case 'duplicate': value = Ols.Status.DUPLICATE; break;
+                case 'out-of-scope': value = Ols.Status.OUT_OF_SCOPE; break;
             }
         }
 

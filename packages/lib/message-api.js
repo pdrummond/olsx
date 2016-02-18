@@ -3,16 +3,16 @@
 MessageApi = function() {
 };
 
-MessageApi.prototype.systemErrorMessage = function(conversationId, errMsg) {
-    return Meteor.call('systemErrorMessage', conversationId, errMsg);
+MessageApi.prototype.systemErrorMessage = function(projectId, errMsg) {
+    return Meteor.call('systemErrorMessage', projectId, errMsg);
 };
 
-MessageApi.prototype.systemSuccessMessage = function(conversationId, msg) {
-    return Meteor.call('systemSuccessMessage', conversationId, msg);
+MessageApi.prototype.systemSuccessMessage = function(projectId, msg) {
+    return Meteor.call('systemSuccessMessage', projectId, msg);
 };
 
-MessageApi.prototype.saveMessage = function(conversationId, errMsg) {
-    return Meteor.call('saveMessage', conversationId, errMsg);
+MessageApi.prototype.saveMessage = function(projectId, errMsg) {
+    return Meteor.call('saveMessage', projectId, errMsg);
 };
 
 Ols.Message = new MessageApi();

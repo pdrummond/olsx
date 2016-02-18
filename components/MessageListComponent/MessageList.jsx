@@ -49,7 +49,7 @@ MessageList = React.createClass({
                 <MessageBox
                     onUserIsTyping={this.props.onUserIsTyping}
                     onMessageAdded={this.props.onMessageAdded} />
-                <UserIsTypingAlert conversationId={this.props.conversationId}/>
+                <UserIsTypingAlert projectId={this.props.projectId}/>
                 <div id="incoming-messages-toast"
                      onClick={this.props.onIncomingMessageToastClicked}
                      className={this.props.incomingMessageCount == 0? 'hidden':''}>
@@ -87,11 +87,11 @@ MessageList = React.createClass({
 
     getRandomEmptyMessage() {
         var msgs = [
-            "So this conversation is empty right now, but not for long!",
-            "An empty conversation this is.  Will you be the first to get the discussion moving? :-)",
-            "Who will be the first to add a message to this wonderful new conversation?",
-            "Everyone knows that communication makes a team more productive, so let's get this conversation started!",
-            "Today, we are going to be super productive and this conversation is where it all begins",
+            "So this project is empty right now, but not for long!",
+            "An empty project this is.  Will you be the first to get the discussion moving? :-)",
+            "Who will be the first to add a message to this wonderful new project?",
+            "Everyone knows that communication makes a team more productive, so let's get this project started!",
+            "Today, we are going to be super productive and this project is where it all begins",
             "Let's replace this message with something of more substance shall we? Who's going to be first?"
         ];
         return msgs[this.getRandomInt(msgs.length-1)];

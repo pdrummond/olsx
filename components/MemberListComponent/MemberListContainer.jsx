@@ -18,12 +18,12 @@ MemberListContainer = React.createClass({
     onMemberClicked(memberToRemove) {
         var currentMember = Members.findOne({userId: Meteor.userId()});
         if(currentMember.role == Ols.ROLE_ADMIN) {
-            if(confirm("Do you wish to remove this member from the conversation?")) {
+            if(confirm("Do you wish to remove this member from the project?")) {
                 Members.methods.removeMember.call({memberId: memberToRemove._id}, (err) => {
                     if (err) {
                         toastr.error('Unable to remove member: ' + err.reason);
                     } else {
-                        Ols.Message.systemSuccessMessage(this.props.conversationId, Meteor.user().username + " removed " + memberToRemove.username + " from this conversation");
+                        Ols.Message.systemSuccessMessage(this.props.projectId, Meteor.user().username + " removed " + memberToRemove.username + " from this project");
                     }
                 });
             }
@@ -34,12 +34,12 @@ MemberListContainer = React.createClass({
         event.preventDefault();
         var emailOrUsername = ReactDOM.findDOMNode(this.refs.textInput).value.trim();
 
-        Members.methods.addMember.call({emailOrUsername, conversationId: this.props.conversationId, role:Ols.ROLE_USER}, (err, member) => {
+        Members.methods.addMember.call({emailOrUsername, projectId: this.props.projectId, role:Ols.ROLE_USER}, (err, member) => {
             if(err) {
                 toastr.error('Unable to add member: ' + err.reason);
                 console.error('Error adding member: ' + JSON.stringify(err, null, 2));
             } else {
-                Ols.Message.systemSuccessMessage(this.props.conversationId, Meteor.user().username + " added " + member.username + " to this conversation");
+                Ols.Message.systemSuccessMessage(this.props.projectId, Meteor.user().username + " added " + member.username + " to this project");
             }
         });
         ReactDOM.findDOMNode(this.refs.textInput).value = "";

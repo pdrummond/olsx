@@ -10,7 +10,7 @@ if(Meteor.isServer) {
             if(opts.startMessageSeq == 0) {
                 console.log('-- start message is 0 so finding latest page of messages...');
 
-                var latestMessage = ServerMessages.findOne({conversationId: opts.conversationId}, {sort: {createdAt: -1}});
+                var latestMessage = ServerMessages.findOne({projectId: opts.projectId}, {sort: {createdAt: -1}});
                 if(latestMessage) {
                     var latestSeq = latestMessage.seq;
                     console.log('-- seq for latest message is ' + latestSeq);
@@ -20,7 +20,7 @@ if(Meteor.isServer) {
                     }
                     console.log('-- start message seq for latest page is therefore ' + opts.startMessageSeq);
                 } else {
-                    console.log('-- There are no messages in this conversation so the seq is set to 1');
+                    console.log('-- There are no messages in this project so the seq is set to 1');
                     opts.startMessageSeq = 1;
                 }
             }
@@ -41,7 +41,7 @@ if(Meteor.isServer) {
                 message with a seq of opts.startMessageSeq.
              */
 
-            result.messages = ServerMessages.find({conversationId: opts.conversationId, seq: {$gte: opts.startMessageSeq}}, {
+            result.messages = ServerMessages.find({projectId: opts.projectId, seq: {$gte: opts.startMessageSeq}}, {
                 limit: opts.messagesCountLimit+1,
                 sort: {seq: 1}
             }).fetch();
@@ -57,12 +57,12 @@ if(Meteor.isServer) {
             if(result.messages && result.messages.length > 0) {
 
                 var olderMessagesCount = ServerMessages.find({
-                    conversationId: opts.conversationId,
+                    projectId: opts.projectId,
                     seq: {$lt: result.messages[0].seq}
                 }).count();
 
                 var newerMessagesCount = ServerMessages.find({
-                    conversationId: opts.conversationId,
+                    projectId: opts.projectId,
                     seq: {$gt: result.messages[result.messages.length-1].seq}
                 }).count();
 
@@ -78,7 +78,7 @@ if(Meteor.isServer) {
             try {
                 console.log("> saveMessage(). "
                 + "messageType=" + message.messageType
-                + ", conversationId=" + message.conversationId
+                + ", projectId=" + message.projectId
                 + ", content=" + (message.content ? Ols.StringUtils.truncate(message.content, 100) : ""));
 
                 var commandName;
@@ -112,7 +112,7 @@ if(Meteor.isServer) {
                         Ols.Command.executeCommand(commandName, commandData, message);
                     } else {
                         console.error("-- command is not valid (" + message.content + "). Generating error message...");
-                        Meteor.call('systemErrorMessage', message.conversationId, 'Invalid command: "' + commandName + "'");
+                        Meteor.call('systemErrorMessage', message.projectId, 'Invalid command: "' + commandName + "'");
                     }
                 }
                 if(message.content.startsWith("@loopbot")) {
@@ -132,7 +132,7 @@ if(Meteor.isServer) {
             var now = new Date();
             message.createdAt = now;
             message.updatedAt = now;
-            message.seq = incrementCounter('counters', message.conversationId);
+            message.seq = incrementCounter('counters', message.projectId);
             console.log("-- saving message " + message.seq + "...");
             var messageId = ServerMessages.insert(message);
             console.log("-- message " + message.seq + " saved");
@@ -181,12 +181,12 @@ if(Meteor.isServer) {
                         var key = parseInt(matches[1]);
                         console.log("-- ref to task " + key + " found for message " + message.seq);
                         if (key != null) {
-                            var task = Tasks.findOne({conversationId: message.conversationId, key: key});
+                            var task = Tasks.findOne({projectId: message.projectId, key: key});
                             if (task != null) {
                                 console.log("-- task found for key " + key + ".  Adding ref...");
                                 Refs.methods.addRef.call({
                                     messageId: message._id,
-                                    conversationId: message.conversationId,
+                                    projectId: message.projectId,
                                     messageSeq: message.seq,
                                     messageContent: message.content,
                                     taskId: task._id,
@@ -217,10 +217,10 @@ if(Meteor.isServer) {
             }
         },
 
-        systemSuccessMessage: function(conversationId, content) {
-            console.log("-- saving system success message for conversation " + conversationId + ": " + content);
+        systemSuccessMessage: function(projectId, content) {
+            console.log("-- saving system success message for project " + projectId + ": " + content);
             return Meteor.call('insertAndBroadcastMessage', {
-                conversationId: conversationId,
+                projectId: projectId,
                 createdBy: Ols.SYSTEM_USERID,
                 createdByName: Ols.SYSTEM_USERNAME,
                 updatedBy: Ols.SYSTEM_USERID,
@@ -234,10 +234,10 @@ if(Meteor.isServer) {
             console.log("-- system success message saved");
         },
 
-        systemErrorMessage: function(conversationId, content) {
-            console.log("-- saving system ERROR message for conversation " + conversationId + ": " + content);
+        systemErrorMessage: function(projectId, content) {
+            console.log("-- saving system ERROR message for project " + projectId + ": " + content);
             return Meteor.call('insertAndBroadcastMessage', {
-                conversationId: conversationId,
+                projectId: projectId,
                 createdBy: Ols.SYSTEM_USERID,
                 createdByName: Ols.SYSTEM_USERNAME,
                 updatedBy: Ols.SYSTEM_USERID,

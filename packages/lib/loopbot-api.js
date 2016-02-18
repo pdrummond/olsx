@@ -3,25 +3,25 @@ LoopBotApi = function() {
 };
 
 LoopBotApi.prototype.addActiveProcess = function(process) {
-    this.activeProcessList[process.conversationId] = process;
+    this.activeProcessList[process.projectId] = process;
 }
 
-LoopBotApi.prototype.processExistsForConversation = function(conversationId) {
-    var exists = this.activeProcessList[conversationId] != null;
-    console.log("processExistsForConversation: " + exists);
+LoopBotApi.prototype.processExistsForProject = function(projectId) {
+    var exists = this.activeProcessList[projectId] != null;
+    console.log("processExistsForProject: " + exists);
     return exists;
 };
 
 LoopBotApi.prototype.executeResponseHandler = function(message, content) {
-    var process = this.activeProcessList[message.conversationId];
+    var process = this.activeProcessList[message.projectId];
     if(process) {
         process.responseHandler(message, content);
-        this.endActiveProcess(message.conversationId);
+        this.endActiveProcess(message.projectId);
     }
 };
 
-LoopBotApi.prototype.endActiveProcess = function(conversationId) {
-    delete this.activeProcessList[conversationId];
+LoopBotApi.prototype.endActiveProcess = function(projectId) {
+    delete this.activeProcessList[projectId];
 };
 
 /*
@@ -32,19 +32,19 @@ LoopBotApi.prototype.promptMessage = function(opts) {
 
     check(opts, {
         processName: String,
-        conversationId: String,
+        projectId: String,
         content: String,
         responseHandler: Match.Any
     });
     var self = this;
-    if (this.processExistsForConversation(opts.conversationId)) {
+    if (this.processExistsForProject(opts.projectId)) {
         Ols.LoopBot.errorMessage({
-            conversationId: opts.conversationId,
+            projectId: opts.projectId,
             content: "Sorry, I'm not very good at doing two things at once.  Type `@loopbot cancel` first, then try again"
         });
     } else {
         Meteor.call('saveMessage', {
-            conversationId: opts.conversationId,
+            projectId: opts.projectId,
             content: opts.content,
             messageType: Ols.MESSAGE_TYPE_LOOPBOT,
             messageSubType: Ols.MESSAGE_SUBTYPE_LOOPBOT_PROMPT,
@@ -58,7 +58,7 @@ LoopBotApi.prototype.promptMessage = function(opts) {
             } else {
                 console.error("-- loopbot message " + msg.seq + " saved successfully.");
                 self.addActiveProcess({
-                    conversationId: opts.conversationId,
+                    projectId: opts.projectId,
                     processName: opts.processName,
                     responseHandler: opts.responseHandler
                 });
@@ -73,11 +73,11 @@ LoopBotApi.prototype.promptMessage = function(opts) {
  */
 LoopBotApi.prototype.infoMessage = function(opts, callback) {
     check(opts, {
-        conversationId: String,
+        projectId: String,
         content: String
     });
     Meteor.call('saveMessage', {
-        conversationId: opts.conversationId,
+        projectId: opts.projectId,
         content: opts.content,
         messageType: Ols.MESSAGE_TYPE_LOOPBOT,
         messageSubType: Ols.MESSAGE_SUBTYPE_LOOPBOT_INFO,
@@ -102,11 +102,11 @@ LoopBotApi.prototype.infoMessage = function(opts, callback) {
  */
 LoopBotApi.prototype.errorMessage = function(opts, callback) {
     check(opts, {
-        conversationId: String,
+        projectId: String,
         content: String
     });
     Meteor.call('saveMessage', {
-        conversationId: opts.conversationId,
+        projectId: opts.projectId,
         content: opts.content,
         messageType: Ols.MESSAGE_TYPE_LOOPBOT,
         messageSubType: Ols.MESSAGE_SUBTYPE_LOOPBOT_ERROR,
@@ -131,26 +131,26 @@ LoopBotApi.prototype.onResponseReceived = function(message) {
     console.log("-- LOOPBOT received message " + message.seq + ": " + message.content);
     var content = message.content.replace("@loopbot", "").trim();
     if(content == "cancel") {
-        if(this.processExistsForConversation(message.conversationId)) {
-            this.endActiveProcess(message.conversationId);
+        if(this.processExistsForProject(message.projectId)) {
+            this.endActiveProcess(message.projectId);
             Ols.LoopBot.infoMessage({
-                conversationId: message.conversationId,
+                projectId: message.projectId,
                 content: "Okay, I'll pretend it never happened ;-) Bye for now."
             });
         } else {
             Ols.LoopBot.infoMessage({
-                conversationId: message.conversationId,
+                projectId: message.projectId,
                 content: "There is nothing to cancel - I'm not doing anything right now.  To be honest, I'm a bit bored."
             });
         }
-    } else if(this.processExistsForConversation(message.conversationId)) {
+    } else if(this.processExistsForProject(message.projectId)) {
         console.log("-- LOOPBOT has active process so treating message " + message.seq + " as the response");
         console.log("-- LOOPBOT is executing the active response handler now..");
         this.executeResponseHandler(message, content);
         console.log("-- LOOPBOT has finished executing the active response handler");
     } else {
         Ols.LoopBot.infoMessage({
-            conversationId: message.conversationId,
+            projectId: message.projectId,
             content: "Hey, " + Meteor.user().username + ". How's it going? I'm pretty thick so I only respond to specific commands.  Type `/help` to list a list of available commands."});
     }
 };

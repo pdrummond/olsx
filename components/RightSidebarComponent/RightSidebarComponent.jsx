@@ -38,9 +38,9 @@ RightSidebarComponent = React.createClass({
 
     renderSelectedComponent() {
         if(this.state.selectedComponent == 'TASKS') {
-            return <TaskListComponent conversationId={this.props.conversationId} />;
+            return <TaskListComponent projectId={this.props.projectId} />;
         } else {
-            return <MemberListContainer conversationId={this.props.conversationId} memberList={this.props.memberList}/>
+            return <MemberListContainer projectId={this.props.projectId} memberList={this.props.memberList}/>
         }
     },
 

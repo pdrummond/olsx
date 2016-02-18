@@ -1,4 +1,4 @@
-Conversation = React.createClass({
+Project = React.createClass({
     propTypes: {
         numNewMessages: React.PropTypes.number,
         isActive: React.PropTypes.bool,
@@ -12,12 +12,12 @@ Conversation = React.createClass({
                 onClick={this.onClick}
                 className={this.getClassName()}>
                 <div>
-                    <span className="conversation-subject"><i className="fa fa-bullseye"></i> {this.props.conv.subject}</span>
+                    <span className="project-title"><i className="fa fa-bullseye"></i> {this.props.project.title}</span>
                     <div>
                         <div style={{fontSize:'12px', color:'gray', position:'relative'}}>
-                            Created by {this.props.conv.createdByName} {moment(this.props.conv.createdAt).fromNow()}
+                            Created by {this.props.project.createdByName} {moment(this.props.project.createdAt).fromNow()}
                         </div>
-                        <span className={this.props.numNewMessages == 0 ?"hide conversation-new-messages-badge":"conversation-new-messages-badge"}>
+                        <span className={this.props.numNewMessages == 0 ?"hide project-new-messages-badge":"project-new-messages-badge"}>
                         {this.props.numNewMessages}
                     </span>
                     </div>
@@ -28,7 +28,7 @@ Conversation = React.createClass({
     },
 
     getClassName() {
-        var className = 'conversation';
+        var className = 'project';
         if(this.props.isActive) {
             className += ' active';
         }
@@ -39,6 +39,6 @@ Conversation = React.createClass({
     },
 
     onClick: function() {
-        this.props.onClick(this.props.conv);
+        this.props.onClick(this.props.project);
     }
 });

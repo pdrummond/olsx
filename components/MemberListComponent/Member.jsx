@@ -6,11 +6,11 @@ Member = React.createClass({
         var data = {};
         data.userProfileImage = user.profileImage;
         data.userStatus = user.status && user.status.online
-                ? user.currentConversationId && user.currentConversationId == this.props.member.conversationId
+                ? user.currentProjectId && user.currentProjectId == this.props.member.projectId
                     ? 'viewing' : 'online'
                 : 'offline';
         switch(data.userStatus) {
-            case 'viewing': data.userStatusLabel = 'Viewing this conversation'; break;
+            case 'viewing': data.userStatusLabel = 'Viewing this project'; break;
             case 'online': data.userStatusLabel = 'Online, elsewhere'; break;
             case 'offline': data.userStatusLabel = 'Offline'; break;
         }

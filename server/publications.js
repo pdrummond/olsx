@@ -1,31 +1,31 @@
-Meteor.publish("conversations", function () {
+Meteor.publish("projects", function () {
     this.autorun(function(computation) {
-        var conversationIds = Members.find({userId: this.userId}).map(function (member) {
-            return member.conversationId;
+        var projectIds = Members.find({userId: this.userId}).map(function (member) {
+            return member.projectId;
         });
-        return Conversations.find({_id: {$in: conversationIds}});
+        return Projects.find({_id: {$in: projectIds}});
     });
 });
 
-Meteor.publish("tasks", function(conversationId) {
-   return Tasks.find({conversationId});
+Meteor.publish("tasks", function(projectId) {
+   return Tasks.find({projectId});
 });
 
-Meteor.publish("refs", function(conversationId) {
-    return Refs.find({conversationId});
+Meteor.publish("refs", function(projectId) {
+    return Refs.find({projectId});
 });
 
 
 
-Meteor.publish('currentConversation', function(conversationId) {
+Meteor.publish('currentProject', function(projectId) {
     this.autorun(function(computation) {
-        var c = Conversations.find(conversationId);
+        var c = Projects.find(projectId);
         return c;
     });
 });
 
-Meteor.publish("currentConversationMembers", function (conversationId) {
-    return Members.find({conversationId: conversationId});
+Meteor.publish("currentProjectMembers", function (projectId) {
+    return Members.find({projectId: projectId});
 });
 
 
@@ -33,7 +33,7 @@ Meteor.publish("allUsernames", function () {
     return Meteor.users.find({}, {fields: {
         "username": 1,
         "profileImage": 1,
-        "currentConversationId": 1
+        "currentProjectId": 1
     }});
 });
 

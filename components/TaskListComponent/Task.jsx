@@ -11,7 +11,7 @@ Task = React.createClass({
     getMeteorData() {
         var data = {};
         data.refList = Refs.find({
-                conversationId: this.props.task.conversationId,
+                projectId: this.props.task.projectId,
                 taskId: this.props.task._id
             }, {
                 sort: {createdAt: -1}
@@ -97,8 +97,8 @@ Task = React.createClass({
     },
 
     onJumpClicked: function() {
-        FlowRouter.go('conversationPageStartSeq', {
-            conversationId: this.props.task.conversationId,
+        FlowRouter.go('projectPageStartSeq', {
+            projectId: this.props.task.projectId,
             startMessageSeq: this.props.task.messageSeq
         }, {
             scrollTop: true,

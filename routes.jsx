@@ -2,27 +2,27 @@
 FlowRouter.route('/', {
     name: 'homePage',
     action: function(params) {
-        ReactLayout.render(MainLayout, {content: <ConversationPage />});
+        ReactLayout.render(MainLayout, {content: <ProjectPage />});
     }
 });
-FlowRouter.route('/conversation/:conversationId', {
-    name: 'conversationPageLatest',
+FlowRouter.route('/project/:projectId', {
+    name: 'projectPageLatest',
     action: function(params) {
-        ReactLayout.render(MainLayout, {content: <ConversationPage />});
-    }
-});
-
-FlowRouter.route('/conversation/:conversationId/start-message/:startMessageSeq', {
-    name: 'conversationPageStartSeq',
-    action: function(params) {
-        ReactLayout.render(MainLayout, {content: <ConversationPage />});
+        ReactLayout.render(MainLayout, {content: <ProjectPage />});
     }
 });
 
-FlowRouter.route('/conversation/:conversationId/start-message/:startMessageSeq/limit/:messagesCountLimit', {
-    name: 'conversationPageStartSeqAndLimit',
+FlowRouter.route('/project/:projectId/start-message/:startMessageSeq', {
+    name: 'projectPageStartSeq',
     action: function(params) {
-        ReactLayout.render(MainLayout, {content: <ConversationPage />});
+        ReactLayout.render(MainLayout, {content: <ProjectPage />});
+    }
+});
+
+FlowRouter.route('/project/:projectId/start-message/:startMessageSeq/limit/:messagesCountLimit', {
+    name: 'projectPageStartSeqAndLimit',
+    action: function(params) {
+        ReactLayout.render(MainLayout, {content: <ProjectPage />});
     }
 });
 

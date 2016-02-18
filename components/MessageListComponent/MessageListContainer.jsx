@@ -3,11 +3,11 @@ MessageListContainer = React.createClass({
     mixins: [ReactMeteorData],
 
     propTypes: {
-        conversationId: React.PropTypes.string,
+        projectId: React.PropTypes.string,
         startMessageSeq: React.PropTypes.number,
         messagesCountLimit: React.PropTypes.number,
 
-        onOtherConversationNewMessage: React.PropTypes.func
+        onOtherProjectNewMessage: React.PropTypes.func
     },
 
     getInitialState() {
@@ -22,7 +22,7 @@ MessageListContainer = React.createClass({
         var self = this;
         Streamy.on('incomingMessage', function(msg) {
             console.log("incoming message received: " + JSON.stringify(msg, null, 4));
-            if(msg.conversationId == self.props.conversationId) {
+            if(msg.projectId == self.props.projectId) {
                 var incomingMessageCount = 0;
                 if (self.isInScrollBack()/* && msg.createdBy != Meteor.userId()*/) {
                     incomingMessageCount = self.state.incomingMessageCount || 0;
@@ -50,7 +50,7 @@ MessageListContainer = React.createClass({
                     }
                 }
             } else {
-                self.props.onOtherConversationNewMessage(msg);
+                self.props.onOtherProjectNewMessage(msg);
             }
         });
         return {};
@@ -65,7 +65,7 @@ MessageListContainer = React.createClass({
                 showForwardLink={this.state.showForwardLink}
                 showBackwardLink={this.state.showBackwardLink}
                 incomingMessageCount={this.state.incomingMessageCount}
-                conversationId={this.props.conversationId}
+                projectId={this.props.projectId}
                 onMessageAdded={this.onMessageAdded}
                 onUserIsTyping={this.onUserIsTyping}
                 onLoadOlderLinkClicked={this.onLoadOlderLinkClicked}
@@ -76,7 +76,7 @@ MessageListContainer = React.createClass({
     },
 
     onIncomingMessageToastClicked: function() {
-        FlowRouter.go('conversationPageLatest', {conversationId: this.props.conversationId}, {scrollBottom: true});
+        FlowRouter.go('projectPageLatest', {projectId: this.props.projectId}, {scrollBottom: true});
         this.setState({'messages': this.state.messages.concat(this.state.newMessages), incomingMessageCount: 0});
         this.scrollBottom();
     },
@@ -85,8 +85,8 @@ MessageListContainer = React.createClass({
         var self = this;
         var newestMessage = this.state.messages[this.state.messages.length-1];
         if(newestMessage) {
-            FlowRouter.go('conversationPageStartSeq', {
-                conversationId: this.props.conversationId,
+            FlowRouter.go('projectPageStartSeq', {
+                projectId: this.props.projectId,
                 startMessageSeq: newestMessage.seq + 1
             });
         }
@@ -99,8 +99,8 @@ MessageListContainer = React.createClass({
             startMessageSeq = 1;
         }
         if(oldestMessage) {
-            FlowRouter.go('conversationPageStartSeq', {
-                conversationId: this.props.conversationId,
+            FlowRouter.go('projectPageStartSeq', {
+                projectId: this.props.projectId,
                 startMessageSeq: startMessageSeq
             });
         }
@@ -110,7 +110,7 @@ MessageListContainer = React.createClass({
         console.log("loadMessages");
         var self = this;
         Meteor.call('loadMessages', {
-            conversationId: this.props.conversationId,
+            projectId: this.props.projectId,
             startMessageSeq: this.props.startMessageSeq,
             messagesCountLimit: this.props.messagesCountLimit
         }, function (err, result) {
@@ -134,7 +134,7 @@ MessageListContainer = React.createClass({
         Streamy.broadcast('userIsTyping', {
             userId: Meteor.userId(),
             username: Meteor.user().username,
-            conversationId: this.props.conversationId
+            projectId: this.props.projectId
         });
     },
 
@@ -161,7 +161,7 @@ MessageListContainer = React.createClass({
 
     insertClientMessage(content) {
         var message = {
-            conversationId: this.props.conversationId,
+            projectId: this.props.projectId,
             createdBy: Meteor.userId(),
             createdByName: Meteor.user().username,
             updatedBy: Meteor.userId(),

@@ -36,7 +36,7 @@ CommandApi.prototype.executeCommand = function(commandName, args, message) {
     console.log("-- COMMAND_API: executing command '" + message.content + "'");
     var result = this._commands[commandName]({
         args,
-        conversationId: message.conversationId,
+        projectId: message.projectId,
         message
     });
     if (typeof result === "undefined") {

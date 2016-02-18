@@ -252,7 +252,7 @@ main {
         padding-left: 10px;
         padding-right:10px;
     }
-    .conversation-list-container {
+    .project-list-container {
         display:none;
     }
     .right-sidebar-container {
@@ -264,7 +264,7 @@ main {
     margin-top:5px;
 }
 
-.conversation-list-container {
+.project-list-container {
     position: absolute;
     left: 0px;
     top:0px;
@@ -273,33 +273,33 @@ main {
     box-shadow: 0 0px 6px rgba(0,0,0,0.35);
 }
 
-.conversation-list {
+.project-list {
     margin-top:20px;
     overflow-y:auto;
     height: calc(100% - 80px);
 }
 
-.conversation {
+.project {
     padding:10px;
     vertical-align: middle;
     transition: background .2s;
     color: #7089A9;
 }
 
-.conversation:hover {
+.project:hover {
     background-color: #e7edf3;
     cursor:pointer;
 }
 
-.conversation.active {
+.project.active {
     background-color: #e7edf3;
 }
 
-.conversation .conversation-subject {
+.project .project-title {
     font-weight:bold;
 }
 
-.conversation.seen .conversation-subject {
+.project.seen .project-title {
     font-weight:normal;
 }
 
@@ -310,7 +310,7 @@ input {
     outline:none;
 }
 
-.conversation-input {
+.project-input {
     width:305px;
     position:relative;
     top:5px;
@@ -323,7 +323,7 @@ input {
     top:5px;
 }
 
-.empty-conversation-list {
+.empty-project-list {
     width: 400px;
     margin: auto auto;
     margin-top: 200px;
@@ -392,7 +392,7 @@ input {
     color: red;
 }
 
-.conversation-new-messages-badge {
+.project-new-messages-badge {
     position: relative;
     top: -15px;
     float: right;

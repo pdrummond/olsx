@@ -42,8 +42,8 @@ Ref = React.createClass({
     },
 
     onJumpClicked: function() {
-        FlowRouter.go('conversationPageStartSeq', {
-            conversationId: this.props.refItem.conversationId,
+        FlowRouter.go('projectPageStartSeq', {
+            projectId: this.props.refItem.projectId,
             startMessageSeq: this.props.refItem.messageSeq
         }, {
             scrollTop: true,

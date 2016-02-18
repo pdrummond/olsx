@@ -1,7 +1,7 @@
 UserIsTypingAlert = React.createClass({
 
     propTypes: {
-        conversationId: React.PropTypes.string
+        projectId: React.PropTypes.string
     },
 
 
@@ -16,7 +16,7 @@ UserIsTypingAlert = React.createClass({
         console.log("UserIsTypingAlert.componentDidMount");
         Streamy.on('userIsTyping', function(ctx) {
             if(ctx.userId != Meteor.userId()) {
-                if(ctx.conversationId == self.props.conversationId) {
+                if(ctx.projectId == self.props.projectId) {
                     self.setState({'userIsTypingMsg': ctx.username + " is typing.."});
                     clearInterval(self.userIsTypingTimeout);
                     self.userIsTypingTimeout = setTimeout(function() {

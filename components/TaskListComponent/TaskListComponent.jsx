@@ -10,8 +10,8 @@ TaskListComponent = React.createClass({
     getMeteorData() {
         var data = {};
         data.taskList = [];
-        var tasksHandle = Meteor.subscribe('tasks', this.props.conversationId);
-        var refsHandle = Meteor.subscribe('refs', this.props.conversationId);
+        var tasksHandle = Meteor.subscribe('tasks', this.props.projectId);
+        var refsHandle = Meteor.subscribe('refs', this.props.projectId);
 
         if(tasksHandle.ready() && refsHandle.ready()) {
             data.taskList = Tasks.find(Ols.Filter.parseString(this.state.filterInput), {sort: {updatedAt: -1}}).fetch();
@@ -61,7 +61,7 @@ TaskListComponent = React.createClass({
         var self = this;
         Tasks.methods.addTask.call({
             description: description,
-            conversationId: this.props.conversationId
+            projectId: this.props.projectId
         }, (err, task) => {
             if (err) {
                 if (err.reason) {

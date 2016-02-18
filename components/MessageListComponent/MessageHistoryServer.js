@@ -132,7 +132,7 @@ if(Meteor.isServer) {
             var now = new Date();
             message.createdAt = now;
             message.updatedAt = now;
-            message.seq = incrementCounter('counters', message.projectId);
+            message.seq = incrementCounter('counters', "message-counter-" + message.projectId);
             console.log("-- saving message " + message.seq + "...");
             var messageId = ServerMessages.insert(message);
             console.log("-- message " + message.seq + " saved");
@@ -172,25 +172,27 @@ if(Meteor.isServer) {
 
         detectRefsInMessage: function(message) {
             if(message.content) {
-                var re = /#([\d]+)/g;
-                var matches;
                 console.log("-- checking for refs in message " + message.seq);
+                var projectKey = Projects.findOne(message.projectId).key;
+                console.log("-- project key for message " + message.seq + " is " + projectKey);
+                var re = new RegExp('#' + projectKey + '-([\\d]+)', 'g');
+                var matches;
                 do {
                     matches = re.exec(message.content);
                     if (matches) {
-                        var key = parseInt(matches[1]);
-                        console.log("-- ref to task " + key + " found for message " + message.seq);
-                        if (key != null) {
-                            var task = Items.findOne({projectId: message.projectId, key: key});
-                            if (task != null) {
-                                console.log("-- task found for key " + key + ".  Adding ref...");
+                        var seq = parseInt(matches[1]);
+                        console.log("-- ref to item " + seq + " found for message " + message.seq);
+                        if (seq != null) {
+                            var item = Items.findOne({projectId: message.projectId, seq, seq});
+                            if (item != null) {
+                                console.log("-- item found with seq " + seq + ".  Adding ref...");
                                 Refs.methods.addRef.call({
                                     messageId: message._id,
                                     projectId: message.projectId,
                                     messageSeq: message.seq,
                                     messageContent: message.content,
-                                    taskId: task._id,
-                                    taskKey: key
+                                    itemId: item._id,
+                                    itemSeq: seq
 
                                 }, (err, ref) => {
                                     if (err) {
@@ -200,13 +202,13 @@ if(Meteor.isServer) {
                                             console.error("- Error adding ref: " + err.reason);
                                         }
                                     } else {
-                                        console.log("-- ref " + ref._id + " successfully created for task " + key);
+                                        console.log("-- ref " + ref._id + " successfully created for item " + seq);
                                     }
                                 });
 
                             }
                         } else {
-                            console.log("-- No task found for " + key + ".  Ignoring ref.");
+                            console.log("-- No item found for " + seq + ".  Ignoring ref.");
                         }
                     } else {
                         console.log("-- no more refs found");

@@ -26,8 +26,7 @@ ChatMessage = React.createClass({
                 <img style={this.styles.profileImage} src={this.data.userProfileImage}/>
                 <div style={{paddingLeft:'50px'}}>
                     <div><b>{this.props.message.createdByName}</b>
-                        <span
-                            className="message-created-at"> {moment(this.props.message.createdAt).fromNow()}</span>
+                        <span className="message-created-at"> {moment(this.props.message.createdAt).fromNow()} ({this.props.message.seq})</span>
 
                     </div>
                     <div className="message-content markdown-content" style={{marginTop: '0px'}} dangerouslySetInnerHTML={ this.getHtmlContent( this.props.message.content ) } />

@@ -33,15 +33,32 @@ ProjectListContainer = React.createClass({
     },
 
     handleSubmit(event) {
+        var self = this;
         event.preventDefault();
-        var title = ReactDOM.findDOMNode(this.refs.textInput).value.trim();
 
-        Projects.methods.addProject.call({title}, (err) => {
-            if(err) {
-                toastr.error('Oops! Something went wrong creating project - please try again.');
-                console.error('Error creating project: ' + err);
+        var title = ReactDOM.findDOMNode(this.refs.textInput).value.trim();
+        if(title != null) {
+            title = title.trim();
+            if (title.length > 0) {
+                bootbox.prompt({
+                    title: "What is the unique key for this project?",
+                    value: title.substring(0, 3).toUpperCase(),
+                    callback: function (key) {
+                        if(key != null) {
+                            key = key.trim();
+                            if (key.length > 0) {
+                                Projects.methods.addProject.call({title, key}, (err) => {
+                                    if (err) {
+                                        toastr.error('Oops! Something went wrong creating project - please try again.');
+                                        console.error('Error creating project: ' + err);
+                                    }
+                                });
+                            }
+                        }
+                        ReactDOM.findDOMNode(self.refs.textInput).value = "";
+                    }
+                });
             }
-        });
-        ReactDOM.findDOMNode(this.refs.textInput).value = "";
+        }
     }
 });

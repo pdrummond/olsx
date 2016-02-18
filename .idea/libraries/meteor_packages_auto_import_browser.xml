@@ -122,6 +122,7 @@
         <item url="file://$USER_HOME$/.meteor/packages/react-runtime/0.14.4/web.browser/react-runtime.js" />
         <item url="file://$USER_HOME$/.meteor/packages/react-runtime-dev/0.14.4/web.browser/react.browserify.options.json" />
         <item url="file://$USER_HOME$/.meteor/packages/aldeed_collection2-core/1.0.0/web.browser/lib/collection2.js" />
+        <item url="file://$USER_HOME$/.meteor/packages/mizzao_bootboxjs/4.4.0/web.browser/packages/mizzao_bootboxjs.js" />
         <item url="file://$USER_HOME$/.meteor/packages/react-runtime-dev/0.14.4/web.browser/detect-shims.js" />
         <item url="file://$USER_HOME$/.meteor/packages/react-runtime-dev/0.14.4/web.browser/attach-require.js" />
         <item url="file://$USER_HOME$/.meteor/packages/aldeed_schema-deny/1.0.1/web.browser/lib/deny.js" />
@@ -257,6 +258,7 @@
       <root url="file://$USER_HOME$/.meteor/packages/react-runtime/0.14.4/web.browser/react-runtime.js" />
       <root url="file://$USER_HOME$/.meteor/packages/react-runtime-dev/0.14.4/web.browser/react.browserify.options.json" />
       <root url="file://$USER_HOME$/.meteor/packages/aldeed_collection2-core/1.0.0/web.browser/lib/collection2.js" />
+      <root url="file://$USER_HOME$/.meteor/packages/mizzao_bootboxjs/4.4.0/web.browser/packages/mizzao_bootboxjs.js" />
       <root url="file://$USER_HOME$/.meteor/packages/react-runtime-dev/0.14.4/web.browser/detect-shims.js" />
       <root url="file://$USER_HOME$/.meteor/packages/react-runtime-dev/0.14.4/web.browser/attach-require.js" />
       <root url="file://$USER_HOME$/.meteor/packages/aldeed_schema-deny/1.0.1/web.browser/lib/deny.js" />

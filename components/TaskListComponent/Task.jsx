@@ -12,7 +12,7 @@ Task = React.createClass({
         var data = {};
         data.refList = Refs.find({
                 projectId: this.props.task.projectId,
-                taskId: this.props.task._id
+                itemId: this.props.task._id
             }, {
                 sort: {createdAt: -1}
             }).fetch();
@@ -38,9 +38,9 @@ Task = React.createClass({
                         <div onClick={this.onDescriptionClicked}
                              className="task-description"
                              style={{fontSize: '14px', fontWeight: 'bold', color:'gray'}}>
-                                {this.renderKey()} {this.props.task.description}
+                                {this.props.task.description}
                         </div>
-                        <div style={{fontSize:'12px',color:'gray'}}>{this.props.task.createdByName}</div>
+                        <div style={{fontSize:'12px',color:'gray'}}>{this.renderKey()} Created by {this.props.task.createdByName} {moment(this.props.task.createdAt).fromNow()}</div>
                     </div>
                     {this.renderSelectedLinks()}
                 </div>
@@ -53,7 +53,7 @@ Task = React.createClass({
         if(this.props.task.key == -1) {
             return <i className="fa fa-spin fa-spinner"></i>;
         } else {
-            return this.props.task.key + ": ";
+            return <b>{this.props.task.projectKey}-{this.props.task.seq}:</b>;
         }
     },
 

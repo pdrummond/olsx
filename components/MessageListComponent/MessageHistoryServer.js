@@ -132,7 +132,7 @@ if(Meteor.isServer) {
             var now = new Date();
             message.createdAt = now;
             message.updatedAt = now;
-            message.seq = incrementCounter('counters', "message-counter-" + message.projectId);
+            message.seq = Ols.Counter.getMessageCounter(message.projectId);
             console.log("-- saving message " + message.seq + "...");
             var messageId = ServerMessages.insert(message);
             console.log("-- message " + message.seq + " saved");

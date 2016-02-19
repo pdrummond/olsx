@@ -16,7 +16,9 @@ Package.onUse(function(api) {
     'status-type-api.js',
     'item-type-api.js',
     'project-type-api.js',
-    'keys-api.js'
+    'milestone-type-api.js',
+    'keys-api.js',
+    'counter-api.js'
   ]);
   api.export(['Ols']);
 });

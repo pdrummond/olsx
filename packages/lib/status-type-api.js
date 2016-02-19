@@ -4,10 +4,11 @@ Ols.Status = {
     IN_PROGRESS: 2,
     BLOCKED: 3,
     IN_TEST: 4,
-    DONE: 5,
-    REJECTED: 6,
-    DUPLICATE: 7,
-    OUT_OF_SCOPE: 8,
+
+    DONE: 100,
+    REJECTED: 101,
+    DUPLICATE: 102,
+    OUT_OF_SCOPE: 103,
 
     LABEL_NEW: 'New',
     LABEL_OPEN: 'Open',
@@ -45,7 +46,7 @@ Ols.Status = {
     getStatusColor(status) {
         switch (status) {
             case Ols.Status.NEW:
-                return '#5cb85c';
+                return '#BA49BA';
             case Ols.Status.OPEN:
                 return '#f0ad4e';
             case Ols.Status.IN_PROGRESS:
@@ -63,6 +64,14 @@ Ols.Status = {
             case Ols.Status.OUT_OF_SCOPE:
                 return 'gray';
         }
+    },
+
+    isOpen: function(status) {
+        return status < Ols.Status.DONE;
+    },
+
+    isDone: function(status) {
+        return !this.isOpen(status);
     }
 };
 

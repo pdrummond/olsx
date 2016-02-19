@@ -2,7 +2,7 @@ RightSidebarComponent = React.createClass({
 
     getInitialState() {
         return {
-            selectedComponent: 'TASKS'
+            selectedComponent: 'MILESTONES'
         }
     },
 
@@ -15,13 +15,14 @@ RightSidebarComponent = React.createClass({
                   </button>
                   <ul className="dropdown-menu" aria-labelledby="dropdownMenu1">
                       <li><a href="">Project Summary</a></li>
+                      <li><a onClick={this.onMilestonesClicked} href="">Milestones</a></li>
+                      <li><a onClick={this.onTasksClicked} href="">Tasks</a></li>
+                      <li><a onClick={this.onMembersClicked} href="">Members</a></li>
+                      <li role="separator" className="divider"></li>
                       <li><a href="">Filter View</a></li>
                       <li><a href="">Detail View</a></li>
-                      <li role="separator" className="divider"></li>
-                      <li><a onClick={this.onMembersClicked} href="">Members</a></li>
-                      <li><a onClick={this.onTasksClicked} href="">Tasks</a></li>
                       <li><a href="">Features</a></li>
-                      <li><a href="">Milestones</a></li>
+
                       <li><a href="">Sprints</a></li>
                       <li role="separator" className="divider"></li>
                       <li><a href="">My Tasks</a></li>
@@ -33,6 +34,10 @@ RightSidebarComponent = React.createClass({
 
           </div>
       )
+    },
+
+    onMilestonesClicked() {
+        this.setState({'selectedComponent': 'MILESTONES'});
     },
 
     onMembersClicked() {
@@ -49,6 +54,7 @@ RightSidebarComponent = React.createClass({
 
     renderSelectedComponent() {
         switch(this.state.selectedComponent) {
+            case 'MILESTONES': return <MilestoneListComponent projectId={this.props.projectId} />
             case 'TASKS': return <TaskListComponent projectId={this.props.projectId} />;
             case 'MEMBERS': return <MemberListContainer projectId={this.props.projectId} memberList={this.props.memberList}/>
             case 'ARCHIVED': return <ArchivedListComponent projectId={this.props.projectId} />
@@ -57,6 +63,7 @@ RightSidebarComponent = React.createClass({
 
     renderSelectedComponentLabel() {
       switch(this.state.selectedComponent) {
+          case 'MILESTONES': return 'Milestones';
           case 'TASKS': return 'Tasks';
           case 'MEMBERS': return 'Members';
           case 'ARCHIVED': return 'Archived';

@@ -40,18 +40,72 @@ Task = React.createClass({
                              style={{fontSize: '14px', fontWeight: 'bold', color:'gray'}}>
                                 {this.props.task.description}
                         </div>
-                        <div style={{fontSize:'12px',color:'gray'}}>{this.renderKey()} Created by {this.props.task.createdByName} {moment(this.props.task.createdAt).fromNow()}</div>
+                        <div style={{fontSize:'12px',color:'gray', paddingLeft:'35px'}}>{this.renderKey()} Created by {this.props.task.createdByName} {moment(this.props.task.createdAt).fromNow()}</div>
                     </div>
                     <div className="labels" style={{paddingLeft:'35px'}}>
                         <span className="label label-default" style={{backgroundColor:Ols.Status.getStatusColor(this.props.task.status)}}><i className="fa fa-circle"></i> {Ols.Status.getStatusLabel(this.props.task.status)}</span>
                         {/*<span className="label label-default"><i className="fa fa-flag-checkered"></i> Milestone 1</span>
                         <span className="label label-primary"><i className="fa fa-flag"></i> Sprint 44</span>*/}
+                        {this.renderMilestoneDropdown()}
                     </div>
                     {this.renderSelectedLinks()}
                 </div>
                 {this.renderRefList()}
             </li>
         )
+    },
+
+    renderMilestoneLabel() {
+        if(this.props.task.milestoneId != null) {
+            var milestone = _.findWhere(this.props.milestoneList, {_id: this.props.task.milestoneId});
+            if(milestone == null) {
+                return (<i className="fa fa-exclamation-circle" style={{color:'red'}}> Invalid Milestone</i>);
+            } else {
+                return (<i className="fa fa-flag-checkered"> {milestone.title}</i>);
+
+            }
+        } else {
+            return (<i className="fa fa-bars"> Backlog </i>);
+        }
+
+    },
+
+    renderMilestoneDropdown() {
+        return (
+            <span className="dropdown">
+                <button className="btn btn-xs btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                    {this.renderMilestoneLabel()} <span className="caret"></span>
+                </button>
+                <ul className="dropdown-menu" aria-labelledby="dropdownMenu1">
+                    {this.renderMilestoneDropdownItems()}
+                    <li role="separator" className="divider"></li>
+                    <li><a onClick={this.onBacklogClicked} href="#">Backlog</a></li>
+                </ul>
+            </span>
+        );
+    },
+
+    renderMilestoneDropdownItems() {
+        var self = this;
+        if(this.props.milestoneList.length == 0) {
+            return <li className="dropdown-header">Project has no milestones</li>
+        } else {
+            return this.props.milestoneList.map(function (milestone) {
+                return <MilestoneDropdownItem key={milestone._id} milestone={milestone}
+                                              onMilestoneSelected={self.onMilestoneSelected}/>
+            });
+        }
+    },
+
+    onMilestoneSelected(milestone) {
+        Items.methods.addItemToMilestone.call({
+            itemId: this.props.task._id,
+            milestoneId: milestone._id
+        }, (err) => {
+            if(err) {
+                toastr.error("Error adding task to milestone: " + err.reason);
+            }
+        });
     },
 
     renderKey() {
@@ -190,6 +244,15 @@ Task = React.createClass({
         this.updateTaskStatus(Ols.Status.OUT_OF_SCOPE);
     },
 
+    onBacklogClicked() {
+        Items.methods.moveItemToBacklog.call({
+            itemId: this.props.task._id,
+        }, (err) => {
+            if(err) {
+                toastr.error("Error moving item to backlog: " + err.reason);
+            }
+        });
+    },
 
     updateTaskStatus(status) {
         Items.methods.updateItemStatus.call({

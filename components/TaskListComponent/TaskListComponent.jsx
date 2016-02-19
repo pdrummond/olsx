@@ -10,13 +10,17 @@ TaskListComponent = React.createClass({
     getMeteorData() {
         var data = {};
         data.taskList = [];
+        data.milestoneList = [];
         var tasksHandle = Meteor.subscribe('tasks', this.props.projectId);
         var refsHandle = Meteor.subscribe('refs', this.props.projectId);
-
-        if(tasksHandle.ready() && refsHandle.ready()) {
+        var milestonesHandle = Meteor.subscribe('milestones', this.props.projectId);
+        if(tasksHandle.ready() && refsHandle.ready() && milestonesHandle.ready()) {
             var inputFilter = Ols.Filter.parseString(this.state.filterInput);
             var filter = this.props.filter ? _.extend(inputFilter, this.props.filter) : _.extend(inputFilter, {isArchived:false});
-            data.taskList = Items.find(filter, {sort: {updatedAt: -1}}).fetch();
+            data.taskList = Items.find(filter, {sort: {createdAt: -1}}).fetch();
+
+            data.milestoneList = Milestones.find({}, {sort: {createdAt: 1}}).fetch();
+
             data.authInProcess = Meteor.loggingIn();
         }
         return data;
@@ -33,6 +37,7 @@ TaskListComponent = React.createClass({
                            onKeyUp={this.onKeyUp} />
                 </form>
                 <TaskList
+                    milestoneList={this.data.milestoneList}
                     taskList={this.data.taskList}/>
             </div>
         )

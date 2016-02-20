@@ -468,11 +468,11 @@ header {
     font-style: italic;
 }
 
-.task-list {
+.item-list {
     margin-top:10px;
 }
 
-.task-list-component li.task {
+.item-list-component li.task {
     background-color:white;
     border:1px solid lightgray;
     margin-top:5px;
@@ -480,16 +480,16 @@ header {
 
 }
 
-.task-list-component li.task.active {
+.item-list-component li.task.active {
     border: 1px solid orange;
     box-shadow: 0px 0px 4px orange;
 }
 
-.task-list-component li .task-wrapper {
+.item-list-component li .task-wrapper {
     padding:10px;
 }
 
-.task-list-component li.task .task-description:hover {
+.item-list-component li.task .task-description:hover {
     cursor:pointer;
     color:#058AFF !important;
 }

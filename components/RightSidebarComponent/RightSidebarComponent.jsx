@@ -52,7 +52,7 @@ RightSidebarComponent = React.createClass({
         switch(this.state.selectedComponent) {
             case 'PROJECT_SUMMARY': return <ProjectSummaryComponent projectId={this.props.projectId} />
             case 'MILESTONES': return <MilestoneListComponent projectId={this.props.projectId} />
-            case 'TASKS': return <TaskListComponent projectId={this.props.projectId} />;
+            case 'TASKS': return <ItemListComponent projectId={this.props.projectId} />;
             case 'MEMBERS': return <MemberListContainer projectId={this.props.projectId} memberList={this.props.memberList}/>
             case 'ARCHIVED': return <ArchivedListComponent projectId={this.props.projectId} />
         }

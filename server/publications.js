@@ -7,8 +7,8 @@ Meteor.publish("projects", function () {
     });
 });
 
-Meteor.publish("tasks", function(projectId) {
-   return Items.find({projectId, type: Ols.Item.ITEM_TYPE_ACTION, subType: Ols.Item.ACTION_SUBTYPE_TASK});
+Meteor.publish("items", function(projectId) {
+   return Items.find({projectId});
 });
 
 Meteor.publish("refs", function(projectId) {

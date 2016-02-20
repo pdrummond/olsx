@@ -1,4 +1,4 @@
-TaskListComponent = React.createClass({
+ItemListComponent = React.createClass({
     mixins: [ReactMeteorData],
 
     getInitialState() {
@@ -9,15 +9,15 @@ TaskListComponent = React.createClass({
 
     getMeteorData() {
         var data = {};
-        data.taskList = [];
+        data.itemList = [];
         data.milestoneList = [];
-        var tasksHandle = Meteor.subscribe('tasks', this.props.projectId);
+        var itemsHandle = Meteor.subscribe('items', this.props.projectId);
         var refsHandle = Meteor.subscribe('refs', this.props.projectId);
         var milestonesHandle = Meteor.subscribe('milestones', this.props.projectId);
-        if(tasksHandle.ready() && refsHandle.ready() && milestonesHandle.ready()) {
+        if(itemsHandle.ready() && refsHandle.ready() && milestonesHandle.ready()) {
             var inputFilter = Ols.Filter.parseString(this.state.filterInput);
             var filter = this.props.filter ? _.extend(inputFilter, this.props.filter) : _.extend(inputFilter, {isArchived:false});
-            data.taskList = Items.find(filter, {sort: {priority: -1}}).fetch();
+            data.itemList = Items.find(filter, {sort: {priority: -1}}).fetch();
 
             data.milestoneList = Milestones.find({}, {sort: {createdAt: 1}}).fetch();
 
@@ -28,17 +28,17 @@ TaskListComponent = React.createClass({
 
     render() {
         return (
-            <div className="task-list-component">
-                <form className="filter-task" onSubmit={this.handleSubmit}>
-                    <input className="filter-task-input"
+            <div className="item-list-component">
+                <form className="filter-item" onSubmit={this.handleSubmit}>
+                    <input className="filter-item-input"
                            type="text"
                            ref="filterInput"
-                           placeholder="Type here to create task/filter list"
+                           placeholder="Type here to create item/filter list"
                            onKeyUp={this.onKeyUp} />
                 </form>
-                <TaskList
+                <ItemList
                     milestoneList={this.data.milestoneList}
-                    taskList={this.data.taskList}/>
+                    itemList={this.data.itemList}/>
             </div>
         )
     },
@@ -60,23 +60,23 @@ TaskListComponent = React.createClass({
         var description = this.refs.filterInput.value;
         this.setState({'filterInput': description});
         if (description) {
-            this.addTask(description);
+            this.addItem(description);
         }
     },
 
-    addTask(description) {
+    addItem(description) {
         var self = this;
         Items.methods.addItem.call({
             description: description,
             projectId: this.props.projectId,
             type: Ols.Item.ITEM_TYPE_ACTION,
             subType:Ols.Item.ACTION_SUBTYPE_TASK,
-        }, (err, task) => {
+        }, (err, item) => {
             if (err) {
                 if (err.reason) {
-                    toastr.error("Error adding task: " + err.reason);
+                    toastr.error("Error adding item: " + err.reason);
                 } else {
-                    console.error("Error adding task: " + JSON.stringify(err));
+                    console.error("Error adding item: " + JSON.stringify(err));
                 }
             }
             self.refs.filterInput.value= ''

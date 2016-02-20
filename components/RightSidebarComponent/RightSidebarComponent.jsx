@@ -21,6 +21,7 @@ RightSidebarComponent = React.createClass({
                       <li><a onClick={this.onActionsClicked} href="">Actions</a></li>
                       <li><a onClick={this.onIssuesClicked} href="">Issues</a></li>
                       <li role="separator" className="divider"></li>
+                      <li><a onClick={this.onBacklogClicked} href="">Backlog</a></li>
                       <li><a onClick={this.onMembersClicked} href="">Members</a></li>
                       <li><a onClick={this.onArchivedClicked} href="">Archived</a></li>
                   </ul>
@@ -55,6 +56,10 @@ RightSidebarComponent = React.createClass({
         FlowRouter.setQueryParams({'rightView': 'ISSUES'});
     },
 
+    onBacklogClicked() {
+        FlowRouter.setQueryParams({'rightView': 'BACKLOG'});
+    },
+
     onArchivedClicked() {
         FlowRouter.setQueryParams({'rightView': 'ARCHIVED'});
     },
@@ -68,6 +73,7 @@ RightSidebarComponent = React.createClass({
             case 'MILESTONE_DETAIL': return <MilestoneDetailComponent/>
             case 'ACTIONS': return <ActionListComponent projectId={this.props.projectId} />;
             case 'ISSUES': return <IssueListComponent projectId={this.props.projectId} />;
+            case 'BACKLOG': return <BacklogComponent projectId={this.props.projectId} />;
             case 'MEMBERS': return <MemberListContainer projectId={this.props.projectId} memberList={this.props.memberList}/>
             case 'ARCHIVED': return <ArchivedListComponent projectId={this.props.projectId} />
         }
@@ -82,6 +88,7 @@ RightSidebarComponent = React.createClass({
           case 'RELEASE_DETAIL': return 'Release Detail';
           case 'ACTIONS': return 'Actions';
           case 'ISSUES': return 'Issues';
+          case 'BACKLOG': return 'Backlog';
           case 'MEMBERS': return 'Members';
           case 'ARCHIVED': return 'Archived';
       }

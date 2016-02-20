@@ -12,10 +12,19 @@ TaskList = React.createClass({
     },
 
     render() {
-        return (
-            <ul className="task-list">
-                {this.renderTasks()}
-            </ul>
-        )
+
+            if(this.props.taskList.length == 0) {
+                return (
+                    <ul className="task-list">
+                        <li><i style={{color:'gray'}}>No existing items found - press ENTER to create</i></li>
+                    </ul>
+                );
+            } else {
+                return (
+                    <ul className="task-list">
+                    {this.renderTasks()}
+                </ul>
+                )
+            }
     }
 });

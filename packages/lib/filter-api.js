@@ -5,7 +5,7 @@ FilterApi = function() {
 FilterApi.prototype.parseString = function(filterString) {
     var filter = {};
     var remainingText = filterString;
-    var re = new RegExp("([\\w\\.-]+)\\s*:\\s*([\\w\\.-]+)", "g");
+    var re = new RegExp("([\\w\\.-]+)\\s*:\\s*([\\w\\.-\>\<]+)", "g");
     var match = re.exec(filterString);
     var disableTextSearch = false;
     while (match != null) {
@@ -35,6 +35,16 @@ FilterApi.prototype.parseString = function(filterString) {
                 field = 'milestoneId';
                 value = milestone._id;
                 disableTextSearch = true;
+            }
+        } else if(field == 'priority') {
+            if(value.indexOf('>') != -1) {
+                value = parseInt(value.substring(1));
+                value = {$gt: value};
+            } else if(value.indexOf('<') != -1) {
+                value = parseInt(value.substring(1));
+                value = {$lt: value};
+            } else {
+                value = parseInt(value);
             }
         }
 

@@ -17,7 +17,7 @@ TaskListComponent = React.createClass({
         if(tasksHandle.ready() && refsHandle.ready() && milestonesHandle.ready()) {
             var inputFilter = Ols.Filter.parseString(this.state.filterInput);
             var filter = this.props.filter ? _.extend(inputFilter, this.props.filter) : _.extend(inputFilter, {isArchived:false});
-            data.taskList = Items.find(filter, {sort: {createdAt: -1}}).fetch();
+            data.taskList = Items.find(filter, {sort: {priority: -1}}).fetch();
 
             data.milestoneList = Milestones.find({}, {sort: {createdAt: 1}}).fetch();
 

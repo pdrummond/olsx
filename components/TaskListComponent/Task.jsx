@@ -47,12 +47,21 @@ Task = React.createClass({
                         {/*<span className="label label-default"><i className="fa fa-flag-checkered"></i> Milestone 1</span>
                         <span className="label label-primary"><i className="fa fa-flag"></i> Sprint 44</span>*/}
                         {this.renderMilestoneDropdown()}
+                        {this.renderPriorityBadge()}
                     </div>
                     {this.renderSelectedLinks()}
                 </div>
                 {this.renderRefList()}
             </li>
         )
+    },
+
+    renderPriorityBadge() {
+        if(this.props.task.priority) {
+            return <span onClick={this.onSetPriorityClicked}
+                         className='pull-right badge' title="Priority"
+                         style={{backgroundColor:'lightgray', cursor:'pointer'}}>{this.props.task.priority}</span>;
+        }
     },
 
     renderMilestoneLabel() {
@@ -134,12 +143,15 @@ Task = React.createClass({
                         <button type="button" className="btn btn-link" onClick={this.onArchivedClicked}><i className="fa fa-archive"></i> {this.renderArchiveLabel()}</button>
                     </div>
                     <div className="pull-right">
-                        <div className="dropdown">
-                            <button className="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                        <div className="dropdown" style={{position:'relative',top:'5px'}}>
+                            <button className="btn btn-xs btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
                                 <i className="fa fa-ellipsis-v"></i>
                             </button>
                             <ul className="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenu1">
                                 <li><a href="">Show Details</a></li>
+                                <li role="separator" className="divider"></li>
+                                <li><a onClick={this.onSetPriorityClicked} href="">Set Priority</a></li>
+                                <li><a onClick={this.onRemovePriorityClicked} href="">Remove Priority</a></li>
                                 <li role="separator" className="divider"></li>
                                 <li><a href="" onClick={this.onStatusNewClicked}>Set status to New</a></li>
                                 <li><a href="" onClick={this.onStatusOpenClicked}>Set status to Open</a></li>
@@ -253,6 +265,34 @@ Task = React.createClass({
             }
         });
     },
+
+    onSetPriorityClicked() {
+        var self = this;
+        bootbox.prompt({title: "Set Priority:", value: this.props.task.priority, callback: function(priority) {
+            if (priority !== null) {
+                priority = parseInt(priority);
+                Items.methods.updateItemPriority.call({
+                    itemId: self.props.task._id,
+                    priority
+                }, (err) => {
+                    if (err) {
+                        toastr.error("Error setting task priority: " + err.reason);
+                    }
+                });
+            }
+        }});
+    },
+
+    onRemovePriorityClicked() {
+        Items.methods.removeItemPriority.call({
+            itemId: this.props.task._id,
+        }, (err) => {
+            if (err) {
+                toastr.error("Error removing priority: " + err.reason);
+            }
+        });
+    },
+
 
     updateTaskStatus(status) {
         Items.methods.updateItemStatus.call({

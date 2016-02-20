@@ -562,3 +562,38 @@ header {
     position: relative;
     left: -10px;
 }
+
+
+.release-list {
+    margin-top:10px;
+}
+
+.release {
+    list-style-type:none;
+    background-color:white;
+    border:1px solid lightgray;
+    margin-top:5px;
+    margin-bottom:5px;
+    padding:10px;
+    min-height:50px;
+}
+
+.release.active {
+    border: 1px solid orange;
+    box-shadow: 0px 0px 4px orange;
+}
+
+.release-wrapper {
+    padding:10px;
+}
+
+.release-list-component li.release .release-title:hover {
+    cursor:pointer;
+    color:#058AFF !important;
+}
+
+.release-title {
+    font-size: 14px;
+    font-weight: bold;
+    color: gray;
+}

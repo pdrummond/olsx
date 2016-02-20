@@ -53,6 +53,7 @@ Milestone = React.createClass({
                         </div>
                     </div>
                     <span>open: <b>{this.data.openCount}</b> closed: <b>{this.data.doneCount}</b> total: <b>{this.data.totalCount}</b> </span>
+                    {this.renderReleasesDropdown()}
                 </div>
                 {this.renderSelectedLinks()}
             </li>
@@ -96,6 +97,8 @@ Milestone = React.createClass({
         }
     },
 
+
+
     renderDetailLink() {
         if(this.props.showDetailLink) {
             return <button type="button" className="btn btn-link" onClick={this.onDetailClicked}><i
@@ -117,11 +120,13 @@ Milestone = React.createClass({
         this.setState({'isSelected': !this.state.isSelected});
     },
 
-    onDetailClicked() {
+    onDetailClicked(e) {
+        e.preventDefault();
         FlowRouter.setQueryParams({'rightView': 'MILESTONE_DETAIL', 'milestoneId': this.props.milestone._id});
     },
 
-    onDeleteClicked() {
+    onDeleteClicked(e) {
+        e.preventDefault();
         Milestones.methods.removeMilestone.call({
             milestoneId: this.props.milestone._id,
         }, (err) => {
@@ -133,7 +138,8 @@ Milestone = React.createClass({
         });
     },
 
-    onRenameClicked() {
+    onRenameClicked(e) {
+        e.preventDefault();
         var self = this;
         bootbox.prompt({title: "Enter new title for milestone:", value: this.props.milestone.title, callback: function(title) {
             if (title!== null) {
@@ -147,5 +153,56 @@ Milestone = React.createClass({
                 });
             }
         }});
-    }
+    },
+
+    renderReleaseLabel() {
+        if(this.props.milestone.releaseId != null) {
+            var release = _.findWhere(this.props.releaseList, {_id: this.props.milestone.releaseId});
+            if(release == null) {
+                return (<i className="fa fa-exclamation-circle" style={{color:'red'}}> Invalid Release</i>);
+            } else {
+                return (<i className="fa fa-paper-plane"> {release.title}</i>);
+
+            }
+        } else {
+            return (<i className="fa fa-bomb"> No Release </i>);
+        }
+
+    },
+
+    renderReleasesDropdown() {
+        return (
+            <span className="dropdown pull-right">
+                <button className="btn btn-xs btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                    {this.renderReleaseLabel()} <span className="caret"></span>
+                </button>
+                <ul className="dropdown-menu" aria-labelledby="dropdownMenu1">
+                    {this.renderReleaseDropdownItems()}
+                </ul>
+            </span>
+        );
+    },
+
+    renderReleaseDropdownItems() {
+        var self = this;
+        if(this.props.releaseList.length == 0) {
+            return <li className="dropdown-header">Project has no releases</li>
+        } else {
+            return this.props.releaseList.map(function (release) {
+                return <ReleaseDropdownItem key={release._id} release={release}
+                                              onReleaseSelected={self.onReleaseSelected}/>
+            });
+        }
+    },
+
+    onReleaseSelected(release) {
+        Milestones.methods.addMilestoneToRelease.call({
+            milestoneId: this.props.milestone._id,
+            releaseId: release._id
+        }, (err) => {
+            if(err) {
+                toastr.error("Error adding milestone to release: " + err.reason);
+            }
+        });
+    },
 });

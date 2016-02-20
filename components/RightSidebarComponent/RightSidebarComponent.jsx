@@ -16,6 +16,7 @@ RightSidebarComponent = React.createClass({
                   </button>
                   <ul className="dropdown-menu" aria-labelledby="dropdownMenu1">
                       <li><a onClick={this.onProjectSummaryClicked} href="">Project Summary</a></li>
+                      <li><a onClick={this.onReleasesClicked} href="">Releases</a></li>
                       <li><a onClick={this.onMilestonesClicked} href="">Milestones</a></li>
                       <li><a onClick={this.onActionsClicked} href="">Actions</a></li>
                       <li><a onClick={this.onIssuesClicked} href="">Issues</a></li>
@@ -32,6 +33,10 @@ RightSidebarComponent = React.createClass({
 
     onProjectSummaryClicked() {
         FlowRouter.setQueryParams({'rightView': 'PROJECT_SUMMARY'});
+    },
+
+    onReleasesClicked() {
+        FlowRouter.setQueryParams({'rightView': 'RELEASES'});
     },
 
     onMilestonesClicked() {
@@ -58,6 +63,8 @@ RightSidebarComponent = React.createClass({
         switch(this.data.rightView) {
             case 'PROJECT_SUMMARY': return <ProjectSummaryComponent projectId={this.props.projectId} />
             case 'MILESTONES': return <MilestoneListComponent projectId={this.props.projectId} />
+            case 'RELEASES': return <ReleaseListComponent projectId={this.props.projectId} />
+            case 'RELEASE_DETAIL': return <ReleaseDetailComponent/>
             case 'MILESTONE_DETAIL': return <MilestoneDetailComponent/>
             case 'ACTIONS': return <ActionListComponent projectId={this.props.projectId} />;
             case 'ISSUES': return <IssueListComponent projectId={this.props.projectId} />;
@@ -69,8 +76,10 @@ RightSidebarComponent = React.createClass({
     renderSelectedComponentLabel() {
       switch(this.data.rightView) {
           case 'PROJECT_SUMMARY': return 'Project Summary';
+          case 'RELEASES': return 'Releases';
           case 'MILESTONES': return 'Milestones';
           case 'MILESTONE_DETAIL': return 'Milestone Detail';
+          case 'RELEASE_DETAIL': return 'Release Detail';
           case 'ACTIONS': return 'Actions';
           case 'ISSUES': return 'Issues';
           case 'MEMBERS': return 'Members';

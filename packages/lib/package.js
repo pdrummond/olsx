@@ -18,6 +18,7 @@ Package.onUse(function(api) {
     'role-type-api.js',
     'project-type-api.js',
     'milestone-type-api.js',
+    'release-type-api.js',
     'keys-api.js',
     'counter-api.js'
   ]);

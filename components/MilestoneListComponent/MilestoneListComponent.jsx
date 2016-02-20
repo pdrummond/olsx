@@ -10,11 +10,14 @@ MilestoneListComponent = React.createClass({
     getMeteorData() {
         var data = {};
         data.milestoneList = [];
+        data.releaseIdParam = FlowRouter.getQueryParam('releaseId');
         var milestonesHandle = Meteor.subscribe('milestones', this.props.projectId);
-
-        if(milestonesHandle.ready()) {
-            var filter = Ols.Filter.parseString(this.state.filterInput);
+        var releasesHandle = Meteor.subscribe('releases', this.props.projectId);
+        if(milestonesHandle.ready() && releasesHandle.ready()) {
+            var inputFilter = Ols.Filter.parseString(this.state.filterInput);
+            var filter = this.props.filter ? _.extend(inputFilter, this.props.filter) : inputFilter;
             data.milestoneList = Milestones.find(filter, {sort: {updatedAt: -1}}).fetch();
+            data.releaseList = Releases.find({}, {sort: {createdAt: 1}}).fetch();
             data.authInProcess = Meteor.loggingIn();
         }
         return data;
@@ -31,6 +34,7 @@ MilestoneListComponent = React.createClass({
                            onKeyUp={this.onKeyUp} />
                 </form>
                 <MilestoneList
+                    releaseList={this.data.releaseList}
                     milestoneList={this.data.milestoneList}/>
             </div>
         )
@@ -62,6 +66,7 @@ MilestoneListComponent = React.createClass({
         Milestones.methods.addMilestone.call({
             title,
             projectId: this.props.projectId,
+            releaseId: this.data.releaseIdParam
         }, (err, milestone) => {
             if (err) {
                 if (err.reason) {

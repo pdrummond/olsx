@@ -15,9 +15,20 @@ Meteor.publish("refs", function(projectId) {
     return Refs.find({projectId});
 });
 
+Meteor.publish("releases", function() {
+    return Releases.find();
+});
+
+Meteor.publish('currentRelease', function(releaseId) {
+    this.autorun(function(computation) {
+        return Releases.find(releaseId);
+    });
+});
+
 Meteor.publish("milestones", function(projectId) {
     return Milestones.find({projectId});
 });
+
 
 Meteor.publish('currentProject', function(projectId) {
     this.autorun(function(computation) {
@@ -139,5 +150,3 @@ Meteor.publish("projectActionCounts", function (projectId) {
         handle.stop();
     });
 });
-
-

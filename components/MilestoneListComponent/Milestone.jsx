@@ -7,6 +7,11 @@ Milestone = React.createClass({
         }
     },
 
+    propTypes: {
+        milestone: React.PropTypes.object,
+        showDetailLink: React.PropTypes.bool
+    },
+
     getMeteorData: function() {
         var data = {};
         var milestoneTaskCountsHandle = Meteor.subscribe("milestoneTaskCounts", this.props.milestone._id);
@@ -62,10 +67,11 @@ Milestone = React.createClass({
     renderSelectedLinks() {
         if(this.state.isSelected) {
             return (
-                <div>
+                <div style={{paddingLeft:'30px'}}>
                     <div className="btn-group" role="group" aria-label="...">
                         {/*<button type="button" className="btn btn-link" onClick={this.onJumpClicked}><i className="fa fa-mail-reply"></i> Jump</button>
                         <button type="button" className="btn btn-link" onClick={this.onRefsClicked}><i className="fa fa-hashtag"></i> References</button>*/}
+                        {this.renderDetailLink()}
                         <button type="button" className="btn btn-link" onClick={this.onDeleteClicked}><i className="fa fa-trash"></i> Delete</button>
                     </div>
                     <div className="pull-right">
@@ -90,6 +96,13 @@ Milestone = React.createClass({
         }
     },
 
+    renderDetailLink() {
+        if(this.props.showDetailLink) {
+            return <button type="button" className="btn btn-link" onClick={this.onDetailClicked}><i
+                className="fa fa-flag-checkered"></i> Details</button>
+        }
+    },
+
     onJumpClicked: function() {
         FlowRouter.go('projectPageStartSeq', {
             projectId: this.props.milestone.projectId,
@@ -104,12 +117,18 @@ Milestone = React.createClass({
         this.setState({'isSelected': !this.state.isSelected});
     },
 
+    onDetailClicked() {
+        FlowRouter.setQueryParams({'rightView': 'MILESTONE_DETAIL', 'milestoneId': this.props.milestone._id});
+    },
+
     onDeleteClicked() {
         Milestones.methods.removeMilestone.call({
             milestoneId: this.props.milestone._id,
         }, (err) => {
             if(err) {
                 toastr.error("Error removing milestone: " + err.reason);
+            } else {
+                FlowRouter.setQueryParams({'rightView': 'MILESTONES'});
             }
         });
     },

@@ -25,6 +25,13 @@ Meteor.publish('currentProject', function(projectId) {
     });
 });
 
+Meteor.publish('currentMilestone', function(milestoneId) {
+    this.autorun(function(computation) {
+        return Milestones.find(milestoneId);
+    });
+});
+
+
 Meteor.publish("currentProjectMembers", function (projectId) {
     return Members.find({projectId: projectId});
 });

@@ -1,9 +1,10 @@
 RightSidebarComponent = React.createClass({
+    mixins: [ReactMeteorData],
 
-    getInitialState() {
-        return {
-            selectedComponent: 'PROJECT_SUMMARY'
-        }
+    getMeteorData() {
+      return {
+        rightView: FlowRouter.getQueryParam('rightView') || 'PROJECT_SUMMARY'
+      };
     },
 
     render() {
@@ -15,11 +16,11 @@ RightSidebarComponent = React.createClass({
                   </button>
                   <ul className="dropdown-menu" aria-labelledby="dropdownMenu1">
                       <li><a onClick={this.onProjectSummaryClicked} href="">Project Summary</a></li>
+                      <li><a onClick={this.onMilestonesClicked} href="">Milestones</a></li>
                       <li><a onClick={this.onActionsClicked} href="">Actions</a></li>
                       <li><a onClick={this.onIssuesClicked} href="">Issues</a></li>
-                      <li><a onClick={this.onMilestonesClicked} href="">Milestones</a></li>
-                      <li><a onClick={this.onMembersClicked} href="">Members</a></li>
                       <li role="separator" className="divider"></li>
+                      <li><a onClick={this.onMembersClicked} href="">Members</a></li>
                       <li><a onClick={this.onArchivedClicked} href="">Archived</a></li>
                   </ul>
               </div>
@@ -30,33 +31,34 @@ RightSidebarComponent = React.createClass({
     },
 
     onProjectSummaryClicked() {
-        this.setState({'selectedComponent': 'PROJECT_SUMMARY'});
+        FlowRouter.setQueryParams({'rightView': 'PROJECT_SUMMARY'});
     },
 
     onMilestonesClicked() {
-        this.setState({'selectedComponent': 'MILESTONES'});
+        FlowRouter.setQueryParams({'rightView': 'MILESTONES'});
     },
 
     onMembersClicked() {
-        this.setState({'selectedComponent': 'MEMBERS'});
+        FlowRouter.setQueryParams({'rightView': 'MEMBERS'});
     },
 
     onActionsClicked() {
-        this.setState({'selectedComponent': 'ACTIONS'});
+        FlowRouter.setQueryParams({'rightView': 'ACTIONS'});
     },
 
     onIssuesClicked() {
-        this.setState({'selectedComponent': 'ISSUES'});
+        FlowRouter.setQueryParams({'rightView': 'ISSUES'});
     },
 
     onArchivedClicked() {
-        this.setState({'selectedComponent': 'ARCHIVED'});
+        FlowRouter.setQueryParams({'rightView': 'ARCHIVED'});
     },
 
     renderSelectedComponent() {
-        switch(this.state.selectedComponent) {
+        switch(this.data.rightView) {
             case 'PROJECT_SUMMARY': return <ProjectSummaryComponent projectId={this.props.projectId} />
             case 'MILESTONES': return <MilestoneListComponent projectId={this.props.projectId} />
+            case 'MILESTONE_DETAIL': return <MilestoneDetailComponent/>
             case 'ACTIONS': return <ActionListComponent projectId={this.props.projectId} />;
             case 'ISSUES': return <IssueListComponent projectId={this.props.projectId} />;
             case 'MEMBERS': return <MemberListContainer projectId={this.props.projectId} memberList={this.props.memberList}/>
@@ -65,9 +67,10 @@ RightSidebarComponent = React.createClass({
     },
 
     renderSelectedComponentLabel() {
-      switch(this.state.selectedComponent) {
+      switch(this.data.rightView) {
           case 'PROJECT_SUMMARY': return 'Project Summary';
           case 'MILESTONES': return 'Milestones';
+          case 'MILESTONE_DETAIL': return 'Milestone Detail';
           case 'ACTIONS': return 'Actions';
           case 'ISSUES': return 'Issues';
           case 'MEMBERS': return 'Members';

@@ -319,7 +319,7 @@ input {
 }
 
 .right-sidebar-container input {
-    width:378px;
+    width:100%;
     position:relative;
     top:5px;
 }
@@ -514,7 +514,8 @@ header {
     margin-top:10px;
 }
 
-.milestone-list-component li.milestone {
+.milestone {
+    list-style-type:none;
     background-color:white;
     border:1px solid lightgray;
     margin-top:5px;
@@ -523,12 +524,12 @@ header {
 
 }
 
-.milestone-list-component li.milestone.active {
+.milestone.active {
     border: 1px solid orange;
     box-shadow: 0px 0px 4px orange;
 }
 
-.milestone-list-component li .milestone-wrapper {
+.milestone-wrapper {
     padding:10px;
 }
 

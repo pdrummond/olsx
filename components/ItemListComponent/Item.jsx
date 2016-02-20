@@ -243,43 +243,53 @@ Item = React.createClass({
         }
     },
 
-    onStatusNewClicked() {
+    onStatusNewClicked(e) {
+        e.preventDefault();
         this.updateItemStatus(Ols.Status.NEW);
     },
 
-    onStatusOpenClicked() {
+    onStatusOpenClicked(e) {
+        e.preventDefault();
         this.updateItemStatus(Ols.Status.OPEN);
     },
 
-    onStatusInProgressClicked() {
+    onStatusInProgressClicked(e) {
+        e.preventDefault();
         this.updateItemStatus(Ols.Status.IN_PROGRESS);
     },
 
-    onStatusBlockedClicked() {
+    onStatusBlockedClicked(e) {
+        e.preventDefault();
         this.updateItemStatus(Ols.Status.BLOCKED);
     },
 
-    onStatusInTestClicked() {
+    onStatusInTestClicked(e) {
+        e.preventDefault();
         this.updateItemStatus(Ols.Status.IN_TEST);
     },
 
-    onStatusDoneClicked() {
+    onStatusDoneClicked(e) {
+        e.preventDefault();
         this.updateItemStatus(Ols.Status.DONE);
     },
 
-    onStatusRejectedClicked() {
+    onStatusRejectedClicked(e) {
+        e.preventDefault();
         this.updateItemStatus(Ols.Status.REJECTED);
     },
 
-    onStatusDuplicateClicked() {
+    onStatusDuplicateClicked(e) {
+        e.preventDefault();
         this.updateItemStatus(Ols.Status.DUPLICATE);
     },
 
-    onStatusOutOfScopeClicked() {
+    onStatusOutOfScopeClicked(e) {
+        e.preventDefault();
         this.updateItemStatus(Ols.Status.OUT_OF_SCOPE);
     },
 
-    onBacklogClicked() {
+    onBacklogClicked(e) {
+        e.preventDefault();
         Items.methods.moveItemToBacklog.call({
             itemId: this.props.item._id,
         }, (err) => {
@@ -289,15 +299,18 @@ Item = React.createClass({
         });
     },
 
-    onBugTypeClicked() {
+    onBugTypeClicked(e) {
+        e.preventDefault();
         this.updateItemType(Ols.Item.ITEM_TYPE_ISSUE, Ols.Item.ISSUE_SUBTYPE_BUG);
     },
 
-    onTaskTypeClicked() {
+    onTaskTypeClicked(e) {
+        e.preventDefault();
         this.updateItemType(Ols.Item.ITEM_TYPE_ACTION, Ols.Item.ACTION_SUBTYPE_TASK);
     },
 
-    onSetPriorityClicked() {
+    onSetPriorityClicked(e) {
+        e.preventDefault();
         var self = this;
         bootbox.prompt({title: "Set Priority:", value: this.props.item.priority, callback: function(priority) {
             if (priority !== null) {
@@ -314,7 +327,8 @@ Item = React.createClass({
         }});
     },
 
-    onRemovePriorityClicked() {
+    onRemovePriorityClicked(e) {
+        e.preventDefault();
         Items.methods.removeItemPriority.call({
             itemId: this.props.item._id,
         }, (err) => {

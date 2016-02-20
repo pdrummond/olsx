@@ -1,6 +1,10 @@
 ItemListComponent = React.createClass({
     mixins: [ReactMeteorData],
 
+    propTypes: {
+        projectId: React.PropTypes.string
+    },
+
     getInitialState() {
         return {
             filterInput: ''
@@ -11,6 +15,7 @@ ItemListComponent = React.createClass({
         var data = {};
         data.itemList = [];
         data.milestoneList = [];
+        data.milestoneIdParam = FlowRouter.getQueryParam('milestoneId');
         var itemsHandle = Meteor.subscribe('items', this.props.projectId);
         var refsHandle = Meteor.subscribe('refs', this.props.projectId);
         var milestonesHandle = Meteor.subscribe('milestones', this.props.projectId);
@@ -83,6 +88,7 @@ ItemListComponent = React.createClass({
             projectId: this.props.projectId,
             type: Ols.Item.ITEM_TYPE_ACTION,
             subType:Ols.Item.ACTION_SUBTYPE_TASK,
+            milestoneId: this.data.milestoneIdParam
         }, (err, item) => {
             if (err) {
                 if (err.reason) {

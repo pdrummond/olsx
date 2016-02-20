@@ -8,6 +8,8 @@ ProjectSummaryComponent = React.createClass({
     getMeteorData: function() {
         var data = {};
         var currentProjectHandle = Meteor.subscribe('currentProject', this.props.projectId);
+        var currentReleaseHandle = Meteor.subscribe('projectCurrentRelease', this.props.projectId);
+        var nextReleaseHandle = Meteor.subscribe('projectNextRelease', this.props.projectId);
         var projectActionCountsHandle = Meteor.subscribe("projectActionCounts", this.props.projectId);
         if(currentProjectHandle.ready() && projectActionCountsHandle.ready()) {
             var counts = ProjectActionCounts.findOne(this.props.projectId);
@@ -17,6 +19,8 @@ ProjectSummaryComponent = React.createClass({
                 data.doneCount = counts.doneCount;
             }
             data.currentProject = Projects.findOne(this.props.projectId);
+            data.currentRelease = Releases.findOne(data.currentProject.currentReleaseId);
+            data.nextRelease = Releases.findOne(data.currentProject.nextReleaseId);
         }
         return data;
     },
@@ -49,8 +53,8 @@ ProjectSummaryComponent = React.createClass({
                     <div className="panel panel-default">
                         <div className="panel-heading"><div className="panel-title">Release Information</div></div>
                         <div className="panel-body">
-                            <div className="alert alert-success"><i className="fa fa-paper-plane"></i> Current Release: <a href=""><strong>Release 1.1</strong></a></div>
-                            <div className="alert alert-info"><i className="fa fa-paper-plane"></i> Next Release: <a href=""><strong>Release 1.2</strong></a></div>
+                            {this.renderCurrentReleaseAlert()}
+                            {this.renderNextReleaseAlert()}
                         </div>
                     </div>
                     <div className="panel panel-default">
@@ -62,10 +66,10 @@ ProjectSummaryComponent = React.createClass({
                                 <tr><th>Type</th><th>Open</th> <th>Closed</th></tr>
                                 </thead>
                                 <tbody>
-                                <tr><td>Tasks: </td> <td>10</td><td>20</td></tr>
-                                <tr><td>Bugs: </td> <td>300</td><td>20</td></tr>
-                                <tr><td>Features: </td> <td>3</td><td>30</td></tr>
-                                <tr><td>Enhancements: </td> <td>2</td><td>40</td></tr>
+                                <tr><td>Tasks: </td> <td>TODO</td><td>TODO</td></tr>
+                                <tr><td>Bugs: </td> <td>TODO</td><td>TODO</td></tr>
+                                <tr><td>Features: </td> <td>TODO</td><td>TODO</td></tr>
+                                <tr><td>Enhancements: </td> <td>TODO</td><td>TODO</td></tr>
                                 </tbody>
                             </table>
                         </div>
@@ -75,8 +79,51 @@ ProjectSummaryComponent = React.createClass({
         }
     },
 
+    renderCurrentReleaseAlert() {
+        if(this.data.currentRelease) {
+            return (
+                <div className="alert alert-success">
+                    <i className="fa fa-paper-plane"></i> Current Release: <a onClick={this.onCurrentReleaseClicked} href=""><strong>{this.data.currentRelease.title}</strong></a>
+                </div>
+            );
+        } else {
+            return (
+                <div className="alert alert-success">
+                    <i className="fa fa-paper-plane"></i> Current Release: <i>None</i>
+                </div>
+            );
+        }
+    },
+
+    renderNextReleaseAlert() {
+        if(this.data.nextRelease) {
+            return (
+                <div className="alert alert-success">
+                    <i className="fa fa-paper-plane"></i> Next Release: <a onClick={this.onNextReleaseClicked} href=""><strong>{this.data.nextRelease.title}</strong></a>
+                </div>
+            );
+        } else {
+            return (
+                <div className="alert alert-success">
+                    <i className="fa fa-paper-plane"></i> Next Release: <i>None</i>
+                </div>
+            );
+        }
+    },
+
     getProjectPercentage() {
         var p = (this.data.doneCount / this.data.totalCount) * 100;
         return parseInt(p).toFixed(0) + '%';
     },
+
+    onCurrentReleaseClicked(e) {
+        e.preventDefault();
+        FlowRouter.setQueryParams({'rightView': 'RELEASE_DETAIL', releaseId: this.data.currentRelease._id});
+    },
+
+    onNextReleaseClicked(e) {
+        e.preventDefault();
+        FlowRouter.setQueryParams({'rightView': 'RELEASE_DETAIL', releaseId: this.data.nextRelease._id});
+    }
+
 });

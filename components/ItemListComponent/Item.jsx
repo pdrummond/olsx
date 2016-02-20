@@ -40,7 +40,9 @@ Item = React.createClass({
                              style={{fontSize: '14px', fontWeight: 'bold', color:'gray'}}>
                                 {this.props.item.description}
                         </div>
-                        <div style={{fontSize:'12px',color:'gray'}}>{this.renderKey()} Created by {this.props.item.createdByName} {moment(this.props.item.createdAt).fromNow()}</div>
+                        <div style={{fontSize:'12px',color:'gray', paddingLeft:'35px', paddingTop:'5px', paddingBottom:'5px'}}>
+                            {this.renderKey()} Created by {this.props.item.createdByName} {moment(this.props.item.createdAt).fromNow()}
+                        </div>
                     </div>
                     <div className="labels" style={{paddingLeft:'35px'}}>
                         <span className="label label-default" style={{backgroundColor:Ols.Status.getStatusColor(this.props.item.status)}}><i className="fa fa-circle"></i> {Ols.Status.getStatusLabel(this.props.item.status)}</span>

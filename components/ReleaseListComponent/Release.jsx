@@ -37,13 +37,29 @@ Release = React.createClass({
                         onClick={this.onTitleClicked}
                         className="release-title">
                         {this.props.release.title}
-                        <span className="pull-right label label-success">{this.props.release.status}</span>
+                        <span className="pull-right">
+                            {this.renderCurrentReleaseLabel()}
+                            {this.renderNextReleaseLabel()}
+                            <span className="label label-success">{this.props.release.status}</span>
+                        </span>
                     </span>
                     {this.renderDescription()}
                 </div>
                 {this.renderSelectedLinks()}
             </li>
         );
+    },
+
+    renderCurrentReleaseLabel() {
+        if(this.props.release._id == this.props.currentReleaseId) {
+            return <span className="label label-info" style={{marginRight:'5px'}}>current</span>
+        }
+    },
+
+    renderNextReleaseLabel() {
+        if(this.props.release._id == this.props.nextReleaseId) {
+            return <span className="label label-warning" style={{marginRight:'5px'}}>next</span>
+        }
     },
 
     renderDescription() {
@@ -63,14 +79,17 @@ Release = React.createClass({
                         <button type="button" className="btn btn-link" onClick={this.onDeleteClicked}><i className="fa fa-trash"></i> Delete</button>
                     </div>
                     <div className="pull-right">
-                        <div className="dropdown">
-                            <button className="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                        <div className="dropdown" style={{position:'relative',top:'5px'}}>
+                            <button className="btn btn-default btn-xs dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
                                 <i className="fa fa-ellipsis-v"></i>
                             </button>
                             <ul className="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenu1">
                                 {/*<li><a href="">Set Due Date</a></li>*/}
                                 <li><a onClick={this.onUpdateDescriptionClicked} href="">Update Description</a></li>
                                 <li><a onClick={this.onRenameClicked} href="">Rename</a></li>
+                                <li role="separator" className="divider"></li>
+                                {this.renderSetCurrentReleaseLink()}
+                                {this.renderSetNextReleaseLink()}
 
                                 {/*<li role="separator" className="divider"></li>
                                  <li><a href="">Activate Release</a></li>
@@ -83,6 +102,22 @@ Release = React.createClass({
             );
         } else {
             return <div></div>
+        }
+    },
+
+    renderSetCurrentReleaseLink() {
+        if(this.props.release._id == this.props.currentReleaseId) {
+            return <li><a onClick={this.onRemoveCurrentReleaseClicked} href="">Remove Current Release</a></li>
+        } else {
+            return <li><a onClick={this.onSetCurrentReleaseClicked} href="">Set Current Release</a></li>
+        }
+    },
+
+    renderSetNextReleaseLink() {
+        if(this.props.release._id == this.props.nextReleaseId) {
+            return <li><a onClick={this.onRemoveNextReleaseClicked} href="">Remove Next Release</a></li>
+        } else {
+            return <li><a onClick={this.onSetNextReleaseClicked} href="">Set Next Release</a></li>
         }
     },
 
@@ -176,5 +211,53 @@ Release = React.createClass({
                 });
             }
         }});
+    },
+
+    onSetCurrentReleaseClicked(e) {
+        e.preventDefault();
+        Projects.methods.setProjectCurrentRelease.call({
+            projectId: this.props.release.projectId,
+            releaseId: this.props.release._id,
+        }, (err) => {
+            if(err) {
+                toastr.error("Error setting current release: " + err.reason);
+            }
+        });
+    },
+
+    onRemoveCurrentReleaseClicked(e) {
+        e.preventDefault();
+        Projects.methods.removeProjectCurrentRelease.call({
+            projectId: this.props.release.projectId,
+            releaseId: this.props.release._id,
+        }, (err) => {
+            if(err) {
+                toastr.error("Error removing current release: " + err.reason);
+            }
+        });
+    },
+
+    onRemoveNextReleaseClicked(e) {
+        e.preventDefault();
+        Projects.methods.removeProjectNextRelease.call({
+            projectId: this.props.release.projectId,
+            releaseId: this.props.release._id,
+        }, (err) => {
+            if(err) {
+                toastr.error("Error removing next release: " + err.reason);
+            }
+        });
+    },
+
+    onSetNextReleaseClicked(e) {
+        e.preventDefault();
+        Projects.methods.setProjectNextRelease.call({
+            projectId: this.props.release.projectId,
+            releaseId: this.props.release._id,
+        }, (err) => {
+            if(err) {
+                toastr.error("Error setting next release: " + err.reason);
+            }
+        });
     }
 });

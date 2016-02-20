@@ -25,6 +25,17 @@ Meteor.publish('currentRelease', function(releaseId) {
     });
 });
 
+Meteor.publish('projectCurrentRelease', function(projectId) {
+    var project = Projects.findOne(projectId);
+    return Releases.find(project.currentReleaseId);
+});
+
+
+Meteor.publish('projectNextRelease', function(projectId) {
+    var project = Projects.findOne(projectId);
+    return Releases.find(project.nextReleaseId);
+});
+
 Meteor.publish("milestones", function(projectId) {
     return Milestones.find({projectId});
 });

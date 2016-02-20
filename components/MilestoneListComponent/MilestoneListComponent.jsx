@@ -79,6 +79,4 @@ MilestoneListComponent = React.createClass({
             self.setState({'filterInput': ''});
         });
     }
-
-
 });

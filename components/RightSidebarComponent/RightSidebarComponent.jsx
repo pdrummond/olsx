@@ -16,6 +16,7 @@ RightSidebarComponent = React.createClass({
                   <ul className="dropdown-menu" aria-labelledby="dropdownMenu1">
                       <li><a onClick={this.onProjectSummaryClicked} href="">Project Summary</a></li>
                       <li><a onClick={this.onActionsClicked} href="">Actions</a></li>
+                      <li><a onClick={this.onIssuesClicked} href="">Issues</a></li>
                       <li><a onClick={this.onMilestonesClicked} href="">Milestones</a></li>
                       <li><a onClick={this.onMembersClicked} href="">Members</a></li>
                       <li role="separator" className="divider"></li>
@@ -44,6 +45,10 @@ RightSidebarComponent = React.createClass({
         this.setState({'selectedComponent': 'ACTIONS'});
     },
 
+    onIssuesClicked() {
+        this.setState({'selectedComponent': 'ISSUES'});
+    },
+
     onArchivedClicked() {
         this.setState({'selectedComponent': 'ARCHIVED'});
     },
@@ -52,7 +57,8 @@ RightSidebarComponent = React.createClass({
         switch(this.state.selectedComponent) {
             case 'PROJECT_SUMMARY': return <ProjectSummaryComponent projectId={this.props.projectId} />
             case 'MILESTONES': return <MilestoneListComponent projectId={this.props.projectId} />
-            case 'ACTIONS': return <ItemListComponent projectId={this.props.projectId} />;
+            case 'ACTIONS': return <ActionListComponent projectId={this.props.projectId} />;
+            case 'ISSUES': return <IssueListComponent projectId={this.props.projectId} />;
             case 'MEMBERS': return <MemberListContainer projectId={this.props.projectId} memberList={this.props.memberList}/>
             case 'ARCHIVED': return <ArchivedListComponent projectId={this.props.projectId} />
         }
@@ -63,6 +69,7 @@ RightSidebarComponent = React.createClass({
           case 'PROJECT_SUMMARY': return 'Project Summary';
           case 'MILESTONES': return 'Milestones';
           case 'ACTIONS': return 'Actions';
+          case 'ISSUES': return 'Issues';
           case 'MEMBERS': return 'Members';
           case 'ARCHIVED': return 'Archived';
       }

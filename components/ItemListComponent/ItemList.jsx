@@ -12,19 +12,11 @@ ItemList = React.createClass({
     },
 
     render() {
+        return (
+            <ul className="item-list">
+                {this.renderItems()}
+            </ul>
+        )
 
-            if(this.props.itemList.length == 0) {
-                return (
-                    <ul className="item-list">
-                        <li><i style={{color:'gray'}}>No existing items found - press ENTER to create</i></li>
-                    </ul>
-                );
-            } else {
-                return (
-                    <ul className="item-list">
-                    {this.renderItems()}
-                </ul>
-                )
-            }
     }
 });

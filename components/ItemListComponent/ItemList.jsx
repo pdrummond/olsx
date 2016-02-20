@@ -2,11 +2,7 @@ ItemList = React.createClass({
     renderItems() {
         if(this.props.itemList) {
             return this.props.itemList.map((item) => {
-                if(item.subType == Ols.Item.ACTION_SUBTYPE_TASK) {
-                    return <Task milestoneList={this.props.milestoneList} key={item._id} task={item}/>;
-                } else {
-                    console.error("Item type is not supported: " + item.subType);
-                }
+                return <Item milestoneList={this.props.milestoneList} key={item._id} item={item}/>;
             });
         } else {
             return <p style={{textAlign: 'center', color: 'lightgray'}}>

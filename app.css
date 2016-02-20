@@ -472,7 +472,7 @@ header {
     margin-top:10px;
 }
 
-.item-list-component li.task {
+.item-list-component li.item {
     background-color:white;
     border:1px solid lightgray;
     margin-top:5px;
@@ -480,16 +480,16 @@ header {
 
 }
 
-.item-list-component li.task.active {
+.item-list-component li.item.active {
     border: 1px solid orange;
     box-shadow: 0px 0px 4px orange;
 }
 
-.item-list-component li .task-wrapper {
+.item-list-component li .item-wrapper {
     padding:10px;
 }
 
-.item-list-component li.task .task-description:hover {
+.item-list-component li.item .item-description:hover {
     cursor:pointer;
     color:#058AFF !important;
 }
@@ -505,7 +505,7 @@ header {
     margin-top:5px;
 }
 
-.task-wrapper .labels .label {
+.item-wrapper .labels .label {
     margin-right:5px;
 }
 
@@ -552,4 +552,12 @@ header {
     padding:0;
     margin:0;
     font-size:10px;
+}
+
+.item-type-dropdown-button, .item-type-dropdown-button:active, .item-type-dropdown-button:hover {
+    box-shadow:none !important;
+    background-color:white !important;
+    border: none;
+    position: relative;
+    left: -10px;
 }

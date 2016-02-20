@@ -41,7 +41,7 @@ ChatMessage = React.createClass({
 
     renderEditedLabel() {
       if(this.props.message.isEdited) {
-          return <span className="label label-info">edited</span>;
+          return <span className="label label-default" style={{backgroundColor:'white', color:'orange'}}>(edited)</span>;
       };
     },
 

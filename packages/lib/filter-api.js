@@ -5,7 +5,7 @@ FilterApi = function() {
 FilterApi.prototype.parseString = function(filterString) {
     var filter = {};
     var remainingText = filterString;
-    var re = new RegExp("([\\w\\.-]+)\\s*:\\s*([\\w\\.-\>\<]+)", "g");
+    var re = new RegExp("([\\w\\.-]+)\\s*:\\s*([\\w\\.\\-><]+)", "g");
     var match = re.exec(filterString);
     var disableTextSearch = false;
     while (match != null) {
@@ -28,7 +28,7 @@ FilterApi.prototype.parseString = function(filterString) {
                 case 'out-of-scope': value = Ols.Status.OUT_OF_SCOPE; break;
             }
         } else if(field == 'milestone') {
-            var valueAndRemainingText = value + " " + remainingText
+            var valueAndRemainingText = value + " " + remainingText;
             valueAndRemainingText = valueAndRemainingText.trim();
             var milestone = Milestones.findOne({title: valueAndRemainingText});
             if(milestone != null) {
@@ -40,9 +40,9 @@ FilterApi.prototype.parseString = function(filterString) {
             if(value.indexOf('>') != -1) {
                 value = parseInt(value.substring(1));
                 value = {$gt: value};
-            } else if(value.indexOf('<') != -1) {
+            } if(value.indexOf('<') != -1) {
                 value = parseInt(value.substring(1));
-                value = {$lt: value};
+                value = {$gt: value};
             } else {
                 value = parseInt(value);
             }

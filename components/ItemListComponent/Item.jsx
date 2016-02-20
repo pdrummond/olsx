@@ -1,4 +1,4 @@
-Task = React.createClass({
+Item = React.createClass({
     mixins: [ReactMeteorData],
 
     getInitialState() {
@@ -11,17 +11,17 @@ Task = React.createClass({
     getMeteorData() {
         var data = {};
         data.refList = Refs.find({
-                projectId: this.props.task.projectId,
-                itemId: this.props.task._id
+                projectId: this.props.item.projectId,
+                itemId: this.props.item._id
             }, {
                 sort: {createdAt: -1}
             }).fetch();
-        console.log("Task.getMeteorData() refList = " + JSON.stringify(data.refList));
+        console.log("Item.getMeteorData() refList = " + JSON.stringify(data.refList));
         return data;
     },
 
     styles: {
-        taskIcon: {
+        itemIcon: {
             float: 'left',
             width: '35px',
             position: 'relative',
@@ -31,19 +31,19 @@ Task = React.createClass({
 
     render() {
         return (
-            <li className={this.state.isSelected?'task active':'task'}>
-                <div className="task-wrapper">
-                    <i style={this.styles.taskIcon} className="fa fa-exclamation-circle fa-2x"></i>
+            <li className={this.state.isSelected?'item active':'item'}>
+                <div className="item-wrapper">
+                    {this.renderTypeDropdown()}
                     <div style={{paddingLeft: '0px'}}>
                         <div onClick={this.onDescriptionClicked}
-                             className="task-description"
+                             className="item-description"
                              style={{fontSize: '14px', fontWeight: 'bold', color:'gray'}}>
-                                {this.props.task.description}
+                                {this.props.item.description}
                         </div>
-                        <div style={{fontSize:'12px',color:'gray', paddingLeft:'35px'}}>{this.renderKey()} Created by {this.props.task.createdByName} {moment(this.props.task.createdAt).fromNow()}</div>
+                        <div style={{fontSize:'12px',color:'gray'}}>{this.renderKey()} Created by {this.props.item.createdByName} {moment(this.props.item.createdAt).fromNow()}</div>
                     </div>
                     <div className="labels" style={{paddingLeft:'35px'}}>
-                        <span className="label label-default" style={{backgroundColor:Ols.Status.getStatusColor(this.props.task.status)}}><i className="fa fa-circle"></i> {Ols.Status.getStatusLabel(this.props.task.status)}</span>
+                        <span className="label label-default" style={{backgroundColor:Ols.Status.getStatusColor(this.props.item.status)}}><i className="fa fa-circle"></i> {Ols.Status.getStatusLabel(this.props.item.status)}</span>
                         {/*<span className="label label-default"><i className="fa fa-flag-checkered"></i> Milestone 1</span>
                         <span className="label label-primary"><i className="fa fa-flag"></i> Sprint 44</span>*/}
                         {this.renderMilestoneDropdown()}
@@ -56,17 +56,40 @@ Task = React.createClass({
         )
     },
 
+    renderTypeDropdown() {
+        return(
+            <span className="dropdown pull-left" style={{width:'35px'}}>
+                <button className="item-type-dropdown-button btn btn-xs btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                    <i style={this.styles.itemIcon} className={this.renderItemTypeClassName()}></i>
+                </button>
+                <ul className="dropdown-menu" aria-labelledby="dropdownMenu1">
+                    <li><a onClick={this.onTaskTypeClicked} href="#"><i className="fa fa-exclamation-circle"></i> Task</a></li>
+                    <li><a onClick={this.onBugTypeClicked} href="#"><i className="fa fa-bug"></i> Bug</a></li>
+                </ul>
+            </span>
+        );
+    },
+
+    renderItemTypeClassName() {
+        var className = 'fa fa-2x ';
+        switch(this.props.item.subType) {
+            case Ols.Item.ACTION_SUBTYPE_TASK: className += 'fa-exclamation-circle'; break;
+            case Ols.Item.ISSUE_SUBTYPE_BUG: className += 'fa-bug'; break;
+        }
+        return className;
+    },
+
     renderPriorityBadge() {
-        if(this.props.task.priority) {
+        if(this.props.item.priority) {
             return <span onClick={this.onSetPriorityClicked}
                          className='pull-right badge' title="Priority"
-                         style={{backgroundColor:'lightgray', cursor:'pointer'}}>{this.props.task.priority}</span>;
+                         style={{backgroundColor:'lightgray', cursor:'pointer'}}>{this.props.item.priority}</span>;
         }
     },
 
     renderMilestoneLabel() {
-        if(this.props.task.milestoneId != null) {
-            var milestone = _.findWhere(this.props.milestoneList, {_id: this.props.task.milestoneId});
+        if(this.props.item.milestoneId != null) {
+            var milestone = _.findWhere(this.props.milestoneList, {_id: this.props.item.milestoneId});
             if(milestone == null) {
                 return (<i className="fa fa-exclamation-circle" style={{color:'red'}}> Invalid Milestone</i>);
             } else {
@@ -108,20 +131,20 @@ Task = React.createClass({
 
     onMilestoneSelected(milestone) {
         Items.methods.addItemToMilestone.call({
-            itemId: this.props.task._id,
+            itemId: this.props.item._id,
             milestoneId: milestone._id
         }, (err) => {
             if(err) {
-                toastr.error("Error adding task to milestone: " + err.reason);
+                toastr.error("Error adding item to milestone: " + err.reason);
             }
         });
     },
 
     renderKey() {
-        if(this.props.task.key == -1) {
+        if(this.props.item.key == -1) {
             return <i className="fa fa-spin fa-spinner"></i>;
         } else {
-            return <b>{this.props.task.projectKey}-{this.props.task.seq}:</b>;
+            return <b>{this.props.item.projectKey}-{this.props.item.seq}:</b>;
         }
     },
 
@@ -177,7 +200,7 @@ Task = React.createClass({
     },
 
     renderArchiveLabel: function() {
-        return this.props.task.isArchived? 'Restore':'Archive';
+        return this.props.item.isArchived? 'Restore':'Archive';
     },
 
     onDescriptionClicked: function() {
@@ -186,8 +209,8 @@ Task = React.createClass({
 
     onJumpClicked: function() {
         FlowRouter.go('projectPageStartSeq', {
-            projectId: this.props.task.projectId,
-            startMessageSeq: this.props.task.messageSeq
+            projectId: this.props.item.projectId,
+            startMessageSeq: this.props.item.messageSeq
         }, {
             scrollTop: true,
             selectStartMessage: true
@@ -199,66 +222,66 @@ Task = React.createClass({
     },
 
     onArchivedClicked() {
-        if(this.props.task.isArchived) {
+        if(this.props.item.isArchived) {
             Items.methods.restoreItem.call({
-                projectId: this.props.task.projectId,
-                seq: this.props.task.seq,
+                projectId: this.props.item.projectId,
+                seq: this.props.item.seq,
             }, (err) => {
                 if (err) {
-                    toastr.error("Error restoring task: " + err.reason);
+                    toastr.error("Error restoring item: " + err.reason);
                 }
             });
         } else {
             Items.methods.archiveItem.call({
-                projectId: this.props.task.projectId,
-                seq: this.props.task.seq,
+                projectId: this.props.item.projectId,
+                seq: this.props.item.seq,
             }, (err) => {
                 if (err) {
-                    toastr.error("Error archiving task: " + err.reason);
+                    toastr.error("Error archiving item: " + err.reason);
                 }
             });
         }
     },
 
     onStatusNewClicked() {
-        this.updateTaskStatus(Ols.Status.NEW);
+        this.updateItemStatus(Ols.Status.NEW);
     },
 
     onStatusOpenClicked() {
-        this.updateTaskStatus(Ols.Status.OPEN);
+        this.updateItemStatus(Ols.Status.OPEN);
     },
 
     onStatusInProgressClicked() {
-        this.updateTaskStatus(Ols.Status.IN_PROGRESS);
+        this.updateItemStatus(Ols.Status.IN_PROGRESS);
     },
 
     onStatusBlockedClicked() {
-        this.updateTaskStatus(Ols.Status.BLOCKED);
+        this.updateItemStatus(Ols.Status.BLOCKED);
     },
 
     onStatusInTestClicked() {
-        this.updateTaskStatus(Ols.Status.IN_TEST);
+        this.updateItemStatus(Ols.Status.IN_TEST);
     },
 
     onStatusDoneClicked() {
-        this.updateTaskStatus(Ols.Status.DONE);
+        this.updateItemStatus(Ols.Status.DONE);
     },
 
     onStatusRejectedClicked() {
-        this.updateTaskStatus(Ols.Status.REJECTED);
+        this.updateItemStatus(Ols.Status.REJECTED);
     },
 
     onStatusDuplicateClicked() {
-        this.updateTaskStatus(Ols.Status.DUPLICATE);
+        this.updateItemStatus(Ols.Status.DUPLICATE);
     },
 
     onStatusOutOfScopeClicked() {
-        this.updateTaskStatus(Ols.Status.OUT_OF_SCOPE);
+        this.updateItemStatus(Ols.Status.OUT_OF_SCOPE);
     },
 
     onBacklogClicked() {
         Items.methods.moveItemToBacklog.call({
-            itemId: this.props.task._id,
+            itemId: this.props.item._id,
         }, (err) => {
             if(err) {
                 toastr.error("Error moving item to backlog: " + err.reason);
@@ -266,17 +289,25 @@ Task = React.createClass({
         });
     },
 
+    onBugTypeClicked() {
+        this.updateItemType(Ols.Item.ITEM_TYPE_ISSUE, Ols.Item.ISSUE_SUBTYPE_BUG);
+    },
+
+    onTaskTypeClicked() {
+        this.updateItemType(Ols.Item.ITEM_TYPE_ACTION, Ols.Item.ACTION_SUBTYPE_TASK);
+    },
+
     onSetPriorityClicked() {
         var self = this;
-        bootbox.prompt({title: "Set Priority:", value: this.props.task.priority, callback: function(priority) {
+        bootbox.prompt({title: "Set Priority:", value: this.props.item.priority, callback: function(priority) {
             if (priority !== null) {
                 priority = parseInt(priority);
                 Items.methods.updateItemPriority.call({
-                    itemId: self.props.task._id,
+                    itemId: self.props.item._id,
                     priority
                 }, (err) => {
                     if (err) {
-                        toastr.error("Error setting task priority: " + err.reason);
+                        toastr.error("Error setting item priority: " + err.reason);
                     }
                 });
             }
@@ -285,7 +316,7 @@ Task = React.createClass({
 
     onRemovePriorityClicked() {
         Items.methods.removeItemPriority.call({
-            itemId: this.props.task._id,
+            itemId: this.props.item._id,
         }, (err) => {
             if (err) {
                 toastr.error("Error removing priority: " + err.reason);
@@ -294,14 +325,26 @@ Task = React.createClass({
     },
 
 
-    updateTaskStatus(status) {
+    updateItemStatus(status) {
         Items.methods.updateItemStatus.call({
-            projectId: this.props.task.projectId,
-            seq:this.props.task.seq,
+            projectId: this.props.item.projectId,
+            seq:this.props.item.seq,
             status
         }, (err) => {
             if(err) {
-                toastr.error("Error updating task status: " + err.reason);
+                toastr.error("Error updating item status: " + err.reason);
+            }
+        });
+    },
+
+    updateItemType(type, subType) {
+        Items.methods.updateItemType.call({
+            itemId: this.props.item._id,
+            type,
+            subType
+        }, (err) => {
+            if(err) {
+                toastr.error("Error updating item type: " + err.reason);
             }
         });
     }

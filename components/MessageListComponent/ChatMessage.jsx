@@ -23,10 +23,11 @@ ChatMessage = React.createClass({
     render() {
         return (
             <li className={this.getClassName()} onClick={this.onClick}>
-                <img style={this.styles.profileImage} src={this.data.userProfileImage}/>
+                <img style={this.styles.profileImage} src={this.data.userProfileImage} title={'Message ' + this.props.message.seq}/>
                 <div style={{paddingLeft:'50px'}}>
                     <div><b>{this.props.message.createdByName}</b>
                         <span className="message-created-at"> {moment(this.props.message.createdAt).fromNow()} </span>
+                        {this.renderEditedLabel()}
                         {this.renderMessageDropdown()}
                     </div>
                     <div className="message-content markdown-content"
@@ -36,6 +37,12 @@ ChatMessage = React.createClass({
                 </div>
             </li>
         );
+    },
+
+    renderEditedLabel() {
+      if(this.props.message.isEdited) {
+          return <span className="label label-info">edited</span>;
+      };
     },
 
     renderMessageDropdown() {
@@ -73,6 +80,7 @@ ChatMessage = React.createClass({
     },
 
     onEditClicked() {
+        var self = this;
         bootbox.dialog({
             message: '<textarea id="edit-chat-message-textarea" rows=10 style="width:100%;border:1px solid lightgray" type="text" name="content">' + this.props.message.content + '</textarea>',
             title: "Edit Message",
@@ -84,7 +92,19 @@ ChatMessage = React.createClass({
                         var content = $('#edit-chat-message-textarea').val();
                         if(content != null) {
                             content = content.trim();
-                            alert('new content: ' + content);
+                            Meteor.call('editMessage', self.props.message._id, content, (err, content) => {
+                                if(err) {
+                                    toastr.error("Error deleting message: " + err.reason);
+                                } else {
+                                    //I know this is bad-form, but it's an exception because messages are special in that
+                                    //there is the ServerMessage/ClientMessage split.  So updating the server message isn't
+                                    //enough - we have to update the client message separately.
+                                    self.props.message.content = content;
+                                    self.props.message.isDeleted = false; //message may have been previously deleted
+                                    self.props.message.isEdited = true;
+                                    self.forceUpdate();
+                                }
+                            });
                         }
                     }
                 },

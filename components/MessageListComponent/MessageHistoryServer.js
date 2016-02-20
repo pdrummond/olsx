@@ -253,7 +253,44 @@ if(Meteor.isServer) {
             console.log("-- system error message saved");
         },
 
+        editMessage: function(messageId, content) {
+            check(messageId, String);
+            check(content, String);
+            if (!this.userId) {
+                throw new Meteor.Error("editMessage.not-authenticated");
+            }
+            var message = ServerMessages.findOne(messageId);
+            if (message == null) {
+                throw new Meteor.Error("editMessage.message-not-exist", "Message " + messageId + " does not exist");
+            }
+            var userIsAuthor = Meteor.userId() == message.createdBy;
+
+            var member = Members.findOne({userId: Meteor.userId(), projectId: message.projectId});
+
+            if(member == null || !userIsAuthor) {
+                throw new Meteor.Error("editMessage.not-authorised", "Only project admins or the message author can edit messages");
+            }
+
+            ServerMessages.update(messageId, {
+                $set: {content: content, isEdited: true, isDeleted:false, updatedAt: new Date()}
+            });
+
+            Ols.Message.systemSuccessMessage(message.projectId, Meteor.user().username + " edited message " + message.seq);
+
+            //TODO: Need to do more than this to deal with refs properly
+            //This deals with the most obvious case - editing a message in order to add a ref.
+            //But what about if the message has a ref and its content changes (but the ref remains).
+            //What about if the content changes and the ref is removed?
+            //Need to deal with both of these cases.  Are there any more?
+            message = ServerMessages.findOne(messageId);
+            Meteor.call('detectRefsInMessage', message);
+
+            return content;
+        },
+
         deleteMessage: function(messageId) {
+            check(messageId, String);
+
             if (!this.userId) {
                 throw new Meteor.Error("deleteMessage.not-authenticated");
             }
@@ -271,7 +308,6 @@ if(Meteor.isServer) {
             if(member == null || !userIsAuthor) {
                 throw new Meteor.Error("deleteMessage.not-authorised", "Only project admins or the message author can delete messages");
             }
-            console.log("member: " + JSON.stringify(member, null, 2));
 
             var deletedMessageContent = 'Message deleted by ' + Meteor.user().username + (userIsAuthor ? ' (author)': ' (admin)');
 
@@ -280,6 +316,8 @@ if(Meteor.isServer) {
             });
 
             Ols.Message.systemSuccessMessage(message.projectId, Meteor.user().username + " deleted message " + message.seq);
+
+            //TODO: Need to remove refs
 
             return deletedMessageContent;
         }

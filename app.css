@@ -164,6 +164,7 @@ main {
 
 .message-box {
     padding-top:20px;
+    z-index:999;
 }
 
 .message-box textarea {

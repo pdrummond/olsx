@@ -45,10 +45,13 @@
         <item url="file://$USER_HOME$/.meteor/packages/launch-screen/1.0.4/web.browser/packages/launch-screen.js" />
         <item url="file://$USER_HOME$/.meteor/packages/peerlibrary_fiber-utils/0.6.0/web.browser/packages/peerlibrary_fiber-utils.js" />
         <item url="file://$USER_HOME$/.meteor/packages/peerlibrary_reactive-mongo/0.1.1/web.browser/packages/peerlibrary_reactive-mongo.js" />
+        <item url="file://$USER_HOME$/.meteor/packages/universe_react-chartjs/1.0.2/web.browser/packages/universe_react-chartjs.js" />
         <item url="file://$USER_HOME$/.meteor/packages/logging/1.0.8/web.browser/packages/logging.js" />
         <item url="file://$USER_HOME$/.meteor/packages/peerlibrary_reactive-publish/0.2.0/web.browser/packages/peerlibrary_reactive-publish.js" />
         <item url="file://$USER_HOME$/.meteor/packages/ddp-rate-limiter/1.0.0/web.browser/packages/ddp-rate-limiter.js" />
         <item url="file://$USER_HOME$/.meteor/packages/peerlibrary_server-autorun/0.5.2/web.browser/packages/peerlibrary_server-autorun.js" />
+        <item url="file://$USER_HOME$/.meteor/packages/universe_modules/0.4.2/web.browser/packages/universe_modules.js" />
+        <item url="file://$USER_HOME$/.meteor/packages/chart_chart/1.0.1-beta.4/web.browser/packages/chart:chart.js" />
         <item url="file://$USER_HOME$/.meteor/packages/mongo-id/1.0.1/web.browser/packages/mongo-id.js" />
         <item url="file://$USER_HOME$/.meteor/packages/accounts-ui-unstyled/1.1.8/web.browser/login_buttons_session.js" />
         <item url="file://$USER_HOME$/.meteor/packages/observe-sequence/1.0.7/web.browser/packages/observe-sequence.js" />
@@ -181,10 +184,13 @@
       <root url="file://$USER_HOME$/.meteor/packages/launch-screen/1.0.4/web.browser/packages/launch-screen.js" />
       <root url="file://$USER_HOME$/.meteor/packages/peerlibrary_fiber-utils/0.6.0/web.browser/packages/peerlibrary_fiber-utils.js" />
       <root url="file://$USER_HOME$/.meteor/packages/peerlibrary_reactive-mongo/0.1.1/web.browser/packages/peerlibrary_reactive-mongo.js" />
+      <root url="file://$USER_HOME$/.meteor/packages/universe_react-chartjs/1.0.2/web.browser/packages/universe_react-chartjs.js" />
       <root url="file://$USER_HOME$/.meteor/packages/logging/1.0.8/web.browser/packages/logging.js" />
       <root url="file://$USER_HOME$/.meteor/packages/peerlibrary_reactive-publish/0.2.0/web.browser/packages/peerlibrary_reactive-publish.js" />
       <root url="file://$USER_HOME$/.meteor/packages/ddp-rate-limiter/1.0.0/web.browser/packages/ddp-rate-limiter.js" />
       <root url="file://$USER_HOME$/.meteor/packages/peerlibrary_server-autorun/0.5.2/web.browser/packages/peerlibrary_server-autorun.js" />
+      <root url="file://$USER_HOME$/.meteor/packages/universe_modules/0.4.2/web.browser/packages/universe_modules.js" />
+      <root url="file://$USER_HOME$/.meteor/packages/chart_chart/1.0.1-beta.4/web.browser/packages/chart:chart.js" />
       <root url="file://$USER_HOME$/.meteor/packages/mongo-id/1.0.1/web.browser/packages/mongo-id.js" />
       <root url="file://$USER_HOME$/.meteor/packages/accounts-ui-unstyled/1.1.8/web.browser/login_buttons_session.js" />
       <root url="file://$USER_HOME$/.meteor/packages/observe-sequence/1.0.7/web.browser/packages/observe-sequence.js" />

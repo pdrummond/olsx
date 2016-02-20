@@ -436,6 +436,15 @@ header {
     right: 10px;
 }
 
+.markdown-content ul {
+    padding-left:30px;
+    margin:10px;
+}
+
+.markdown-content li {
+    list-style-type: circle;
+}
+
 .markdown-content p:first-child{
     margin:0;
 }

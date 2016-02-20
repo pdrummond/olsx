@@ -17,7 +17,7 @@ MemberListContainer = React.createClass({
 
     onMemberClicked(memberToRemove) {
         var currentMember = Members.findOne({userId: Meteor.userId()});
-        if(currentMember.role == Ols.ROLE_ADMIN) {
+        if(currentMember.role == Ols.Role.ROLE_ADMIN) {
             if(confirm("Do you wish to remove this member from the project?")) {
                 Members.methods.removeMember.call({memberId: memberToRemove._id}, (err) => {
                     if (err) {

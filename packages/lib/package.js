@@ -15,6 +15,7 @@ Package.onUse(function(api) {
     'loopbot-api.js',
     'status-type-api.js',
     'item-type-api.js',
+    'role-type-api.js',
     'project-type-api.js',
     'milestone-type-api.js',
     'keys-api.js',

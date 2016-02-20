@@ -42,3 +42,7 @@ oaf:html5-desktop-notifications
 themeteorchef:commonmark
 twbs:bootstrap
 mizzao:bootboxjs
+
+
+highcharts-container
+universe:react-chartjs

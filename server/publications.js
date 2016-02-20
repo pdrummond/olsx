@@ -87,4 +87,50 @@ Meteor.publish("milestoneTaskCounts", function (milestoneId) {
     });
 });
 
+//http://docs.meteor.com/#/full/meteor_publish
+Meteor.publish("projectActionCounts", function (projectId) {
+    var self = this;
+    var totalCount = 0;
+    var openCount = 0;
+    var doneCount = 0;
+    var initializing = true;
+    var handle = Items.find({projectId: projectId, type:Ols.Item.ITEM_TYPE_ACTION}).observeChanges({
+        added: function (id, fields) {
+            totalCount++;
+            if(Ols.Status.isOpen(fields.status)) {
+                openCount++;
+            } else {
+                doneCount++;
+            }
+            if (!initializing) {
+                self.changed("project-action-counts", projectId, {totalCount, openCount, doneCount});
+            }
+        },
+        removed: function (id) {
+            totalCount--;
+            if(Ols.Status.isOpen(fields.status)) {
+                openCount--;
+            } else {
+                doneCount--;
+            }
+            self.changed("project-action-counts", projectId, {totalCount, openCount, doneCount});
+        }
+        // don't care about moved or changed
+    });
+
+    // Observe only returns after the initial added callbacks have
+    // run.  Now return an initial value and mark the subscription
+    // as ready.
+    initializing = false;
+    self.added("project-action-counts", projectId, {totalCount, openCount, doneCount});
+    self.ready();
+
+    // Stop observing the cursor when client unsubs.
+    // Stopping a subscription automatically takes
+    // care of sending the client any removed messages.
+    self.onStop(function () {
+        handle.stop();
+    });
+});
+
 

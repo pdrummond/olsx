@@ -251,6 +251,37 @@ if(Meteor.isServer) {
                 isError: true
             });
             console.log("-- system error message saved");
+        },
+
+        deleteMessage: function(messageId) {
+            if (!this.userId) {
+                throw new Meteor.Error("deleteMessage.not-authenticated");
+            }
+            var message = ServerMessages.findOne(messageId);
+            if (message == null) {
+                throw new Meteor.Error("deleteMessage.message-not-exist", "Message " + messageId + " does not exist");
+            }
+            if(message.isDeleted) {
+                throw new Meteor.Error("deleteMessage.message-already-deleted", "Message " + messageId + " is already deleted");
+            }
+            var userIsAuthor = Meteor.userId() == message.createdBy;
+
+            var member = Members.findOne({userId: Meteor.userId(), projectId: message.projectId});
+
+            if(member == null || !userIsAuthor) {
+                throw new Meteor.Error("deleteMessage.not-authorised", "Only project admins or the message author can delete messages");
+            }
+            console.log("member: " + JSON.stringify(member, null, 2));
+
+            var deletedMessageContent = 'Message deleted by ' + Meteor.user().username + (userIsAuthor ? ' (author)': ' (admin)');
+
+            ServerMessages.update(messageId, {
+                $set: {content: deletedMessageContent, isDeleted:true, updatedAt: new Date()}
+            });
+
+            Ols.Message.systemSuccessMessage(message.projectId, Meteor.user().username + " deleted message " + message.seq);
+
+            return deletedMessageContent;
         }
     });
 }

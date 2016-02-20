@@ -24,6 +24,12 @@ RightSidebarComponent = React.createClass({
                       <li><a onClick={this.onBacklogClicked} href="">Backlog</a></li>
                       <li><a onClick={this.onMembersClicked} href="">Members</a></li>
                       <li><a onClick={this.onArchivedClicked} href="">Archived</a></li>
+                      <li role="separator" className="divider"></li>
+                      <li><a onClick={this.onNewItemsClicked} href="">New Items</a></li>
+                      <li><a onClick={this.onItemsInProgressClicked} href="">Items In Progress</a></li>
+                      <li><a onClick={this.onBlockedItemsClicked} href="">Blocked Items</a></li>
+                      <li><a onClick={this.onItemsInTestClicked} href="">Items In Test</a></li>
+                      <li><a onClick={this.onClosedItemsClicked} href="">Closed Items</a></li>
                   </ul>
               </div>
               {this.renderSelectedComponent()}
@@ -64,18 +70,43 @@ RightSidebarComponent = React.createClass({
         FlowRouter.setQueryParams({'rightView': 'ARCHIVED'});
     },
 
+    onNewItemsClicked() {
+        FlowRouter.setQueryParams({'rightView': 'NEW_ITEMS'});
+    },
+
+    onItemsInProgressClicked() {
+        FlowRouter.setQueryParams({'rightView': 'ITEMS_IN_PROGRESS'});
+    },
+
+    onBlockedItemsClicked() {
+        FlowRouter.setQueryParams({'rightView': 'BLOCKED_ITEMS'});
+    },
+
+    onItemsInTestClicked() {
+        FlowRouter.setQueryParams({'rightView': 'ITEMS_IN_TEST'});
+    },
+
+    onClosedItemsClicked() {
+        FlowRouter.setQueryParams({'rightView': 'CLOSED_ITEMS'});
+    },
+
     renderSelectedComponent() {
         switch(this.data.rightView) {
-            case 'PROJECT_SUMMARY': return <ProjectSummaryComponent projectId={this.props.projectId} />
-            case 'MILESTONES': return <MilestoneListComponent projectId={this.props.projectId} />
-            case 'RELEASES': return <ReleaseListComponent projectId={this.props.projectId} />
-            case 'RELEASE_DETAIL': return <ReleaseDetailComponent/>
-            case 'MILESTONE_DETAIL': return <MilestoneDetailComponent/>
+            case 'PROJECT_SUMMARY': return <ProjectSummaryComponent projectId={this.props.projectId} />;
+            case 'MILESTONES': return <MilestoneListComponent projectId={this.props.projectId} />;
+            case 'RELEASES': return <ReleaseListComponent projectId={this.props.projectId} />;
+            case 'RELEASE_DETAIL': return <ReleaseDetailComponent/>;
+            case 'MILESTONE_DETAIL': return <MilestoneDetailComponent/>;
             case 'ACTIONS': return <ActionListComponent projectId={this.props.projectId} />;
             case 'ISSUES': return <IssueListComponent projectId={this.props.projectId} />;
             case 'BACKLOG': return <BacklogComponent projectId={this.props.projectId} />;
-            case 'MEMBERS': return <MemberListContainer projectId={this.props.projectId} memberList={this.props.memberList}/>
-            case 'ARCHIVED': return <ArchivedListComponent projectId={this.props.projectId} />
+            case 'MEMBERS': return <MemberListContainer projectId={this.props.projectId} memberList={this.props.memberList}/>;
+            case 'ARCHIVED': return <ArchivedListComponent projectId={this.props.projectId} />;
+            case 'NEW_ITEMS': return <NewItemsComponent projectId={this.props.projectId} />;
+            case 'ITEMS_IN_PROGRESS': return <InProgressItemsComponent projectId={this.props.projectId} />;
+            case 'BLOCKED_ITEMS': return <BlockedItemsComponent projectId={this.props.projectId} />;
+            case 'ITEMS_IN_TEST': return <InTestItemsComponent projectId={this.props.projectId} />;
+            case 'CLOSED_ITEMS': return <ClosedItemsComponent projectId={this.props.projectId} />;
         }
     },
 
@@ -91,6 +122,11 @@ RightSidebarComponent = React.createClass({
           case 'BACKLOG': return 'Backlog';
           case 'MEMBERS': return 'Members';
           case 'ARCHIVED': return 'Archived';
+          case 'NEW_ITEMS': return 'New Items';
+          case 'ITEMS_IN_PROGRESS': return 'Items In Progress';
+          case 'BLOCKED_ITEMS': return 'Blocked Items';
+          case 'ITEMS_IN_TEST': return 'Items In Test';
+          case 'CLOSED_ITEMS': return 'Closed Items';
       }
     }
 

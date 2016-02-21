@@ -40,7 +40,7 @@ FilterApi.prototype.parseString = function(filterString) {
             if(value.indexOf('>') != -1) {
                 value = parseInt(value.substring(1));
                 value = {$gt: value};
-            } if(value.indexOf('<') != -1) {
+            } else if(value.indexOf('<') != -1) {
                 value = parseInt(value.substring(1));
                 value = {$gt: value};
             } else {

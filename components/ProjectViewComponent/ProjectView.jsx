@@ -47,7 +47,6 @@ ProjectView = React.createClass({
                 </div>
             );
         } else if (this.data.currentProject._id) {
-            console.log(">>> boom: " + this.data.currentProject._id);
             return (
                 <div className="view-container">
                     <RightSidebarComponent

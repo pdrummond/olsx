@@ -18,10 +18,9 @@ Meteor.publish('currentItem', function(itemId) {
 });
 
 Meteor.publish('itemActivity', function(itemId) {
-    this.autorun(function(computation) {
-        return Activity.find({itemId: itemId}, {sort: {createdAt: -1}});
-    });
+        return Items.find(itemId);
 });
+
 
 Meteor.publish("refs", function(projectId) {
     return Refs.find({projectId});
@@ -128,32 +127,86 @@ Meteor.publish("milestoneTaskCounts", function (milestoneId) {
 });
 
 //http://docs.meteor.com/#/full/meteor_publish
-Meteor.publish("projectActionCounts", function (projectId) {
+Meteor.publish("projectTotals", function (projectId) {
     var self = this;
-    var totalCount = 0;
-    var openCount = 0;
-    var doneCount = 0;
+    var totals = {
+        totalActionCount:0,
+        openActionCount:0,
+        closedActionCount:0,
+        totalBugCount:0,
+        openBugCount:0,
+        closedBugCount:0,
+        totalTaskCount:0,
+        openTaskCount:0,
+        closedTaskCount:0,
+        openBacklogActionCount:0
+    };
     var initializing = true;
-    var handle = Items.find({projectId: projectId, type:Ols.Item.ITEM_TYPE_ACTION}).observeChanges({
-        added: function (id, fields) {
-            totalCount++;
-            if(Ols.Status.isOpen(fields.status)) {
-                openCount++;
-            } else {
-                doneCount++;
+    var handle = Items.find({projectId: projectId}).observeChanges({
+        added: function (id, item) {
+            if(item.subType == Ols.Item.ACTION_SUBTYPE_TASK || item.subType == Ols.Item.ISSUE_SUBTYPE_BUG) {
+                totals.totalActionCount++;
+                if (Ols.Status.isOpen(item.status)) {
+                    totals.openActionCount++;
+                    if(!item.milestoneId ) {
+                        totals.openBacklogActionCount++;
+                    }
+                } else {
+                    totals.closedActionCount++;
+                }
             }
+            if(item.subType == Ols.Item.ACTION_SUBTYPE_TASK) {
+                totals.totalTaskCount++;
+                if (Ols.Status.isOpen(item.status)) {
+                    totals.openTaskCount++;
+                } else {
+                    totals.closedTaskCount++;
+                }
+            }
+            if(item.subType == Ols.Item.ISSUE_SUBTYPE_BUG) {
+                totals.totalBugCount++;
+                if (Ols.Status.isOpen(item.status)) {
+                    totals.openBugCount++;
+                } else {
+                    totals.closedBugCount++;
+                }
+            }
+
             if (!initializing) {
-                self.changed("project-action-counts", projectId, {totalCount, openCount, doneCount});
+                self.changed("project-totals", projectId, totals);
             }
         },
         removed: function (id) {
-            totalCount--;
-            if(Ols.Status.isOpen(fields.status)) {
-                openCount--;
-            } else {
-                doneCount--;
+            if(item.subType == Ols.Item.ACTION_SUBTYPE_TASK || item.subType == Ols.Item.ISSUE_SUBTYPE_BUG) {
+                totals.totalActionCount--;
+                if (Ols.Status.isOpen(item.status)) {
+                    totals.openActionCount--;
+                    if(!item.milestoneId ) {
+                        totals.openBacklogActionCount--;
+                    }
+                } else {
+                    totals.closedActionCount--;
+                }
             }
-            self.changed("project-action-counts", projectId, {totalCount, openCount, doneCount});
+
+            if(item.subType == Ols.Item.ACTION_SUBTYPE_TASK) {
+                totals.totalTaskCount--;
+                if (Ols.Status.isOpen(item.status)) {
+                    totals.openTaskCount--;
+                } else {
+                    totals.closedTaskCount--;
+                }
+            }
+
+            if(item.subType == Ols.Item.ISSUE_SUBTYPE_BUG) {
+                totals.totalBugCount--;
+                if (Ols.Status.isOpen(item.status)) {
+                    totals.openBugCount--;
+                } else {
+                    totals.closedBugCount--;
+                }
+            }
+            self.changed("project-totals", projectId, totals);
         }
         // don't care about moved or changed
     });
@@ -162,7 +215,7 @@ Meteor.publish("projectActionCounts", function (projectId) {
     // run.  Now return an initial value and mark the subscription
     // as ready.
     initializing = false;
-    self.added("project-action-counts", projectId, {totalCount, openCount, doneCount});
+    self.added("project-totals", projectId, totals);
     self.ready();
 
     // Stop observing the cursor when client unsubs.

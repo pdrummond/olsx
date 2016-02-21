@@ -118,8 +118,12 @@ ProjectSummaryComponent = React.createClass({
     },
 
     getProjectPercentage() {
-        var p = (this.data.closedActionCount / this.data.totalActionCount) * 100;
-        return parseInt(p).toFixed(0) + '%';
+        if(this.data.totalActionCount == 0) {
+            return '0%';
+        } else {
+            var p = (this.data.closedActionCount / this.data.totalActionCount) * 100;
+            return parseInt(p).toFixed(0) + '%';
+        }
     },
 
     onCurrentReleaseClicked(e) {

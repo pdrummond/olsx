@@ -6,7 +6,8 @@ GithubMessage = React.createClass({
             width: '40px',
             borderRadius: '20px',
             position:'relative',
-            top:'0px'
+            top:'0px',
+            left: '-5px'
         }
     },
 
@@ -29,6 +30,8 @@ GithubMessage = React.createClass({
     renderContent() {
         if(this.props.message.data.event) {
             switch (this.props.message.data.eventType) {
+                case 'ping':
+                    return this.renderPingEvent();
                 case 'push':
                     return this.renderPushEvent();
                     break;
@@ -38,10 +41,22 @@ GithubMessage = React.createClass({
                 case 'issue_comment':
                     return this.renderIssueCommentEvent();
                     break;
+                default:
+                    return <p>Github event <i>{this.props.message.data.eventType}</i> not supported.</p>;
+                    break;
             }
         } else {
             return <p style={{color:'red'}}>Unexpected error: message contains invalid data</p>;
         }
+    },
+
+    renderPingEvent() {
+        var username = this.props.message.data.event.sender.login;
+        return (
+            <div>
+                <span><i>{username}</i> added <b>GitHub</b> integration to this project.</span>
+            </div>
+        )
     },
 
     renderPushEvent() {

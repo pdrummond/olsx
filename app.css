@@ -601,3 +601,12 @@ header {
     font-weight: bold;
     color: gray;
 }
+
+.btn-backlog {
+    background-color:black;
+    color:white;
+}
+
+.btn-backlog i {
+    font-weight:bold;
+}

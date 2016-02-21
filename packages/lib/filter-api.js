@@ -53,7 +53,7 @@ FilterApi.prototype.parseString = function(filterString) {
     }
     remainingText = remainingText.trim();
     if(remainingText && remainingText.length > 0 && !disableTextSearch) {
-        filter["$or"] = [{description: {$regex:remainingText}}];
+        filter["$or"] = [{description: {$regex: remainingText, $options: 'i'}}];
     }
     console.log("Ols.Filter.parseString: " + JSON.stringify(filter));
     return filter;

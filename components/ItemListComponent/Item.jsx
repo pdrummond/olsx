@@ -104,10 +104,18 @@ Item = React.createClass({
 
     },
 
+    getMilestoneDropdownClassName() {
+        var className = "btn btn-xs btn-default dropdown-toggle ";
+        if(this.props.item.milestoneId == null) {
+            className += "btn-backlog";
+        }
+        return className;
+    },
+
     renderMilestoneDropdown() {
         return (
             <span className="dropdown">
-                <button className="btn btn-xs btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                <button className={this.getMilestoneDropdownClassName()} type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
                     {this.renderMilestoneLabel()} <span className="caret"></span>
                 </button>
                 <ul className="dropdown-menu" aria-labelledby="dropdownMenu1">

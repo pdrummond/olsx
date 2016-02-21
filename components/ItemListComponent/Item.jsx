@@ -23,11 +23,11 @@ Item = React.createClass({
     getMeteorData() {
         var data = {};
         data.refList = Refs.find({
-                projectId: this.props.item.projectId,
-                itemId: this.props.item._id
-            }, {
-                sort: {createdAt: 1}
-            }).fetch();
+            projectId: this.props.item.projectId,
+            itemId: this.props.item._id
+        }, {
+            sort: {createdAt: 1}
+        }).fetch();
         console.log("Item.getMeteorData() refList = " + JSON.stringify(data.refList));
         return data;
     },
@@ -50,16 +50,16 @@ Item = React.createClass({
                         <div onClick={this.onDescriptionClicked}
                              className="item-description"
                              style={this.getDescriptionStyle()}>
-                                {this.props.item.description}
+                            {this.props.item.description}
                         </div>
                         <div style={{fontSize:'12px',color:'gray', paddingLeft:'35px', paddingTop:'5px', paddingBottom:'5px'}}>
                             {this.renderKey()} Created by {this.props.item.createdByName} {moment(this.props.item.createdAt).fromNow()}
                         </div>
                     </div>
                     <div className="labels" style={{paddingLeft:'35px'}}>
-                        <span className="label label-default" style={{backgroundColor:Ols.Status.getStatusColor(this.props.item.status)}}><i className="fa fa-circle"></i> {Ols.Status.getStatusLabel(this.props.item.status)}</span>
+                        {this.renderStatusDropdown()}
                         {/*<span className="label label-default"><i className="fa fa-flag-checkered"></i> Milestone 1</span>
-                        <span className="label label-primary"><i className="fa fa-flag"></i> Sprint 44</span>*/}
+                         <span className="label label-primary"><i className="fa fa-flag"></i> Sprint 44</span>*/}
                         {this.renderMilestoneDropdown()}
                         {this.renderPriorityBadge()}
                     </div>
@@ -87,6 +87,7 @@ Item = React.createClass({
                 <ul className="dropdown-menu" aria-labelledby="dropdownMenu1">
                     <li><a onClick={this.onTaskTypeClicked} href="#"><i className="fa fa-exclamation-circle"></i> Task</a></li>
                     <li><a onClick={this.onBugTypeClicked} href="#"><i className="fa fa-bug"></i> Bug</a></li>
+                    <li><a onClick={this.onQuestionTypeClicked} href="#"><i className="fa fa-question-circle"></i> Question</a></li>
                 </ul>
             </span>
         );
@@ -96,6 +97,7 @@ Item = React.createClass({
         switch(this.props.item.subType) {
             case Ols.Item.ACTION_SUBTYPE_TASK: className += ' fa-exclamation-circle'; break;
             case Ols.Item.ISSUE_SUBTYPE_BUG: className += ' fa-bug'; break;
+            case Ols.Item.INFO_SUBTYPE_QUESTION: className += ' fa-question-circle'; break;
         }
         return className;
     },
@@ -106,6 +108,56 @@ Item = React.createClass({
                          className='pull-right badge' title="Priority"
                          style={{backgroundColor:'lightgray', cursor:'pointer'}}>{this.props.item.priority}</span>;
         }
+    },
+
+    renderStatusDropdown() {
+        if(this.props.item.subType == 'question') {
+            return this.renderQuestionStatusDropdown();
+        } else {
+            return this.renderItemStatusDropdown();
+        }
+    },
+
+    renderItemStatusDropdown() {
+        return (
+            <div className="btn-group">
+                <button type="button" className="btn btn-xs btn-default dropdown-toggle" data-toggle="dropdown" style={{border:'none', marginRight:'5px', backgroundColor:Ols.Status.getStatusColor(this.props.item.status)}}>
+                    <span className="label label-borderless"><i className="fa fa-circle"></i> {Ols.Status.getStatusLabel(this.props.item.status)}</span>
+                </button>
+                <ul className="dropdown-menu">
+                    <li><a href="" onClick={this.onStatusNewClicked}> <i className="fa fa-circle" style={{color: Ols.Status.getStatusColor(Ols.Status.NEW)}}></i> New</a></li>
+                    <li><a href="" onClick={this.onStatusOpenClicked}> <i className="fa fa-circle" style={{color: Ols.Status.getStatusColor(Ols.Status.OPEN)}}></i> Open</a></li>
+                    <li><a href="" onClick={this.onStatusInProgressClicked}> <i className="fa fa-circle" style={{color: Ols.Status.getStatusColor(Ols.Status.IN_PROGRESS)}}></i> In Progress</a></li>
+                    <li><a href="" onClick={this.onStatusBlockedClicked}> <i className="fa fa-circle" style={{color: Ols.Status.getStatusColor(Ols.Status.BLOCKED)}}></i> Blocked</a></li>
+                    <li><a href="" onClick={this.onStatusInTestClicked}> <i className="fa fa-circle" style={{color: Ols.Status.getStatusColor(Ols.Status.IN_TEST)}}></i> In Test</a></li>
+                    <li role="separator" className="divider"></li>
+                    <li><a href="" onClick={this.onStatusDoneClicked}> <i className="fa fa-circle" style={{color: Ols.Status.getStatusColor(Ols.Status.DONE)}}></i> Done</a></li>
+                    <li><a href="" onClick={this.onStatusRejectedClicked}> <i className="fa fa-circle" style={{color: Ols.Status.getStatusColor(Ols.Status.REJECTED)}}></i> Rejected</a></li>
+                    <li><a href="" onClick={this.onStatusDuplicateClicked}> <i className="fa fa-circle" style={{color: Ols.Status.getStatusColor(Ols.Status.DUPLICATE)}}></i> Duplicate</a></li>
+                    <li><a href="" onClick={this.onStatusOutOfScopeClicked}> <i className="fa fa-circle" style={{color: Ols.Status.getStatusColor(Ols.Status.OUT_OF_SCOPE)}}></i> Out of Scope</a></li>
+                </ul>
+            </div>
+        );
+    },
+
+    renderQuestionStatusDropdown() {
+        return (
+            <div className="btn-group">
+                <button type="button" className="btn btn-xs btn-default dropdown-toggle" data-toggle="dropdown" style={{border:'none', marginRight:'5px', backgroundColor:Ols.QuestionStatus.getStatusColor(this.props.item.status)}}>
+                    <span className="label label-borderless"><i className="fa fa-circle"></i> {Ols.QuestionStatus.getStatusLabel(this.props.item.status)}</span>
+                </button>
+                <ul className="dropdown-menu">
+                    <li><a href="" onClick={this.onQuestionStatusUnansweredClicked}> <i className="fa fa-circle" style={{color: Ols.QuestionStatus.getStatusColor(Ols.QuestionStatus.UNANSWERED)}}></i> Unanswered</a></li>
+                    <li><a href="" onClick={this.onQuestionStatusBlockedClicked}> <i className="fa fa-circle" style={{color: Ols.QuestionStatus.getStatusColor(Ols.QuestionStatus.BLOCKED)}}></i> Blocked</a></li>
+                    <li><a href="" onClick={this.onQuestionStatusAnsweredClicked}> <i className="fa fa-circle" style={{color: Ols.QuestionStatus.getStatusColor(Ols.QuestionStatus.ANSWERED)}}></i> Answered</a></li>
+                    <li role="separator" className="divider"></li>
+                    <li><a href="" onClick={this.onQuestionStatusAnswerAcceptedClicked}> <i className="fa fa-circle" style={{color: Ols.QuestionStatus.getStatusColor(Ols.QuestionStatus.ANSWER_ACCEPTED)}}></i> Answer Accepted</a></li>
+                    <li><a href="" onClick={this.onQuestionStatusInvalidClicked}> <i className="fa fa-circle" style={{color: Ols.QuestionStatus.getStatusColor(Ols.QuestionStatus.INVALID)}}></i> Invalid</a></li>
+                    <li><a href="" onClick={this.onQuestionStatusDuplicateClicked}> <i className="fa fa-circle" style={{color: Ols.QuestionStatus.getStatusColor(Ols.QuestionStatus.DUPLICATE)}}></i> Duplicate</a></li>
+                    <li><a href="" onClick={this.onQuestionStatusOutOfScopeClicked}> <i className="fa fa-circle" style={{color: Ols.QuestionStatus.getStatusColor(Ols.QuestionStatus.OUT_OF_SCOPE)}}></i> Out Of Scope</a></li>
+                </ul>
+            </div>
+        );
     },
 
     renderMilestoneLabel() {
@@ -205,17 +257,6 @@ Item = React.createClass({
                                 <li role="separator" className="divider"></li>
                                 <li><a onClick={this.onSetPriorityClicked} href="">Set Priority</a></li>
                                 <li><a onClick={this.onRemovePriorityClicked} href="">Remove Priority</a></li>
-                                <li role="separator" className="divider"></li>
-                                <li><a href="" onClick={this.onStatusNewClicked}>Set status to New</a></li>
-                                <li><a href="" onClick={this.onStatusOpenClicked}>Set status to Open</a></li>
-                                <li><a href="" onClick={this.onStatusInProgressClicked}>Set status to In Progress</a></li>
-                                <li><a href="" onClick={this.onStatusBlockedClicked}>Set status to Blocked</a></li>
-                                <li><a href="" onClick={this.onStatusInTestClicked}>Set status to In Test</a></li>
-                                <li role="separator" className="divider"></li>
-                                <li><a href="" onClick={this.onStatusDoneClicked}>Set status to Done</a></li>
-                                <li><a href="" onClick={this.onStatusRejectedClicked}>Set status to Rejected</a></li>
-                                <li><a href="" onClick={this.onStatusDuplicateClicked}>Set status to Duplicate</a></li>
-                                <li><a href="" onClick={this.onStatusOutOfScopeClicked}>Set status to Out of Scope</a></li>
                                 <li role="separator" className="divider"></li>
                                 <li><a href="" onClick={this.onArchivedClicked}>{this.renderArchiveLabel()}</a></li>
                                 <li><a href="" onClick={this.onDeleteClicked}>Delete</a></li>
@@ -348,6 +389,41 @@ Item = React.createClass({
         this.updateItemStatus(Ols.Status.OUT_OF_SCOPE);
     },
 
+    onQuestionStatusUnansweredClicked(e) {
+        e.preventDefault();
+        this.updateItemStatus(Ols.QuestionStatus.UNANSWERED);
+    },
+
+    onQuestionStatusBlockedClicked(e) {
+        e.preventDefault();
+        this.updateItemStatus(Ols.QuestionStatus.BLOCKED);
+    },
+
+    onQuestionStatusAnsweredClicked(e) {
+        e.preventDefault();
+        this.updateItemStatus(Ols.QuestionStatus.ANSWERED);
+    },
+
+    onQuestionStatusAnswerAcceptedClicked(e) {
+        e.preventDefault();
+        this.updateItemStatus(Ols.QuestionStatus.ANSWER_ACCEPTED);
+    },
+
+    onQuestionStatusInvalidClicked(e) {
+        e.preventDefault();
+        this.updateItemStatus(Ols.QuestionStatus.INVALID);
+    },
+
+    onQuestionStatusDuplicateClicked(e) {
+        e.preventDefault();
+        this.updateItemStatus(Ols.QuestionStatus.DUPLICATE);
+    },
+
+    onQuestionStatusOutOfScopeClicked(e) {
+        e.preventDefault();
+        this.updateItemStatus(Ols.QuestionStatus.OUT_OF_SCOPE);
+    },
+
     onBacklogClicked(e) {
         e.preventDefault();
         Items.methods.moveItemToBacklog.call({
@@ -362,6 +438,11 @@ Item = React.createClass({
     onBugTypeClicked(e) {
         e.preventDefault();
         this.updateItemType(Ols.Item.ITEM_TYPE_ISSUE, Ols.Item.ISSUE_SUBTYPE_BUG);
+    },
+
+    onQuestionTypeClicked(e) {
+        e.preventDefault();
+        this.updateItemType(Ols.Item.ITEM_TYPE_INFO, Ols.Item.INFO_SUBTYPE_QUESTION);
     },
 
     onTaskTypeClicked(e) {
@@ -390,7 +471,7 @@ Item = React.createClass({
     onRemovePriorityClicked(e) {
         e.preventDefault();
         Items.methods.removeItemPriority.call({
-            itemId: this.props.item._id,
+            itemId: this.props.item._id
         }, (err) => {
             if (err) {
                 toastr.error("Error removing priority: " + err.reason);
@@ -401,8 +482,7 @@ Item = React.createClass({
 
     updateItemStatus(status) {
         Items.methods.updateItemStatus.call({
-            projectId: this.props.item.projectId,
-            seq:this.props.item.seq,
+            itemId: this.props.item._id,
             status
         }, (err) => {
             if(err) {

@@ -25,6 +25,7 @@ RightSidebarComponent = React.createClass({
                         <li><a onClick={this.onMilestonesClicked} href="">Milestones</a></li>
                         <li><a onClick={this.onActionsClicked} href="">Actions</a></li>
                         <li><a onClick={this.onIssuesClicked} href="">Issues</a></li>
+                        <li><a onClick={this.onQuestionsClicked} href="">Questions</a></li>
                         <li role="separator" className="divider"></li>
                         <li><a onClick={this.onBacklogClicked} href="">Backlog</a></li>
                         <li><a onClick={this.onMembersClicked} href="">Members</a></li>
@@ -67,6 +68,10 @@ RightSidebarComponent = React.createClass({
         FlowRouter.setQueryParams({'rightView': 'ISSUES'});
     },
 
+    onQuestionsClicked() {
+        FlowRouter.setQueryParams({'rightView': 'QUESTIONS'});
+    },
+
     onBacklogClicked() {
         FlowRouter.setQueryParams({'rightView': 'BACKLOG'});
     },
@@ -104,6 +109,7 @@ RightSidebarComponent = React.createClass({
             case 'MILESTONE_DETAIL': return <MilestoneDetailComponent/>;
             case 'ACTIONS': return <ActionListComponent projectId={this.props.projectId} />;
             case 'ISSUES': return <IssueListComponent projectId={this.props.projectId} />;
+            case 'QUESTIONS': return <QuestionListComponent projectId={this.props.projectId} />;
             case 'ITEM_DETAIL': return <ItemDetailComponent projectId={this.props.projectId} />;
             case 'BACKLOG': return <BacklogComponent projectId={this.props.projectId} />;
             case 'MEMBERS': return <MemberListContainer projectId={this.props.projectId} memberList={this.props.memberList}/>;
@@ -126,6 +132,7 @@ RightSidebarComponent = React.createClass({
             case 'ITEM_DETAIL': return 'Item Detail';
             case 'ACTIONS': return 'Actions';
             case 'ISSUES': return 'Issues';
+            case 'QUESTIONS': return 'Questions';
             case 'BACKLOG': return 'Backlog';
             case 'MEMBERS': return 'Members';
             case 'ARCHIVED': return 'Archived';

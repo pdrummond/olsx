@@ -46,17 +46,17 @@ Ols.Status = {
     getStatusColor(status) {
         switch (status) {
             case Ols.Status.NEW:
-                return '#99CAD9';
+                return 'lightgray';
             case Ols.Status.OPEN:
-                return '#f0ad4e';
+                return '#99CAD9';
             case Ols.Status.IN_PROGRESS:
-                return '#5cb85c';
+                return '#f0ad4e';
             case Ols.Status.BLOCKED:
                 return '#d9534f';
             case Ols.Status.IN_TEST:
                 return '#337ab7';
             case Ols.Status.DONE:
-                return 'gray';
+                return '#5cb85c';
             case Ols.Status.REJECTED:
                 return 'gray';
             case Ols.Status.DUPLICATE:

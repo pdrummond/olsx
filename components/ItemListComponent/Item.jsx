@@ -37,7 +37,7 @@ Item = React.createClass({
                     <div style={{paddingLeft: '0px'}}>
                         <div onClick={this.onDescriptionClicked}
                              className="item-description"
-                             style={{fontSize: '14px', fontWeight: 'bold', color:'gray'}}>
+                             style={this.getDescriptionStyle()}>
                                 {this.props.item.description}
                         </div>
                         <div style={{fontSize:'12px',color:'gray', paddingLeft:'35px', paddingTop:'5px', paddingBottom:'5px'}}>
@@ -56,6 +56,14 @@ Item = React.createClass({
                 {this.renderRefList()}
             </li>
         )
+    },
+
+    getDescriptionStyle() {
+        var style = {fontSize: '14px', fontWeight: 'bold', color:'gray'};
+        if(Ols.Status.isDone(this.props.item.status)) {
+            style.textDecoration = 'line-through';
+        }
+        return style;
     },
 
     renderTypeDropdown() {

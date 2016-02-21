@@ -46,7 +46,8 @@ ProjectView = React.createClass({
                     </div>
                 </div>
             );
-        } else if (this.data.currentProject) {
+        } else if (this.data.currentProject._id) {
+            console.log(">>> boom: " + this.data.currentProject._id);
             return (
                 <div className="view-container">
                     <RightSidebarComponent
@@ -62,6 +63,8 @@ ProjectView = React.createClass({
                         onOtherProjectNewMessage={this.props.onOtherProjectNewMessage} />
                 </div>
             );
+        } else {
+            return <LoadingSpinner/>;
         }
     },
 

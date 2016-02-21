@@ -2,7 +2,17 @@ ItemListComponent = React.createClass({
     mixins: [ReactMeteorData],
 
     propTypes: {
-        projectId: React.PropTypes.string
+        projectId: React.PropTypes.string.isRequired,
+        filter: React.PropTypes.object,
+        newItemType: React.PropTypes.string,
+        newItemSubType: React.PropTypes.string
+    },
+
+    getDefaultProps() {
+        return {
+            newItemType: Ols.Item.ITEM_TYPE_ACTION,
+            newItemSubType: Ols.Item.ACTION_SUBTYPE_TASK
+        };
     },
 
     getInitialState() {
@@ -86,8 +96,8 @@ ItemListComponent = React.createClass({
         Items.methods.addItem.call({
             description: description,
             projectId: this.props.projectId,
-            type: Ols.Item.ITEM_TYPE_ACTION,
-            subType:Ols.Item.ACTION_SUBTYPE_TASK,
+            type: this.props.newItemType,
+            subType:this.props.newItemSubType,
             milestoneId: this.data.milestoneIdParam
         }, (err, item) => {
             if (err) {

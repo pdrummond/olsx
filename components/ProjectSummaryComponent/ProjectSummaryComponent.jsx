@@ -28,7 +28,7 @@ ProjectSummaryComponent = React.createClass({
     render() {
         if(this.data.currentProject == null) {
             return (
-                <i style={{marginTop: '50px', textAlign: 'center', width: '400px'}} className="fa fa-2x fa-spin fa-spinner"></i>
+                <LoadingSpinner/>
             );
         } else {
             return (

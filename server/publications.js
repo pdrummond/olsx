@@ -11,6 +11,13 @@ Meteor.publish("items", function(projectId) {
    return Items.find({projectId});
 });
 
+Meteor.publish('currentItem', function(itemId) {
+    this.autorun(function(computation) {
+        return Items.find(itemId);
+    });
+});
+
+
 Meteor.publish("refs", function(projectId) {
     return Refs.find({projectId});
 });
@@ -39,7 +46,6 @@ Meteor.publish('projectNextRelease', function(projectId) {
 Meteor.publish("milestones", function(projectId) {
     return Milestones.find({projectId});
 });
-
 
 Meteor.publish('currentProject', function(projectId) {
     this.autorun(function(computation) {

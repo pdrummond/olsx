@@ -476,7 +476,8 @@ header {
     margin-top:10px;
 }
 
-.item-list-component li.item {
+.item {
+    list-style-type:none;
     background-color:white;
     border:1px solid lightgray;
     margin-top:5px;
@@ -484,25 +485,28 @@ header {
 
 }
 
-.item-list-component li.item.active {
+.item.active {
     border: 1px solid orange;
     box-shadow: 0px 0px 4px orange;
 }
 
-.item-list-component li .item-wrapper {
+.item-wrapper {
     padding:10px;
 }
 
-.item-list-component li.item .item-description:hover {
+.item-description:hover {
     cursor:pointer;
     color:#058AFF !important;
 }
 
 .ref-list {
+    margin:0;
     padding: 5px;
     padding-left: 20px;
     background-color: whitesmoke;
     border-top: 1px solid lightgray;
+    max-height:300px;
+    overflow-y:auto;
 }
 
 .ref-item {
@@ -609,4 +613,22 @@ header {
 
 .btn-backlog i {
     font-weight:bold;
+}
+
+.btn-link.active {
+    border-bottom:2px solid lightgray;
+}
+
+#item-detail-component {
+    height:calc(100% - 40px);
+}
+
+#item-detail-component .item {
+    height: 100%;
+}
+
+#item-detail-component .ref-list {
+    max-height: none;
+    overflow-y: auto;
+    height: calc(100% - 124px);
 }

@@ -1,15 +1,15 @@
 Milestone = React.createClass({
     mixins: [ReactMeteorData],
 
+    propTypes: {
+        milestone: React.PropTypes.object,
+        showDetailLink: React.PropTypes.bool
+    },
+
     getInitialState() {
         return {
             isSelected: false
         }
-    },
-
-    propTypes: {
-        milestone: React.PropTypes.object,
-        showDetailLink: React.PropTypes.bool
     },
 
     getMeteorData: function() {
@@ -96,8 +96,6 @@ Milestone = React.createClass({
             return <div></div>
         }
     },
-
-
 
     renderDetailLink() {
         if(this.props.showDetailLink) {

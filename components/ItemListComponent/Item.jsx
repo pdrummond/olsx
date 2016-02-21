@@ -1,10 +1,22 @@
 Item = React.createClass({
     mixins: [ReactMeteorData],
 
+    propTypes: {
+        item: React.PropTypes.object.isRequired,
+        milestoneList: React.PropTypes.array.isRequired,
+        detailMode: React.PropTypes.bool
+    },
+
+    getDefaultProps() {
+        return {
+            detailMode: false
+        }
+    },
+
     getInitialState() {
         return {
             isSelected: false,
-            showRefList: false
+            showRefList: this.props.detailMode
         }
     },
 
@@ -14,7 +26,7 @@ Item = React.createClass({
                 projectId: this.props.item.projectId,
                 itemId: this.props.item._id
             }, {
-                sort: {createdAt: -1}
+                sort: {createdAt: 1}
             }).fetch();
         console.log("Item.getMeteorData() refList = " + JSON.stringify(data.refList));
         return data;
@@ -70,7 +82,7 @@ Item = React.createClass({
         return(
             <span className="dropdown pull-left" style={{width:'35px'}}>
                 <button className="item-type-dropdown-button btn btn-xs btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                    <i style={this.styles.itemIcon} className={this.renderItemTypeClassName()}></i>
+                    <i style={this.styles.itemIcon} className={this.getItemTypeClassName('fa fa-2x')}></i>
                 </button>
                 <ul className="dropdown-menu" aria-labelledby="dropdownMenu1">
                     <li><a onClick={this.onTaskTypeClicked} href="#"><i className="fa fa-exclamation-circle"></i> Task</a></li>
@@ -80,11 +92,10 @@ Item = React.createClass({
         );
     },
 
-    renderItemTypeClassName() {
-        var className = 'fa fa-2x ';
+    getItemTypeClassName(className) {
         switch(this.props.item.subType) {
-            case Ols.Item.ACTION_SUBTYPE_TASK: className += 'fa-exclamation-circle'; break;
-            case Ols.Item.ISSUE_SUBTYPE_BUG: className += 'fa-bug'; break;
+            case Ols.Item.ACTION_SUBTYPE_TASK: className += ' fa-exclamation-circle'; break;
+            case Ols.Item.ISSUE_SUBTYPE_BUG: className += ' fa-bug'; break;
         }
         return className;
     },
@@ -175,13 +186,13 @@ Item = React.createClass({
     },
 
     renderSelectedLinks() {
-        if(this.state.isSelected) {
+        if(this.state.isSelected || this.props.detailMode) {
             return (
-                <div>
+                <div style={{paddingLeft:'20px'}}>
                     <div className="btn-group" role="group" aria-label="...">
-                        <button type="button" className="btn btn-link" onClick={this.onJumpClicked}><i className="fa fa-mail-reply"></i> Jump</button>
-                        <button type="button" className="btn btn-link" onClick={this.onRefsClicked}><i className="fa fa-hashtag"></i> References</button>
-                        <button type="button" className="btn btn-link" onClick={this.onArchivedClicked}><i className="fa fa-archive"></i> {this.renderArchiveLabel()}</button>
+                        {this.renderDetailLink()}
+                        <button type="button" className={this.getRefsLinkClassName()} onClick={this.onRefsClicked}><i className="fa fa-hashtag"></i> References</button>
+                        <button type="button" className="btn btn-link" onClick={this.onActivityClicked}><i className="fa fa-exchange"></i> Activity</button>
                     </div>
                     <div className="pull-right">
                         <div className="dropdown" style={{position:'relative',top:'5px'}}>
@@ -206,6 +217,7 @@ Item = React.createClass({
                                 <li><a href="" onClick={this.onStatusDuplicateClicked}>Set status to Duplicate</a></li>
                                 <li><a href="" onClick={this.onStatusOutOfScopeClicked}>Set status to Out of Scope</a></li>
                                 <li role="separator" className="divider"></li>
+                                <li><a href="" onClick={this.onArchivedClicked}>{this.renderArchiveLabel()}</a></li>
                                 <li><a href="" onClick={this.onDeleteClicked}>Delete</a></li>
                             </ul>
                         </div>
@@ -218,12 +230,31 @@ Item = React.createClass({
         }
     },
 
+    getRefsLinkClassName() {
+        var className = 'btn btn-link ';
+        if(this.state.showRefList) {
+            className += 'active';
+        }
+        return className;
+    },
+
+    renderDetailLink() {
+        if(!this.props.detailMode) {
+            return <button type="button" className="btn btn-link" onClick={this.onDetailClicked}><i className={this.getItemTypeClassName('fa')}></i> Details</button>
+        }
+    },
+
     renderArchiveLabel: function() {
         return this.props.item.isArchived? 'Restore':'Archive';
     },
 
     onDescriptionClicked: function() {
         this.setState({'isSelected': !this.state.isSelected});
+    },
+
+    onDetailClicked: function(e) {
+        e.preventDefault();
+        FlowRouter.setQueryParams({'rightView': 'ITEM_DETAIL', 'itemId': this.props.item._id});
     },
 
     onJumpClicked: function() {
@@ -237,7 +268,17 @@ Item = React.createClass({
     },
 
     onRefsClicked: function() {
-        this.setState({'showRefList': !this.state.showRefList});
+        if(this.props.detailMode) {
+            if(!this.state.showRefList) {
+                this.setState({'showRefList': true});
+            }
+        } else {
+            this.setState({'showRefList': !this.state.showRefList});
+        }
+    },
+
+    onActivityClicked: function() {
+
     },
 
     onArchivedClicked() {
@@ -403,12 +444,16 @@ Item = React.createClass({
         e.preventDefault();
         var self = this;
         bootbox.confirm("Are you sure you want to permanently delete this " + this.props.item.subType + "?  Consider archiving it instead, if you just want to hide it from view without destroying it forever.", function(result) {
-            if(result != null) {
+            if(result == true) {
                 Items.methods.removeItem.call({
                     itemId: self.props.item._id
                 }, (err) => {
                     if (err) {
                         toastr.error("Error removing item: " + err.reason);
+                    } else {
+                        if(self.props.detailMode) {
+                            FlowRouter.setQueryParams({'rightView': 'PROJECT_SUMMARY'});
+                        }
                     }
                 });
             }

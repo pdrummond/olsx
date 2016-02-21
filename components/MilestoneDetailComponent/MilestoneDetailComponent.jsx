@@ -2,7 +2,7 @@ MilestoneDetailComponent = React.createClass({
     mixins: [ReactMeteorData],
 
     propTypes: {
-        milestoneId: React.PropTypes.string
+        projectId: React.PropTypes.string.isRequired,
     },
 
     getMeteorData() {

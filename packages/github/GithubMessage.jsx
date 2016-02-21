@@ -18,7 +18,7 @@ GithubMessage = React.createClass({
                     <div><b>{this.props.message.createdByName}</b>
                         <span className="message-created-at"> {moment(this.props.message.createdAt).fromNow()} </span>
                     </div>
-                    <div className="message-content">
+                    <div className="message-content markdown-content">
                         {this.renderContent()}
                     </div>
                 </div>
@@ -51,7 +51,7 @@ GithubMessage = React.createClass({
         var branch = this.props.message.data.event.ref.replace(/refs\/heads\//g, '');
         return (
             <div>
-                <span>{numCommits} new {numCommits==1?"commit":"commits"} by {username} in {repo}:{branch}</span>
+                <span><i>{username}</i> pushed <b>{numCommits}</b> new {numCommits==1?"commit":"commits"} to {repo}:{branch}:</span>
                 <ul>
                     {this.renderCommitMessages()}
                 </ul>
@@ -61,7 +61,7 @@ GithubMessage = React.createClass({
 
     renderCommitMessages() {
         return this.props.message.data.event.commits.map(function(commit) {
-            return <li><a target='_blank' href={commit.url}>{Ols.StringUtils.truncate(commit.id, 7, {ellipsis:false})}</a>:{commit.message}</li>;
+            return <li><a target='_blank' href={commit.url}>{Ols.StringUtils.truncate(commit.id, 7, {ellipsis:false})}</a>: {commit.message}</li>;
         });
     },
 
@@ -75,13 +75,13 @@ GithubMessage = React.createClass({
         if (action == 'assigned') {
             return (
                 <span>
-                {username} {action} issue <a target="_blank" href={url}>issue #{issueNumber}: {Ols.StringUtils.truncate(issueTitle, 100)}</a> to {assignee}
-            </span>
+                    <i>{username}</i> {action} issue <a target="_blank" href={url}>issue #{issueNumber}: {Ols.StringUtils.truncate(issueTitle, 100)}</a> to {assignee}
+                </span>
             );
         } else {
             return (
                 <span>
-                    {username} {action} issue <a target="_blank" href={url}>issue #{issueNumber}: {Ols.StringUtils.truncate(issueTitle, 100)}</a>
+                    <i>{username}</i> {action} issue <a target="_blank" href={url}>issue #{issueNumber}: {Ols.StringUtils.truncate(issueTitle, 100)}</a>
                 </span>
             );
         }
@@ -92,7 +92,11 @@ GithubMessage = React.createClass({
         var url = this.props.message.data.event.comment.html_url;
         var issueNumber = this.props.message.data.event.issue.number;
         var issueTitle = this.props.message.data.event.issue.title;
-        return <span>{username} commented on <a target="_blank" href={url}>issue #{issueNumber}: {Ols.StringUtils.truncate(issueTitle, 100)}</a></span>;
+        return (
+            <span>
+                <i>{username}</i> commented on <a target="_blank" href={url}>issue #{issueNumber}: {Ols.StringUtils.truncate(issueTitle, 100)}</a>
+            </span>
+        );
 
     }
 });

@@ -174,6 +174,7 @@ Item = React.createClass({
                             </button>
                             <ul className="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenu1">
                                 <li><a href="">Show Details</a></li>
+                                <li><a onClick={this.onRenameClicked} href="">Rename</a></li>
                                 <li role="separator" className="divider"></li>
                                 <li><a onClick={this.onSetPriorityClicked} href="">Set Priority</a></li>
                                 <li><a onClick={this.onRemovePriorityClicked} href="">Remove Priority</a></li>
@@ -363,5 +364,22 @@ Item = React.createClass({
                 toastr.error("Error updating item type: " + err.reason);
             }
         });
+    },
+
+    onRenameClicked(e) {
+        e.preventDefault();
+        var self = this;
+        bootbox.prompt({title: "Enter new title:", value: this.props.item.description, callback: function(title) {
+            if (title!== null) {
+                Items.methods.setTitle.call({
+                    itemId: self.props.item._id,
+                    title: title
+                }, (err) => {
+                    if(err) {
+                        toastr.error("Error renaming item: " + err.reason);
+                    }
+                });
+            }
+        }});
     }
 });

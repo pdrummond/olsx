@@ -206,7 +206,7 @@ Item = React.createClass({
                                 <li><a href="" onClick={this.onStatusDuplicateClicked}>Set status to Duplicate</a></li>
                                 <li><a href="" onClick={this.onStatusOutOfScopeClicked}>Set status to Out of Scope</a></li>
                                 <li role="separator" className="divider"></li>
-                                <li><a href="">Delete</a></li>
+                                <li><a href="" onClick={this.onDeleteClicked}>Delete</a></li>
                             </ul>
                         </div>
                     </div>
@@ -397,5 +397,22 @@ Item = React.createClass({
                 });
             }
         }});
+    },
+
+    onDeleteClicked(e) {
+        e.preventDefault();
+        var self = this;
+        bootbox.confirm("Are you sure you want to permanently delete this " + this.props.item.subType + "?  Consider archiving it instead, if you just want to hide it from view without destroying it forever.", function(result) {
+            if(result != null) {
+                Items.methods.removeItem.call({
+                    itemId: self.props.item._id
+                }, (err) => {
+                    if (err) {
+                        toastr.error("Error removing item: " + err.reason);
+                    }
+                });
+            }
+        });
     }
 });
+

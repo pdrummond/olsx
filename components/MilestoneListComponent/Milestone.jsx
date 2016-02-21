@@ -204,5 +204,5 @@ Milestone = React.createClass({
                 toastr.error("Error adding milestone to release: " + err.reason);
             }
         });
-    },
+    }
 });

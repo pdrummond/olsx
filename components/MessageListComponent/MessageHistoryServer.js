@@ -219,7 +219,7 @@ if(Meteor.isServer) {
             }
         },
 
-        systemSuccessMessage: function(projectId, content) {
+        systemSuccessMessage: function(projectId, content, callback) {
             console.log("-- saving system success message for project " + projectId + ": " + content);
             return Meteor.call('insertAndBroadcastMessage', {
                 projectId: projectId,

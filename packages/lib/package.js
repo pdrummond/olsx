@@ -5,7 +5,7 @@ Package.describe({
 
 Package.onUse(function(api) {
   api.versionsFrom('1.2.1');
-  api.use(['ecmascript', 'meteor-platform', 'osv:mongo-counter']);
+  api.use(['ecmascript', 'meteor-platform', 'osv:mongo-counter', 'aldeed:simple-schema']);
   api.addFiles([
     'lib.js',
     'command-api.js',
@@ -19,6 +19,7 @@ Package.onUse(function(api) {
     'role-type-api.js',
     'project-type-api.js',
     'milestone-type-api.js',
+    'activity-type-api.js',
     'release-type-api.js',
     'keys-api.js',
     'counter-api.js'

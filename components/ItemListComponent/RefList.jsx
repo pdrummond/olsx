@@ -6,7 +6,7 @@ RefList = React.createClass({
                 return <Ref key={ref._id} refItem={ref}/>;
             });
         } else {
-            return <i>No references for this task</i>;
+            return <i>No references for this item</i>;
         }
     },
 

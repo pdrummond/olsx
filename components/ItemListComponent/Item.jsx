@@ -22,13 +22,18 @@ Item = React.createClass({
 
     getMeteorData() {
         var data = {};
-        data.refList = Refs.find({
-            projectId: this.props.item.projectId,
-            itemId: this.props.item._id
-        }, {
-            sort: {createdAt: 1}
-        }).fetch();
-        console.log("Item.getMeteorData() refList = " + JSON.stringify(data.refList));
+        data.refList = [];
+        var activityHandle = Meteor.subscribe('itemActivity', this.props.item._id);
+        if(activityHandle.ready()) {
+            data.refList = Refs.find({
+                projectId: this.props.item.projectId,
+                itemId: this.props.item._id
+            }, {
+                sort: {createdAt: 1}
+            }).fetch();
+            data.activityList = Activity.find({itemId:this.props.item._id}, {sort: {createdAt: -1}}).fetch();
+            console.log("Item.getMeteorData() refList = " + JSON.stringify(data.refList));
+        }
         return data;
     },
 
@@ -66,6 +71,7 @@ Item = React.createClass({
                     {this.renderSelectedLinks()}
                 </div>
                 {this.renderRefList()}
+                {this.renderActivityList()}
             </li>
         )
     },
@@ -232,8 +238,12 @@ Item = React.createClass({
     renderRefList() {
         if(this.state.showRefList) {
             return <RefList refList={this.data.refList} />;
-        } else {
-            return null;
+        }
+    },
+
+    renderActivityList() {
+        if(this.state.showActivityList) {
+            return <ActivityList activityList={this.data.activityList} />;
         }
     },
 
@@ -244,7 +254,7 @@ Item = React.createClass({
                     <div className="btn-group" role="group" aria-label="...">
                         {this.renderDetailLink()}
                         <button type="button" className={this.getRefsLinkClassName()} onClick={this.onRefsClicked}><i className="fa fa-hashtag"></i> References</button>
-                        <button type="button" className="btn btn-link" onClick={this.onActivityClicked}><i className="fa fa-exchange"></i> Activity</button>
+                        <button type="button" className={this.getActivityLinkClassName()} onClick={this.onActivityClicked}><i className="fa fa-exchange"></i> Activity</button>
                     </div>
                     <div className="pull-right">
                         <div className="dropdown" style={{position:'relative',top:'5px'}}>
@@ -274,6 +284,14 @@ Item = React.createClass({
     getRefsLinkClassName() {
         var className = 'btn btn-link ';
         if(this.state.showRefList) {
+            className += 'active';
+        }
+        return className;
+    },
+
+    getActivityLinkClassName() {
+        var className = 'btn btn-link ';
+        if(this.state.showActivityList) {
             className += 'active';
         }
         return className;
@@ -309,17 +327,27 @@ Item = React.createClass({
     },
 
     onRefsClicked: function() {
-        if(this.props.detailMode) {
-            if(!this.state.showRefList) {
-                this.setState({'showRefList': true});
+        if(this.state.showRefList == true) {
+            //If ref list is already showing then allow it to be collapsed if not in detail mode.
+            if(this.props.detailMode == false) {
+                this.setState({showRefList: false});
             }
         } else {
-            this.setState({'showRefList': !this.state.showRefList});
+            //If ref list is not showing, then we show it and make sure the activity list is hidden.
+            this.setState({showRefList: true, showActivityList: false});
         }
     },
 
     onActivityClicked: function() {
-
+        if(this.state.showActivityList == true) {
+            //If activity list is already showing then allow it to be collapsed if not in detail mode.
+            if(this.props.detailMode == false) {
+                this.setState({showActivityList: false});
+            }
+        } else {
+            //If activity list is not showing, then we show it and make sure the ref list is hidden.
+            this.setState({showActivityList: true, showRefList: false});
+        }
     },
 
     onArchivedClicked() {

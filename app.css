@@ -499,10 +499,10 @@ header {
     color:#058AFF !important;
 }
 
-.ref-list {
+.ref-list, .activity-list {
     margin:0;
     padding: 5px;
-    padding-left: 20px;
+    padding-left:15px;
     background-color: whitesmoke;
     border-top: 1px solid lightgray;
     max-height:300px;
@@ -510,6 +510,10 @@ header {
 }
 
 .ref-item {
+    margin-top:5px;
+}
+
+.activity-item {
     margin-top:5px;
 }
 
@@ -627,7 +631,7 @@ header {
     height: 100%;
 }
 
-#item-detail-component .ref-list {
+#item-detail-component .ref-list, #item-detail-component .activity-list {
     max-height: none;
     overflow-y: auto;
     height: calc(100% - 124px);
@@ -637,3 +641,7 @@ header {
     background-color:transparent;
 }
 
+.activity-item {
+    padding:5px;
+    border-bottom:1px solid lightgray;
+}

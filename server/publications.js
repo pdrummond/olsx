@@ -17,6 +17,11 @@ Meteor.publish('currentItem', function(itemId) {
     });
 });
 
+Meteor.publish('itemActivity', function(itemId) {
+    this.autorun(function(computation) {
+        return Activity.find({itemId: itemId}, {sort: {createdAt: -1}});
+    });
+});
 
 Meteor.publish("refs", function(projectId) {
     return Refs.find({projectId});

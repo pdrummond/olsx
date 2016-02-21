@@ -46,7 +46,7 @@ Ols.Status = {
     getStatusColor(status) {
         switch (status) {
             case Ols.Status.NEW:
-                return '#BA49BA';
+                return '#99CAD9';
             case Ols.Status.OPEN:
                 return '#f0ad4e';
             case Ols.Status.IN_PROGRESS:

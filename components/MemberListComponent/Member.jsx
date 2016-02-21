@@ -24,7 +24,7 @@ Member = React.createClass({
             width: '35px',
             borderRadius: '20px',
             position: 'relative',
-            top: '8px'
+            top: '3px'
         }
     },
 

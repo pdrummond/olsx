@@ -262,6 +262,7 @@ main {
 }
 
 .member-list-container {
+    height:100%;
     margin-top:5px;
 }
 
@@ -375,12 +376,15 @@ input {
 
 .member-list {
     overflow-y:auto;
-    height: calc(100% - 70px);
+    height: calc(100% - 81px);
+    margin-top:10px;
 }
 
 .member {
-    padding:5px;
+    padding:10px;
     vertical-align: middle;
+    background-color:white;
+    border:1px solid lightgray;
 }
 .member .viewing {
     color: green;

@@ -23,8 +23,8 @@ RightSidebarComponent = React.createClass({
                         <li><a onClick={this.onProjectSummaryClicked} href="">Project Summary</a></li>
                         <li><a onClick={this.onReleasesClicked} href="">Releases</a></li>
                         <li><a onClick={this.onMilestonesClicked} href="">Milestones</a></li>
-                        <li><a onClick={this.onActionsClicked} href="">Actions</a></li>
-                        <li><a onClick={this.onIssuesClicked} href="">Issues</a></li>
+                        <li><a onClick={this.onActionsClicked} href="">Tasks</a></li>
+                        <li><a onClick={this.onIssuesClicked} href="">Bugs</a></li>
                         <li><a onClick={this.onQuestionsClicked} href="">Questions</a></li>
                         <li role="separator" className="divider"></li>
                         <li><a onClick={this.onBacklogClicked} href="">Backlog</a></li>
@@ -130,8 +130,8 @@ RightSidebarComponent = React.createClass({
             case 'MILESTONE_DETAIL': return 'Milestone Detail';
             case 'RELEASE_DETAIL': return 'Release Detail';
             case 'ITEM_DETAIL': return 'Item Detail';
-            case 'ACTIONS': return 'Actions';
-            case 'ISSUES': return 'Issues';
+            case 'ACTIONS': return 'Tasks';
+            case 'ISSUES': return 'Bugs';
             case 'QUESTIONS': return 'Questions';
             case 'BACKLOG': return 'Backlog';
             case 'MEMBERS': return 'Members';

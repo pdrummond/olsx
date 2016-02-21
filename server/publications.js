@@ -18,9 +18,10 @@ Meteor.publish('currentItem', function(itemId) {
 });
 
 Meteor.publish('itemActivity', function(itemId) {
-        return Items.find(itemId);
+    this.autorun(function(computation) {
+        return Activity.find({itemId:itemId});
+    });
 });
-
 
 Meteor.publish("refs", function(projectId) {
     return Refs.find({projectId});

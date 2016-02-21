@@ -16,7 +16,7 @@ Meteor.publish("refs", function(projectId) {
 });
 
 Meteor.publish("releases", function() {
-    return Releases.find();
+    return Releases.find({});
 });
 
 Meteor.publish('currentRelease', function(releaseId) {

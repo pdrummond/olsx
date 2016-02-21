@@ -16,7 +16,7 @@ MilestoneListComponent = React.createClass({
         if(milestonesHandle.ready() && releasesHandle.ready()) {
             var inputFilter = Ols.Filter.parseString(this.state.filterInput);
             var filter = this.props.filter ? _.extend(inputFilter, this.props.filter) : inputFilter;
-            data.milestoneList = Milestones.find(filter, {sort: {updatedAt: -1}}).fetch();
+            data.milestoneList = Milestones.find(filter, {sort: {createdAt: 1}}).fetch();
             data.releaseList = Releases.find({}, {sort: {createdAt: 1}}).fetch();
             data.authInProcess = Meteor.loggingIn();
         }

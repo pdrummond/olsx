@@ -10,8 +10,10 @@ MilestoneDetailComponent = React.createClass({
         data.currentMilestone = null;
         data.milestoneId = FlowRouter.getQueryParam('milestoneId');
         var currentMilestoneHandle = Meteor.subscribe('currentMilestone', data.milestoneId);
-        if(currentMilestoneHandle.ready()) {
+        var releasesHandle = Meteor.subscribe('releases', this.props.projectId);
+        if(currentMilestoneHandle.ready() && releasesHandle.ready()) {
             data.currentMilestone = Milestones.findOne(data.milestoneId);
+            data.releaseList = Releases.find({}, {sort: {createdAt: 1}}).fetch();
         }
         return data;
     },
@@ -27,7 +29,7 @@ MilestoneDetailComponent = React.createClass({
         } else {
             return (
                 <div id="milestone-detail-component">
-                    <Milestone milestone={this.data.currentMilestone} showDetailLink={false} />
+                    <Milestone milestone={this.data.currentMilestone} showDetailLink={false} releaseList={this.data.releaseList} />
                     <div className="panel panel-default">
                         <div className="panel-heading"><div className="panel-title">Milestone Items</div></div>
                         <div className="panel-body">

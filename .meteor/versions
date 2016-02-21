@@ -78,6 +78,7 @@ npm-bcrypt@0.7.8_2
 npm-mongo@1.4.39_1
 oaf:html5-desktop-notifications@1.0.0
 observe-sequence@1.0.7
+ols:github@0.0.1
 ols:lib@0.0.1
 ols:project-command@0.0.1
 ols:task-command@0.0.1
@@ -105,6 +106,7 @@ routepolicy@1.0.6
 service-configuration@1.0.5
 session@1.1.1
 sha@1.0.4
+simple:json-routes@1.0.4
 spacebars@1.0.7
 spacebars-compiler@1.0.7
 srp@1.0.4

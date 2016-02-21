@@ -42,6 +42,7 @@
         <item url="file://$USER_HOME$/.meteor/packages/id-map/1.0.4/web.browser/packages/id-map.js" />
         <item url="file://$USER_HOME$/.meteor/packages/jquery/1.11.4/web.browser/packages/jquery.js" />
         <item url="file://$USER_HOME$/.meteor/packages/peerlibrary_assert/0.2.5/web.browser/packages/peerlibrary:assert.js" />
+        <item url="file://$USER_HOME$/.meteor/packages/simple_json-routes/1.0.4/web.browser/packages/simple_json-routes.js" />
         <item url="file://$USER_HOME$/.meteor/packages/launch-screen/1.0.4/web.browser/packages/launch-screen.js" />
         <item url="file://$USER_HOME$/.meteor/packages/peerlibrary_fiber-utils/0.6.0/web.browser/packages/peerlibrary_fiber-utils.js" />
         <item url="file://$USER_HOME$/.meteor/packages/peerlibrary_reactive-mongo/0.1.1/web.browser/packages/peerlibrary_reactive-mongo.js" />
@@ -181,6 +182,7 @@
       <root url="file://$USER_HOME$/.meteor/packages/id-map/1.0.4/web.browser/packages/id-map.js" />
       <root url="file://$USER_HOME$/.meteor/packages/jquery/1.11.4/web.browser/packages/jquery.js" />
       <root url="file://$USER_HOME$/.meteor/packages/peerlibrary_assert/0.2.5/web.browser/packages/peerlibrary:assert.js" />
+      <root url="file://$USER_HOME$/.meteor/packages/simple_json-routes/1.0.4/web.browser/packages/simple_json-routes.js" />
       <root url="file://$USER_HOME$/.meteor/packages/launch-screen/1.0.4/web.browser/packages/launch-screen.js" />
       <root url="file://$USER_HOME$/.meteor/packages/peerlibrary_fiber-utils/0.6.0/web.browser/packages/peerlibrary_fiber-utils.js" />
       <root url="file://$USER_HOME$/.meteor/packages/peerlibrary_reactive-mongo/0.1.1/web.browser/packages/peerlibrary_reactive-mongo.js" />

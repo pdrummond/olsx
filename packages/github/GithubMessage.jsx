@@ -7,7 +7,6 @@ GithubMessage = React.createClass({
             borderRadius: '20px',
             position:'relative',
             top:'0px'
-
         }
     },
 

@@ -29,6 +29,7 @@ ProjectPage = React.createClass({
     },
 
     render() {
+            this.renderTabTitle();
         /*if(this.data.authInProcess) {
             return (
                 <p>Loading...</p>
@@ -55,6 +56,14 @@ ProjectPage = React.createClass({
                         onOtherProjectNewMessage={this.onOtherProjectNewMessage}/>
                 </div>
             );
+        }
+    },
+
+    renderTabTitle() {
+        if(this.state.incomingMessages.length > 0) {
+            document.title = "(" + this.state.incomingMessages.length + ") OpenLoops";
+        } else {
+            document.title = "OpenLoops";
         }
     },
 

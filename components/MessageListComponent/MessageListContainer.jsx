@@ -57,7 +57,6 @@ MessageListContainer = React.createClass({
     },
 
     render() {
-        //console.log('render: state is ' + JSON.stringify(this.state, null, 4));
         return (
             <MessageList
                 ref="messageList"

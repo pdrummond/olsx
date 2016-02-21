@@ -34,7 +34,7 @@ MemberListContainer = React.createClass({
         event.preventDefault();
         var emailOrUsername = ReactDOM.findDOMNode(this.refs.textInput).value.trim();
 
-        Members.methods.addMember.call({emailOrUsername, projectId: this.props.projectId, role:Ols.ROLE_USER}, (err, member) => {
+        Members.methods.addMember.call({emailOrUsername, projectId: this.props.projectId, role:Ols.Role.ROLE_USER}, (err, member) => {
             if(err) {
                 toastr.error('Unable to add member: ' + err.reason);
                 console.error('Error adding member: ' + JSON.stringify(err, null, 2));

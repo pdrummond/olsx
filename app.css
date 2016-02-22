@@ -431,11 +431,34 @@ input {
 
 header {
     padding: 20px;
+    font-weight: bold;
+
     background: #0079BF;
     border-bottom: 5px solid #01588A;
     color: white;
-    font-weight: bold;
+    transition: background-color 1000ms ease;
 }
+
+header.blue {
+    background: #0079BF;
+    border-bottom: 5px solid #01588A;
+}
+
+header.red {
+    background: #B04632;
+    border-bottom: 5px solid #963C2B;
+}
+
+header.green {
+    background: #519839;
+    border-bottom: 5px solid #458131;
+}
+
+header.purple {
+    background: #89609E;
+    border-bottom: 5px solid #755286;
+}
+
 
 .header-buttons {
     float: right;

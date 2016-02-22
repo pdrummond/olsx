@@ -65,10 +65,14 @@ ProjectView = React.createClass({
         }
     },
 
+    getHeaderClassName() {
+      return this.data.currentProject.theme || 'blue';
+    },
+
     renderHeader() {
         if(this.isLoading) {
             return (
-            <header>
+            <header className={this.getHeaderClassName()}>
                 <h2>
                     <i className="fa fa-spin fa-2x fa-spinner" style={{color:'#01588A', position:'relative', top:'-10px'}}></i>
                 </h2>
@@ -76,7 +80,7 @@ ProjectView = React.createClass({
             );
         } else {
             return(
-                <header>
+                <header className={this.getHeaderClassName()}>
                     <h2>
                         <i className="fa fa-bullseye"></i> {this.data.currentProject.title} <span className="pull-right dropdown">
                         <button className="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown">
@@ -85,10 +89,10 @@ ProjectView = React.createClass({
                         <ul className="dropdown-menu" aria-labelledby="dropdownMenu1">
                             <li><a onClick={this.onRenameLinkClicked} href="#">Rename Project</a></li>
                             <li role="separator" className="divider"></li>
-                            <li><a href="#">Set Blue Theme</a></li>
-                            <li><a href="#">Set Red Theme</a></li>
-                            <li><a href="#">Set Green Theme</a></li>
-                            <li><a href="#">Set Purple Theme</a></li>
+                            <li><a onClick={this.onBlueThemeLinkClicked} href="#">Set Blue Theme</a></li>
+                            <li><a onClick={this.onRedThemeLinkClicked} href="#">Set Red Theme</a></li>
+                            <li><a onClick={this.onGreenThemeLinkClicked} href="#">Set Green Theme</a></li>
+                            <li><a onClick={this.onPurpleThemeLinkClicked} href="#">Set Purple Theme</a></li>
                             <li role="separator" className="divider"></li>
                             <li><a href="#" onClick={this.onDeleteLinkClicked}>Delete Project</a></li>
                         </ul>
@@ -97,6 +101,33 @@ ProjectView = React.createClass({
                 </header>
             );
         }
+    },
+
+    onBlueThemeLinkClicked() {
+        this.updateProjectTheme("blue");
+    },
+
+    onRedThemeLinkClicked() {
+        this.updateProjectTheme("red");
+    },
+
+    onGreenThemeLinkClicked() {
+        this.updateProjectTheme("green");
+    },
+
+    onPurpleThemeLinkClicked() {
+        this.updateProjectTheme("purple");
+    },
+
+    updateProjectTheme: function(theme) {
+        Projects.methods.setTheme.call({
+            projectId: this.data.currentProject._id,
+            theme,
+        }, (err) => {
+            if(err) {
+                toastr.error("Error changing theme for project: " + err.reason);
+            }
+        });
     },
 
     onRenameLinkClicked: function(e) {

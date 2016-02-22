@@ -8,12 +8,10 @@ Project = React.createClass({
 
     render() {
         return (
-            <li
-                onClick={this.onClick}
-                className={this.getClassName()}>
+            <li onClick={this.onClick} className={this.getClassName()}>
                 <div>
                     <span className="project-title"><i className="fa fa-bullseye"></i> {this.props.project.title}
-                        <small style={{color:'lightgray', marginLeft:'2px', fontWeight:'bold'}}> {this.props.project.key}</small>
+                        <small style={{color:'lightgray', marginLeft:'2px', fontWeight:'bold'}}>{this.props.project.key}</small>
                     </span>
                     <div>
                         <div style={{fontSize:'12px', color:'gray', position:'relative'}}>

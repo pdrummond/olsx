@@ -1,8 +1,4 @@
-/*
- This component has two jobs.  Firstly, it manages the subscription
- to the current project for the page.  Secondly, it ensures
- messages are loaded when the page changes through componentDidUpdate().
- */
+
 ProjectPage = React.createClass({
     mixins: [ReactMeteorData],
 
@@ -10,6 +6,14 @@ ProjectPage = React.createClass({
         return {
             incomingMessages: []
         };
+    },
+
+    componentDidMount: function () {
+        console.trace("ProjectPage.componentDidMount");
+    },
+
+    componentDidUpdate: function () {
+        console.trace("ProjectPage.componentDidUpdate");
     },
 
     getMeteorData() {

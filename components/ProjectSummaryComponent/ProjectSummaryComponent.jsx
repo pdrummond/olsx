@@ -74,7 +74,7 @@ ProjectSummaryComponent = React.createClass({
                                 <tr><th>Type</th><th>Open</th> <th>Closed</th> <th>Total</th></tr>
                                 </thead>
                                 <tbody>
-                                <tr><td>Tasks: </td> <td>{this.data.openTaskCount}</td><td>{this.data.closedTaskCount}</td><td>{this.data.totalTaskCount}</td></tr>
+                                <tr><td>Task: </td> <td>{this.data.openTaskCount}</td><td>{this.data.closedTaskCount}</td><td>{this.data.totalTaskCount}</td></tr>
                                 <tr><td>Bugs: </td> <td>{this.data.openBugCount}</td><td>{this.data.closedBugCount}</td><td>{this.data.totalBugCount}</td></tr>
                                 </tbody>
                             </table>

@@ -1,10 +1,11 @@
 Meteor.publish("projects", function () {
-    this.autorun(function(computation) {
+    console.log("publish:projects");
+    //this.autorun(function(computation) {
         var projectIds = Members.find({userId: this.userId}).map(function (member) {
             return member.projectId;
         });
         return Projects.find({_id: {$in: projectIds}});
-    });
+    //});
 });
 
 Meteor.publish("items", function(projectId) {
@@ -108,9 +109,7 @@ Meteor.publish('currentMilestone', function(milestoneId) {
     var self = this;
     this.autorun(function(computation) {
         var milestone = Milestones.findOne(milestoneId);
-        console.log("BOOM1: milestone.projectId: " + milestone.projectId);
         if(Members.findOne({userId: self.userId, projectId: milestone.projectId})) {
-            console.log("BOOM2: milestone.projectId: " + milestone.projectId);
             return Milestones.find(milestoneId);
         } else {
             return null;

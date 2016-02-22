@@ -170,13 +170,13 @@ Item = React.createClass({
         if(this.props.item.milestoneId != null) {
             var milestone = _.findWhere(this.props.milestoneList, {_id: this.props.item.milestoneId});
             if(milestone == null) {
-                return (<i className="fa fa-exclamation-circle" style={{color:'red'}}> Invalid Milestone</i>);
+                return (<span><i className="fa fa-exclamation-circle" style={{color:'red'}}></i> Invalid Milestone</span>);
             } else {
-                return (<i className="fa fa-flag-checkered"> {milestone.title}</i>);
+                return (<span><i className="fa fa-flag-checkered"></i> {milestone.title}</span>);
 
             }
         } else {
-            return (<i className="fa fa-bars"> Backlog </i>);
+            return (<span><i className="fa fa-bars"> </i> Backlog</span>);
         }
 
     },

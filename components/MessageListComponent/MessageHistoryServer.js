@@ -84,7 +84,8 @@ if(Meteor.isServer) {
                 var commandName;
                 //Need to detect command before saving the message to ensure message.isCommand = true
                 //is persisted.
-                if (message.content && message.content.startsWith('/')) {
+                //Commands are disabled for now - they may return later though
+                /*if (message.content && message.content.startsWith('/')) {
                     console.log("-- message has been recognised as a command (" + message.content + ")");
                     var commandData = message.content.split(" ");
                     commandName = commandData[0];
@@ -94,7 +95,7 @@ if(Meteor.isServer) {
                     } else {
                         console.error("-- message is NOT a recognised command so will just be added as a normal chat message");
                     }
-                }
+                }*/
 
                 message = Meteor.call('insertAndBroadcastMessage', message);
 
@@ -106,7 +107,8 @@ if(Meteor.isServer) {
                     Meteor.call('detectMentionsInMessage', message);
                 }
 
-                if (commandName != null) {
+                //Commands are disabled for now - they may return later though
+                /*if (commandName != null) {
                     console.log("-- command detected (" + message.content + ")");
                     if (message.isCommand) {
                         Ols.Command.executeCommand(commandName, commandData, message);
@@ -119,7 +121,7 @@ if(Meteor.isServer) {
                     console.log("-- Detected @loopbot at start of message " + message.seq);
                     console.log("-- Sending message " + message.seq + " to loopbot for further processing...");
                     Ols.LoopBot.onResponseReceived(message);
-                }
+                }*/
                 console.log("< saveMessage()");
                 return message;
             } catch(err) {

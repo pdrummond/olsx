@@ -38,13 +38,24 @@ ReleaseListComponent = React.createClass({
                                placeholder="Type here to create release/filter list"
                                onKeyUp={this.onKeyUp}/>
                     </form>
-                    <ReleaseList
-                        releaseList={this.data.releaseList}
-                        currentReleaseId={this.data.currentProject.currentReleaseId}
-                        nextReleaseId={this.data.currentProject.nextReleaseId}
-                    />
+                    {this.renderReleaseList()}
                 </div>
             )
+        }
+    },
+
+    renderReleaseList() {
+        if(this.data.releaseList.length == 0) {
+            if(this.state.filterInput.length > 0) {
+                return <p style={{marginTop:'10px'}}><i>Nothing found - press ENTER to create</i></p>
+            } else {
+                return <p style={{marginTop:'10px'}}><i>No Results</i></p>
+            }
+        } else {
+            return <ReleaseList
+                releaseList={this.data.releaseList}
+                currentReleaseId={this.data.currentProject.currentReleaseId}
+                nextReleaseId={this.data.currentProject.nextReleaseId}/>
         }
     },
 

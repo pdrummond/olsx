@@ -494,6 +494,10 @@ header {
     padding:10px;
 }
 
+.item-description {
+    padding-left:35px;
+}
+
 .item-description:hover {
     cursor:pointer;
     color:#058AFF !important;
@@ -611,12 +615,12 @@ header {
 }
 
 .btn-backlog {
-    background-color:black;
-    color:white;
+    /*background-color:black;
+    color:white;*/
 }
 
 .btn-backlog i {
-    font-weight:bold;
+    /*font-weight:bold;*/
 }
 
 .btn-link.active {

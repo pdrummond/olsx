@@ -33,16 +33,16 @@ Release = React.createClass({
             <li className={this.state.isSelected?'release active':'release'}>
                 <i style={this.styles.icon} className="fa fa-2x fa-paper-plane"></i>
                 <div style={{paddingLeft:'40px', fontSize: '12px'}}>
-                    <span
+                    <div
                         onClick={this.onTitleClicked}
                         className="release-title">
                         {this.props.release.title}
-                        <span className="pull-right">
-                            {this.renderCurrentReleaseLabel()}
-                            {this.renderNextReleaseLabel()}
-                            <span className="label label-success">{this.props.release.status}</span>
-                        </span>
-                    </span>
+                    </div>
+                    <div>
+                        <span className="label label-success" style={{marginRight:'5px'}}>{this.props.release.status}</span>
+                        {this.renderCurrentReleaseLabel()}
+                        {this.renderNextReleaseLabel()}
+                    </div>
                     {this.renderDescription()}
                 </div>
                 {this.renderSelectedLinks()}
@@ -64,7 +64,7 @@ Release = React.createClass({
 
     renderDescription() {
         if(this.props.release.description) {
-            return <p>{this.props.release.description}</p>;
+            return <p style={{marginTop:'5px'}}>{this.props.release.description}</p>;
         }
     },
 

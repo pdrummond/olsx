@@ -33,11 +33,23 @@ MilestoneListComponent = React.createClass({
                            placeholder="Type here to create milestone/filter list"
                            onKeyUp={this.onKeyUp} />
                 </form>
-                <MilestoneList
-                    releaseList={this.data.releaseList}
-                    milestoneList={this.data.milestoneList}/>
+                {this.renderMilestoneList()}
             </div>
         )
+    },
+
+    renderMilestoneList() {
+        if(this.data.milestoneList.length == 0) {
+            if(this.state.filterInput.length > 0) {
+                return <p style={{marginTop:'10px'}}><i>Nothing found - press ENTER to create</i></p>
+            } else {
+                return <p style={{marginTop:'10px'}}><i>No Results</i></p>
+            }
+        } else {
+            return <MilestoneList
+                releaseList={this.data.releaseList}
+                milestoneList={this.data.milestoneList}/>
+        }
     },
 
     onKeyUp: function() {

@@ -68,16 +68,16 @@ Milestone = React.createClass({
     renderSelectedLinks() {
         if(this.state.isSelected) {
             return (
-                <div style={{paddingLeft:'30px'}}>
+                <div style={{paddingLeft:'30px',marginTop:'10px'}}>
                     <div className="btn-group" role="group" aria-label="...">
                         {/*<button type="button" className="btn btn-link" onClick={this.onJumpClicked}><i className="fa fa-mail-reply"></i> Jump</button>
                         <button type="button" className="btn btn-link" onClick={this.onRefsClicked}><i className="fa fa-hashtag"></i> References</button>*/}
                         {this.renderDetailLink()}
-                        <button type="button" className="btn btn-link" onClick={this.onDeleteClicked}><i className="fa fa-trash"></i> Delete</button>
+                        <button type="button" className="btn btn-xs btn-link" onClick={this.onDeleteClicked}><i className="fa fa-trash"></i> Delete</button>
                     </div>
                     <div className="pull-right">
                         <div className="dropdown">
-                            <button className="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                            <button className="btn btn-default btn-xs dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
                                 <i className="fa fa-ellipsis-v"></i>
                             </button>
                             <ul className="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenu1">
@@ -99,7 +99,7 @@ Milestone = React.createClass({
 
     renderDetailLink() {
         if(this.props.showDetailLink) {
-            return <button type="button" className="btn btn-link" onClick={this.onDetailClicked}><i
+            return <button type="button" className="btn btn-xs btn-link" onClick={this.onDetailClicked}><i
                 className="fa fa-flag-checkered"></i> Details</button>
         }
     },

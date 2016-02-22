@@ -33,7 +33,7 @@ MilestoneDetailComponent = React.createClass({
                     <div className="panel panel-default">
                         <div className="panel-heading"><div className="panel-title">Milestone Items</div></div>
                         <div className="panel-body">
-                            <ItemListComponent projectId={this.data.currentMilestone.projectId} filter={{milestoneId: this.data.milestoneId}}/>
+                            <ItemListComponent projectId={this.data.currentMilestone.projectId} filter={{milestoneId: this.data.milestoneId, isArchived:false}}/>
                         </div>
                     </div>
 

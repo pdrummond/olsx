@@ -47,12 +47,12 @@ Milestone = React.createClass({
                         className="milestone-title">
                         {this.props.milestone.title}
                     </span>
-                    <div className="progress">
+                    <div>open: <b>{this.data.openCount}</b> closed: <b>{this.data.doneCount}</b> total: <b>{this.data.totalCount}</b> </div>
+                    <div className="progress" style={{marginTop:'5px'}}>
                         <div className="progress-bar progress-bar-success progress-bar-striped" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style={{width: this.getProgressPercentage()}}>
                             <span className="sr-only">40% Complete (success)</span>
                         </div>
                     </div>
-                    <span>open: <b>{this.data.openCount}</b> closed: <b>{this.data.doneCount}</b> total: <b>{this.data.totalCount}</b> </span>
                     {this.renderReleasesDropdown()}
                 </div>
                 {this.renderSelectedLinks()}
@@ -71,7 +71,7 @@ Milestone = React.createClass({
                 <div style={{paddingLeft:'30px',marginTop:'10px'}}>
                     <div className="btn-group" role="group" aria-label="...">
                         {/*<button type="button" className="btn btn-link" onClick={this.onJumpClicked}><i className="fa fa-mail-reply"></i> Jump</button>
-                        <button type="button" className="btn btn-link" onClick={this.onRefsClicked}><i className="fa fa-hashtag"></i> References</button>*/}
+                         <button type="button" className="btn btn-link" onClick={this.onRefsClicked}><i className="fa fa-hashtag"></i> References</button>*/}
                         {this.renderDetailLink()}
                         <button type="button" className="btn btn-xs btn-link" onClick={this.onDeleteClicked}><i className="fa fa-trash"></i> Delete</button>
                     </div>
@@ -84,8 +84,8 @@ Milestone = React.createClass({
                                 {/*<li><a href="">Set Due Date</a></li>*/}
                                 <li><a onClick={this.onRenameClicked} href="">Rename</a></li>
                                 {/*<li role="separator" className="divider"></li>
-                                <li><a href="">Activate Milestone</a></li>
-                                <li><a href="">Mark Complete</a></li>*/}
+                                 <li><a href="">Activate Milestone</a></li>
+                                 <li><a href="">Mark Complete</a></li>*/}
                             </ul>
                         </div>
                     </div>
@@ -170,13 +170,16 @@ Milestone = React.createClass({
 
     renderReleasesDropdown() {
         return (
-            <span className="dropdown pull-right">
-                <button className="btn btn-xs btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                    {this.renderReleaseLabel()} <span className="caret"></span>
-                </button>
-                <ul className="dropdown-menu" aria-labelledby="dropdownMenu1">
-                    {this.renderReleaseDropdownItems()}
-                </ul>
+            <span>
+                <label className="label label-success">open</label>
+                <span className="dropdown pull-right">
+                    <button className="btn btn-xs btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                        {this.renderReleaseLabel()} <span className="caret"></span>
+                    </button>
+                    <ul className="dropdown-menu" aria-labelledby="dropdownMenu1">
+                        {this.renderReleaseDropdownItems()}
+                    </ul>
+                </span>
             </span>
         );
     },
@@ -188,7 +191,7 @@ Milestone = React.createClass({
         } else {
             return this.props.releaseList.map(function (release) {
                 return <ReleaseDropdownItem key={release._id} release={release}
-                                              onReleaseSelected={self.onReleaseSelected}/>
+                                            onReleaseSelected={self.onReleaseSelected}/>
             });
         }
     },

@@ -6,7 +6,7 @@ html, body {
 body {
     font-family: 'Open Sans', sans-serif;
     padding-left: 350px;
-    padding-right: 400px;
+    padding-right: 350px;
     margin: 0 auto;
     color: #333;
 }
@@ -177,6 +177,7 @@ main {
     resize:none;
     outline:none;
     border-radius:5px;
+    margin-left:7px;
 }
 
 .message-item {
@@ -251,14 +252,13 @@ main {
 }
 
 @media(max-width: 1380px) {
-    body {
-        padding-left: 10px;
-        padding-right:10px;
+    header h2 {
+        font-size:20px;
     }
-    .project-list-container {
-        display:none;
-    }
-    .right-sidebar-container {
+}
+
+@media(max-width: 905px) {
+    .message-list-wrapper, header {
         display:none;
     }
 }
@@ -369,11 +369,12 @@ input {
     right: 0px;
     top: 0px;
     padding: 10px;
-    width: 400px;
+    width: 350px;
     background: whitesmoke;
     height: 100%;
     border-left:1px solid lightgray;
-    overflow-y:auto;
+    overflow:auto;
+
 }
 
 .member-list {
@@ -437,7 +438,7 @@ header {
 .header-buttons {
     float: right;
     position: relative;
-    top: -60px;
+    top: -50px;
     right: 10px;
 }
 

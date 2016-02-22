@@ -1,11 +1,10 @@
 Meteor.publish("projects", function () {
-    console.log("publish:projects");
-    //this.autorun(function(computation) {
+    this.autorun(function(computation) {
         var projectIds = Members.find({userId: this.userId}).map(function (member) {
             return member.projectId;
         });
         return Projects.find({_id: {$in: projectIds}});
-    //});
+    });
 });
 
 Meteor.publish("items", function(projectId) {

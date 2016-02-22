@@ -160,6 +160,8 @@ main {
     height: calc(100% - 230px);
     overflow-y: auto;
     margin: 0;
+    padding-left:20px;
+    padding-right:20px;
 }
 
 .message-box {
@@ -421,8 +423,6 @@ input {
 
 .message-list-wrapper {
     position:relative;
-    padding-left:20px;
-    padding-right:20px;
     transition: background .2s;
 }
 
@@ -648,4 +648,17 @@ header {
 .activity-item {
     padding:5px;
     border-bottom:1px solid lightgray;
+}
+
+::-webkit-scrollbar {
+    width: 4px;
+    height:4px;
+}
+
+::-webkit-scrollbar-track {
+    background:lightgray;
+}
+
+::-webkit-scrollbar-thumb {
+    background:gray;
 }

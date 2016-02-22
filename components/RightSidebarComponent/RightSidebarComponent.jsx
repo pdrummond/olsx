@@ -2,7 +2,7 @@ RightSidebarComponent = React.createClass({
     mixins: [ReactMeteorData],
 
     propTypes: {
-        projectId: React.PropTypes.string.isRequired,
+        projectId: React.PropTypes.string.isRequired
     },
 
     getMeteorData() {
@@ -45,59 +45,59 @@ RightSidebarComponent = React.createClass({
     },
 
     onProjectSummaryClicked() {
-        FlowRouter.setQueryParams({'rightView': 'PROJECT_SUMMARY'});
+        FlowRouter.go('projectPageLatest', {projectId: this.props.projectId}, {'rightView': 'PROJECT_SUMMARY'});
     },
 
     onReleasesClicked() {
-        FlowRouter.setQueryParams({'rightView': 'RELEASES'});
+        FlowRouter.go('projectPageLatest', {projectId: this.props.projectId}, {'rightView': 'RELEASES'});
     },
 
     onMilestonesClicked() {
-        FlowRouter.setQueryParams({'rightView': 'MILESTONES'});
+        FlowRouter.go('projectPageLatest', {projectId: this.props.projectId}, {'rightView': 'MILESTONES'});
     },
 
     onMembersClicked() {
-        FlowRouter.setQueryParams({'rightView': 'MEMBERS'});
+        FlowRouter.go('projectPageLatest', {projectId: this.props.projectId}, {'rightView': 'MEMBERS'});
     },
 
     onActionsClicked() {
-        FlowRouter.setQueryParams({'rightView': 'ACTIONS'});
+        FlowRouter.go('projectPageLatest', {projectId: this.props.projectId}, {'rightView': 'ACTIONS'});
     },
 
     onIssuesClicked() {
-        FlowRouter.setQueryParams({'rightView': 'ISSUES'});
+        FlowRouter.go('projectPageLatest', {projectId: this.props.projectId}, {'rightView': 'ISSUES'});
     },
 
     onQuestionsClicked() {
-        FlowRouter.setQueryParams({'rightView': 'QUESTIONS'});
+        FlowRouter.go('projectPageLatest', {projectId: this.props.projectId}, {'rightView': 'QUESTIONS'});
     },
 
     onBacklogClicked() {
-        FlowRouter.setQueryParams({'rightView': 'BACKLOG'});
+        FlowRouter.go('projectPageLatest', {projectId: this.props.projectId}, {'rightView': 'BACKLOG'});
     },
 
     onArchivedClicked() {
-        FlowRouter.setQueryParams({'rightView': 'ARCHIVED'});
+        FlowRouter.go('projectPageLatest', {projectId: this.props.projectId}, {'rightView': 'ARCHIVED'});
     },
 
     onNewItemsClicked() {
-        FlowRouter.setQueryParams({'rightView': 'NEW_ITEMS'});
+        FlowRouter.go('projectPageLatest', {projectId: this.props.projectId}, {'rightView': 'NEW_ITEMS'});
     },
 
     onItemsInProgressClicked() {
-        FlowRouter.setQueryParams({'rightView': 'ITEMS_IN_PROGRESS'});
+        FlowRouter.go('projectPageLatest', {projectId: this.props.projectId}, {'rightView': 'ITEMS_IN_PROGRESS'});
     },
 
     onBlockedItemsClicked() {
-        FlowRouter.setQueryParams({'rightView': 'BLOCKED_ITEMS'});
+        FlowRouter.go('projectPageLatest', {projectId: this.props.projectId}, {'rightView': 'BLOCKED_ITEMS'});
     },
 
     onItemsInTestClicked() {
-        FlowRouter.setQueryParams({'rightView': 'ITEMS_IN_TEST'});
+        FlowRouter.go('projectPageLatest', {projectId: this.props.projectId}, {'rightView': 'ITEMS_IN_TEST'});
     },
 
     onClosedItemsClicked() {
-        FlowRouter.setQueryParams({'rightView': 'CLOSED_ITEMS'});
+        FlowRouter.go('projectPageLatest', {projectId: this.props.projectId}, {'rightView': 'CLOSED_ITEMS'});
     },
 
     renderSelectedComponent() {

@@ -8,62 +8,115 @@ Meteor.publish("projects", function () {
 });
 
 Meteor.publish("items", function(projectId) {
-   return Items.find({projectId});
+    if(Members.findOne({userId: this.userId, projectId})) {
+        return Items.find({projectId});
+    } else {
+        return null;
+    }
 });
 
 Meteor.publish('currentItem', function(itemId) {
+    var self = this;
     this.autorun(function(computation) {
-        return Items.find(itemId);
+        var item = Items.findOne(itemId);
+        if(Members.findOne({userId: self.userId, projectId: item.projectId})) {
+            return Items.find(itemId);
+        } else {
+            return null;
+        }
     });
 });
 
 Meteor.publish('itemActivity', function(itemId) {
+    var self = this;
     this.autorun(function(computation) {
-        return Activity.find({itemId:itemId});
+        var item = Items.findOne(itemId);
+        if(Members.findOne({userId: self.userId, projectId: item.projectId})) {
+            return Activity.find({itemId: itemId});
+        } else {
+            return null;
+        }
     });
 });
 
 Meteor.publish("refs", function(projectId) {
-    return Refs.find({projectId});
+    if(Members.findOne({userId: this.userId, projectId: projectId})) {
+        return Refs.find({projectId});
+    } else {
+        return null;
+    }
 });
 
-Meteor.publish("releases", function() {
-    return Releases.find({});
+Meteor.publish("releases", function(projectId) {
+    if(Members.findOne({userId: this.userId, projectId})) {
+        return Releases.find({projectId});
+    } else {
+        return null;
+    }
 });
 
 Meteor.publish('currentRelease', function(releaseId) {
+    var self = this;
     this.autorun(function(computation) {
-        return Releases.find(releaseId);
+        var release = Releases.findOne(releaseId);
+        if(Members.findOne({userId: self.userId, projectId: release.projectId})) {
+            return Releases.find(releaseId);
+        } else {
+            return null;
+        }
     });
 });
 
 Meteor.publish('projectCurrentRelease', function(projectId) {
     var project = Projects.findOne(projectId);
-    return Releases.find(project.currentReleaseId);
+    if(Members.findOne({userId: this.userId, projectId})) {
+        return Releases.find(project.currentReleaseId);
+    } else {
+        return null;
+    }
 });
-
 
 Meteor.publish('projectNextRelease', function(projectId) {
     var project = Projects.findOne(projectId);
-    return Releases.find(project.nextReleaseId);
+    if(Members.findOne({userId: this.userId, projectId: project._id})) {
+        return Releases.find(project.nextReleaseId);
+    } else {
+        return null;
+    }
 });
 
 Meteor.publish("milestones", function(projectId) {
-    return Milestones.find({projectId});
+    if(Members.findOne({userId: this.userId, projectId: projectId})) {
+        return Milestones.find({projectId});
+    } else {
+        return null;
+    }
 });
 
 Meteor.publish('currentProject', function(projectId) {
+    var self = this;
     this.autorun(function(computation) {
-        return Projects.find(projectId);
+        if(Members.findOne({userId: self.userId, projectId})) {
+            return Projects.find(projectId);
+        } else {
+            return null;
+        }
     });
 });
 
 Meteor.publish('currentMilestone', function(milestoneId) {
+    var self = this;
     this.autorun(function(computation) {
-        return Milestones.find(milestoneId);
+        var milestone = Milestones.findOne(milestoneId);
+        console.log("BOOM1: milestone.projectId: " + milestone.projectId);
+        if(Members.findOne({userId: self.userId, projectId: milestone.projectId})) {
+            console.log("BOOM2: milestone.projectId: " + milestone.projectId);
+            return Milestones.find(milestoneId);
+        } else {
+            return null;
+        }
     });
 });
-
 
 Meteor.publish("currentProjectMembers", function (projectId) {
     return Members.find({projectId: projectId});

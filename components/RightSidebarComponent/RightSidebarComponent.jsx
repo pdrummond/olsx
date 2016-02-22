@@ -106,7 +106,7 @@ RightSidebarComponent = React.createClass({
             case 'MILESTONES': return <MilestoneListComponent projectId={this.props.projectId} />;
             case 'RELEASES': return <ReleaseListComponent projectId={this.props.projectId} />;
             case 'RELEASE_DETAIL': return <ReleaseDetailComponent/>;
-            case 'MILESTONE_DETAIL': return <MilestoneDetailComponent/>;
+            case 'MILESTONE_DETAIL': return <MilestoneDetailComponent projectId={this.props.projectId} />;
             case 'ACTIONS': return <ActionListComponent projectId={this.props.projectId} />;
             case 'ISSUES': return <IssueListComponent projectId={this.props.projectId} />;
             case 'QUESTIONS': return <QuestionListComponent projectId={this.props.projectId} />;

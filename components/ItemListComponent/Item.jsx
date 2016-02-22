@@ -250,14 +250,14 @@ Item = React.createClass({
     renderSelectedLinks() {
         if(this.state.isSelected || this.props.detailMode) {
             return (
-                <div style={{paddingLeft:'20px'}}>
+                <div style={{paddingLeft:'30px',marginTop:'10px'}}>
                     <div className="btn-group" role="group" aria-label="...">
                         {this.renderDetailLink()}
                         <button type="button" className={this.getRefsLinkClassName()} onClick={this.onRefsClicked}><i className="fa fa-hashtag"></i> References</button>
                         <button type="button" className={this.getActivityLinkClassName()} onClick={this.onActivityClicked}><i className="fa fa-exchange"></i> Activity</button>
                     </div>
                     <div className="pull-right">
-                        <div className="dropdown" style={{position:'relative',top:'5px'}}>
+                        <div className="dropdown" style={{position:'relative',top:'0px'}}>
                             <button className="btn btn-xs btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
                                 <i className="fa fa-ellipsis-v"></i>
                             </button>
@@ -282,7 +282,7 @@ Item = React.createClass({
     },
 
     getRefsLinkClassName() {
-        var className = 'btn btn-link ';
+        var className = 'btn btn-xs btn-link ';
         if(this.state.showRefList) {
             className += 'active';
         }
@@ -290,7 +290,7 @@ Item = React.createClass({
     },
 
     getActivityLinkClassName() {
-        var className = 'btn btn-link ';
+        var className = 'btn btn-xs btn-link ';
         if(this.state.showActivityList) {
             className += 'active';
         }
@@ -299,7 +299,7 @@ Item = React.createClass({
 
     renderDetailLink() {
         if(!this.props.detailMode) {
-            return <button type="button" className="btn btn-link" onClick={this.onDetailClicked}><i className={this.getItemTypeClassName('fa')}></i> Details</button>
+            return <button type="button" className="btn btn-xs btn-link" onClick={this.onDetailClicked}><i className={this.getItemTypeClassName('fa')}></i> Details</button>
         }
     },
 

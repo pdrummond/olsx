@@ -77,19 +77,53 @@ ProjectView = React.createClass({
         } else {
             return(
                 <header>
-                    <h2><i className="fa fa-bullseye"></i> {this.data.currentProject.title}</h2>
-                    <div className="header-buttons">
-                        <a style={{color:'white;font-size:12px', textDecoration:'none'}} onClick={this.onDeleteLinkClicked} href="">
-                            <i className="fa fa-trash"></i> Delete
-                        </a>
-                    </div>
+                    <h2>
+                        <i className="fa fa-bullseye"></i> {this.data.currentProject.title} <span className="pull-right dropdown">
+                        <button className="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown">
+                            <span className="caret"></span>
+                        </button>
+                        <ul className="dropdown-menu" aria-labelledby="dropdownMenu1">
+                            <li><a onClick={this.onRenameLinkClicked} href="#">Rename Project</a></li>
+                            <li role="separator" className="divider"></li>
+                            <li><a href="#">Set Blue Theme</a></li>
+                            <li><a href="#">Set Red Theme</a></li>
+                            <li><a href="#">Set Green Theme</a></li>
+                            <li><a href="#">Set Purple Theme</a></li>
+                            <li role="separator" className="divider"></li>
+                            <li><a href="#" onClick={this.onDeleteLinkClicked}>Delete Project</a></li>
+                        </ul>
+                    </span>
+                    </h2>
                 </header>
             );
         }
     },
 
-    onDeleteLinkClicked: function() {
-        this.props.onDeleteLinkClicked(this.data.currentProjectId);
+    onRenameLinkClicked: function(e) {
+        e.preventDefault();
+        var self = this;
+        bootbox.prompt({title: "Enter new project title:", value: this.data.currentProject.title, callback: function(title) {
+            if (title !== null) {
+                Projects.methods.setTitle.call({
+                    projectId: self.data.currentProject._id,
+                    title: title
+                }, (err) => {
+                    if(err) {
+                        toastr.error("Error renaming project: " + err.reason);
+                    }
+                });
+            }
+        }});
+    },
+
+    onDeleteLinkClicked: function(e) {
+        var self = this;
+        e.preventDefault();
+        bootbox.confirm("Are you sure you want to permanently delete this project?  Consider archiving it instead, if you just want to hide it from view without destroying it forever.", function(result) {
+            if (result == true) {
+                self.props.onDeleteLinkClicked(self.data.currentProjectId);
+            }
+        });
     },
 
     componentDidMount: function () {

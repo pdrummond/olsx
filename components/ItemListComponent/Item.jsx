@@ -61,7 +61,7 @@ Item = React.createClass({
                             {this.renderKey()} Created by {this.props.item.createdByName} {moment(this.props.item.createdAt).fromNow()}
                         </div>
                     </div>
-                    <div className="labels" style={{paddingLeft:'35px'}}>
+                    <div className="labels" style={{paddingLeft:'35px',lineHeight: '1.8'}}>
                         {this.renderStatusDropdown()}
                         {/*<span className="label label-default"><i className="fa fa-flag-checkered"></i> Milestone 1</span>
                          <span className="label label-primary"><i className="fa fa-flag"></i> Sprint 44</span>*/}

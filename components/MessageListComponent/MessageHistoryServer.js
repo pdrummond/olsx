@@ -309,7 +309,7 @@ if(Meteor.isServer) {
             }
             var userIsAuthor = Meteor.userId() == message.createdBy;
 
-            var member = Members.findOne({userId: Meteor.userId(), projectId: message.projectId});
+            var member = Members.findOne({userId: Meteor.userId(), projectId: message.projectId, role:Ols.Role.ROLE_ADMIN});
 
             if(member == null || !userIsAuthor) {
                 throw new Meteor.Error("deleteMessage.not-authorised", "Only project admins or the message author can delete messages");

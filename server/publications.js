@@ -70,7 +70,7 @@ Meteor.publish('currentRelease', function(releaseId) {
 
 Meteor.publish('projectCurrentRelease', function(projectId) {
     var project = Projects.findOne(projectId);
-    if(Members.findOne({userId: this.userId, projectId})) {
+    if(project && Members.findOne({userId: this.userId, projectId})) {
         return Releases.find(project.currentReleaseId);
     } else {
         return null;
@@ -79,7 +79,7 @@ Meteor.publish('projectCurrentRelease', function(projectId) {
 
 Meteor.publish('projectNextRelease', function(projectId) {
     var project = Projects.findOne(projectId);
-    if(Members.findOne({userId: this.userId, projectId: project._id})) {
+    if(project && Members.findOne({userId: this.userId, projectId: project._id})) {
         return Releases.find(project.nextReleaseId);
     } else {
         return null;

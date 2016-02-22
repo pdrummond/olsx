@@ -139,8 +139,12 @@ if(Meteor.isServer) {
             var messageId = ServerMessages.insert(message);
             console.log("-- message " + message.seq + " saved");
             message._id = messageId;
-            console.log("-- broadcasting new message " + message.seq + " to all clients");
-            Streamy.broadcast('incomingMessage', message);
+            console.log("-- broadcasting message " + message.seq + ". Need to get members to broadcast to");
+            var userIds = Members.find({projectId: message.projectId}).map(function (member) {
+                return member.userId;
+            });
+            console.log("-- broadcasting message to " + userIds.length + " members: " + JSON.stringify(userIds));
+            Streamy.sessionsForUsers(userIds).emit('incomingMessage', message);
             return message;
         },
 

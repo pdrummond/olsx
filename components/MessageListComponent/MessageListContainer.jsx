@@ -130,7 +130,10 @@ MessageListContainer = React.createClass({
     },
 
     onUserIsTyping: function() {
-        Streamy.broadcast('userIsTyping', {
+        var userIds = Members.find({projectId: this.props.projectId}).map(function (member) {
+            return member.userId;
+        });
+        Streamy.sessionsForUsers(userIds).emit('userIsTyping', {
             userId: Meteor.userId(),
             username: Meteor.user().username,
             projectId: this.props.projectId

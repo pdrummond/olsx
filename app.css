@@ -388,6 +388,7 @@ input {
     vertical-align: middle;
     background-color:white;
     border:1px solid lightgray;
+    margin-top:5px;
 }
 .member .viewing {
     color: green;
@@ -420,6 +421,7 @@ input {
     font-size:12px;
     font-weight:bold;
     color:gray;
+    margin-left:10px;
 }
 
 .message-list-wrapper {

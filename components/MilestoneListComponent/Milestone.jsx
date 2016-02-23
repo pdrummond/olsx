@@ -157,13 +157,13 @@ Milestone = React.createClass({
         if(this.props.milestone.releaseId != null) {
             var release = _.findWhere(this.props.releaseList, {_id: this.props.milestone.releaseId});
             if(release == null) {
-                return (<i className="fa fa-exclamation-circle" style={{color:'red'}}> Invalid Release</i>);
+                return (<span><i className="fa fa-exclamation-circle" style={{color:'red'}}></i> Invalid Release</span>);
             } else {
-                return (<i className="fa fa-paper-plane"> {release.title}</i>);
+                return (<span><i className="fa fa-paper-plane"></i> {release.title}</span>);
 
             }
         } else {
-            return (<i className="fa fa-bomb"> No Release </i>);
+            return (<span><i className="fa fa-bomb"></i> No Release</span>);
         }
 
     },

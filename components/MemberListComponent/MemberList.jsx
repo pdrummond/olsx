@@ -2,7 +2,7 @@ MemberList = React.createClass({
     renderMembers() {
         if(this.props.memberList) {
             return this.props.memberList.map((member) => {
-                return <Member onClick={this.props.onMemberClicked} key={member._id} member={member}/>;
+                return <Member key={member._id} member={member}/>;
             });
         } else {
             return <p style={{textAlign: 'center', color: 'lightgray'}}>

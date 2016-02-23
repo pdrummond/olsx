@@ -169,7 +169,6 @@ if(Meteor.isServer) {
                             messageContent: message.content
                         };
                         Streamy.sessionsForUsers(toUser._id).emit('mention', data);
-                        //Streamy.broadcast('mention', data);
                     }
                 }
             } while (matches);
@@ -229,6 +228,8 @@ if(Meteor.isServer) {
             console.log("-- saving system success message for project " + projectId + ": " + content);
             return Meteor.call('insertAndBroadcastMessage', {
                 projectId: projectId,
+                userId: Meteor.userId(),
+                username: Meteor.user().username,
                 createdBy: Ols.SYSTEM_USERID,
                 createdByName: Ols.SYSTEM_USERNAME,
                 updatedBy: Ols.SYSTEM_USERID,
@@ -246,6 +247,8 @@ if(Meteor.isServer) {
             console.log("-- saving system ERROR message for project " + projectId + ": " + content);
             return Meteor.call('insertAndBroadcastMessage', {
                 projectId: projectId,
+                userId: Meteor.userId(),
+                username: Meteor.user().username,
                 createdBy: Ols.SYSTEM_USERID,
                 createdByName: Ols.SYSTEM_USERNAME,
                 updatedBy: Ols.SYSTEM_USERID,

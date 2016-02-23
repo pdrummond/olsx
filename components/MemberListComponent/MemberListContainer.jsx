@@ -10,24 +10,9 @@ MemberListContainer = React.createClass({
                            placeholder="Type email/username to add member"/>
                 </form>
                 <MemberList
-                    memberList={this.props.memberList} onMemberClicked={this.onMemberClicked} />
+                    memberList={this.props.memberList} />
             </div>
         )
-    },
-
-    onMemberClicked(memberToRemove) {
-        var currentMember = Members.findOne({userId: Meteor.userId()});
-        if(currentMember.role == Ols.Role.ROLE_ADMIN) {
-            if(confirm("Do you wish to remove this member from the project?")) {
-                Members.methods.removeMember.call({memberId: memberToRemove._id}, (err) => {
-                    if (err) {
-                        toastr.error('Unable to remove member: ' + err.reason);
-                    } else {
-                        Ols.Message.systemSuccessMessage(this.props.projectId, Meteor.user().username + " removed " + memberToRemove.username + " from this project");
-                    }
-                });
-            }
-        }
     },
 
     handleSubmit(event) {
@@ -38,8 +23,6 @@ MemberListContainer = React.createClass({
             if(err) {
                 toastr.error('Unable to add member: ' + err.reason);
                 console.error('Error adding member: ' + JSON.stringify(err, null, 2));
-            } else {
-                Ols.Message.systemSuccessMessage(this.props.projectId, Meteor.user().username + " added " + member.username + " to this project");
             }
         });
         ReactDOM.findDOMNode(this.refs.textInput).value = "";

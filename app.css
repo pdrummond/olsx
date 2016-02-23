@@ -6,7 +6,7 @@ html, body {
 body {
     font-family: 'Open Sans', sans-serif;
     padding-left: 350px;
-    padding-right: 350px;
+    padding-right: 400px;
     margin: 0 auto;
     color: #333;
 }
@@ -198,7 +198,7 @@ main {
 
 .message-item.success {
     color:gray;
-    font-style: italic;
+
 }
 
 .message-created-at {
@@ -287,7 +287,7 @@ main {
     padding:10px;
     vertical-align: middle;
     transition: background .2s;
-    color: #7089A9;
+
 }
 
 .project:hover {
@@ -301,10 +301,11 @@ main {
 
 .project .project-title {
     font-weight:bold;
+    color:black;
 }
 
 .project.seen .project-title {
-    font-weight:normal;
+    color: #7089A9;
 }
 
 input {
@@ -369,7 +370,7 @@ input {
     right: 0px;
     top: 0px;
     padding: 10px;
-    width: 350px;
+    width: 400px;
     background: whitesmoke;
     height: 100%;
     border-left:1px solid lightgray;
@@ -687,4 +688,19 @@ header.purple {
 
 ::-webkit-scrollbar-thumb {
     background:gray;
+}
+
+.member-title {
+    font-weight:bold;
+}
+
+.member-title:hover {
+    cursor:pointer;
+    color:#058AFF !important;
+
+}
+
+.member.active {
+    border:1px solid orange;
+    box-shadow: 0px 0px 4px orange;
 }

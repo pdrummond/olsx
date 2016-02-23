@@ -31,7 +31,7 @@ RightSidebarComponent = React.createClass({
                         <li><a onClick={this.onMembersClicked} href="">Members</a></li>
                         <li><a onClick={this.onArchivedClicked} href="">Archived</a></li>
                         <li role="separator" className="divider"></li>
-                        <li><a onClick={this.onNewItemsClicked} href="">New Items</a></li>
+                        {/*<li><a onClick={this.onNewItemsClicked} href="">New Items</a></li>*/}
                         <li><a onClick={this.onItemsInProgressClicked} href="">Items In Progress</a></li>
                         <li><a onClick={this.onBlockedItemsClicked} href="">Blocked Items</a></li>
                         <li><a onClick={this.onItemsInTestClicked} href="">Items In Test</a></li>

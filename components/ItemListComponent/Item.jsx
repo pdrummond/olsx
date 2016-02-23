@@ -131,7 +131,7 @@ Item = React.createClass({
                     <span className="label label-borderless"><i className="fa fa-circle"></i> {Ols.Status.getStatusLabel(this.props.item.status)}</span>
                 </button>
                 <ul className="dropdown-menu">
-                    <li><a href="" onClick={this.onStatusNewClicked}> <i className="fa fa-circle" style={{color: Ols.Status.getStatusColor(Ols.Status.NEW)}}></i> New</a></li>
+                    {/*<li><a href="" onClick={this.onStatusNewClicked}> <i className="fa fa-circle" style={{color: Ols.Status.getStatusColor(Ols.Status.NEW)}}></i> New</a></li>*/}
                     <li><a href="" onClick={this.onStatusOpenClicked}> <i className="fa fa-circle" style={{color: Ols.Status.getStatusColor(Ols.Status.OPEN)}}></i> Open</a></li>
                     <li><a href="" onClick={this.onStatusInProgressClicked}> <i className="fa fa-circle" style={{color: Ols.Status.getStatusColor(Ols.Status.IN_PROGRESS)}}></i> In Progress</a></li>
                     <li><a href="" onClick={this.onStatusBlockedClicked}> <i className="fa fa-circle" style={{color: Ols.Status.getStatusColor(Ols.Status.BLOCKED)}}></i> Blocked</a></li>

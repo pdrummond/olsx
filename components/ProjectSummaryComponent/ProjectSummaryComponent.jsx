@@ -58,9 +58,6 @@ ProjectSummaryComponent = React.createClass({
                             <h2 style={{color:'gray',fontSize:'20px',marginBottom:'10px',fontWeight:'100'}}>
                                 {this.getProjectPercentage()} complete
                                 <span className="pull-right" style={{position:'relative',top:'0px'}}>
-                                <span title="New items aren't considered part of the project until they are opened"
-                                    style={{fontSize:'14px',color:'orange', fontWeight:'bold',marginRight: '5px'}}> new: <b>{this.data.newActionCount}</b>
-                                </span>
                                     <span style={{fontSize:'14px',fontWeight:'bold',color:'green'}}> backlog: <b>{this.data.openBacklogActionCount}</b></span>
                                 </span>
 
@@ -87,12 +84,11 @@ ProjectSummaryComponent = React.createClass({
                             <div className="alert alert-warning"><i className="fa fa-exclamation-circle"></i> This information will be displayed as a nice fancy pie chart eventually!</div>
                             <table className="table table-striped" style={{border:'1px solid lightgray', fontSize:'12px'}}>
                                 <thead>
-                                <tr><th>Type</th> <th style={{color:'gray'}}> New </th><th>Open</th> <th>Test</th> <th>Closed</th> <th>Total</th></tr>
+                                <tr><th>Type</th><th>Open</th> <th>Test</th> <th>Closed</th> <th>Total</th></tr>
                                 </thead>
                                 <tbody>
                                 <tr>
                                     <td>Tasks: </td>
-                                    <td style={{color:'gray'}}>{this.data.newTaskCount}</td>
                                     <td>{this.data.openTaskCount}</td>
                                     <td>{this.data.inTestTaskCount}</td>
                                     <td>{this.data.closedTaskCount}</td>
@@ -100,7 +96,6 @@ ProjectSummaryComponent = React.createClass({
                                 </tr>
                                 <tr>
                                     <td>Bugs: </td>
-                                    <td style={{color:'gray'}}>{this.data.newBugCount}</td>
                                     <td>{this.data.openBugCount}</td>
                                     <td>{this.data.inTestBugCount}</td>
                                     <td>{this.data.closedBugCount}</td>

@@ -5,13 +5,15 @@ ItemListComponent = React.createClass({
         projectId: React.PropTypes.string.isRequired,
         filter: React.PropTypes.object,
         newItemType: React.PropTypes.string,
-        newItemSubType: React.PropTypes.string
+        newItemSubType: React.PropTypes.string,
+        newItemStatus: React.PropTypes.string
     },
 
     getDefaultProps() {
         return {
             newItemType: Ols.Item.ITEM_TYPE_ACTION,
-            newItemSubType: Ols.Item.ACTION_SUBTYPE_TASK
+            newItemSubType: Ols.Item.ACTION_SUBTYPE_TASK,
+            newItemStatus: Ols.Status.OPEN
         };
     },
 
@@ -32,7 +34,7 @@ ItemListComponent = React.createClass({
         if(itemsHandle.ready() && refsHandle.ready() && milestonesHandle.ready()) {
             var inputFilter = Ols.Filter.parseString(this.state.filterInput);
             var filter = this.props.filter ? _.extend(inputFilter, this.props.filter) : _.extend(inputFilter, {isArchived:false});
-            data.itemList = Items.find(filter, {sort: {priority: -1}}).fetch();
+            data.itemList = Items.find(filter, {sort: {priority: -1, updatedAt: -1}}).fetch();
 
             data.milestoneList = Milestones.find({}, {sort: {createdAt: 1}}).fetch();
 
@@ -98,6 +100,7 @@ ItemListComponent = React.createClass({
             projectId: this.props.projectId,
             type: this.props.newItemType,
             subType:this.props.newItemSubType,
+            status: this.props.newItemStatus,
             milestoneId: this.data.milestoneIdParam
         }, (err, item) => {
             if (err) {

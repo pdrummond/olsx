@@ -183,12 +183,18 @@ Meteor.publish("projectTotals", function (projectId) {
     var self = this;
     var totals = {
         totalActionCount:0,
+        newActionCount:0,
+        inTestActionCount:0,
         openActionCount:0,
         closedActionCount:0,
+        newBugCount:0,
+        inTestBugCount:0,
         totalBugCount:0,
         openBugCount:0,
         closedBugCount:0,
         totalTaskCount:0,
+        newTaskCount:0,
+        inTestTaskCount:0,
         openTaskCount:0,
         closedTaskCount:0,
         openBacklogActionCount:0
@@ -197,30 +203,48 @@ Meteor.publish("projectTotals", function (projectId) {
     var handle = Items.find({projectId: projectId}).observeChanges({
         added: function (id, item) {
             if(item.subType == Ols.Item.ACTION_SUBTYPE_TASK || item.subType == Ols.Item.ISSUE_SUBTYPE_BUG) {
-                totals.totalActionCount++;
-                if (Ols.Status.isOpen(item.status)) {
-                    totals.openActionCount++;
-                    if(!item.milestoneId ) {
-                        totals.openBacklogActionCount++;
-                    }
+                if(item.status == Ols.Status.NEW) {
+                    totals.newActionCount++;
                 } else {
-                    totals.closedActionCount++;
+                    totals.totalActionCount++;
+                    if(item.status == Ols.Status.IN_TEST) {
+                        totals.inTestActionCount++;
+                    } else if (Ols.Status.isOpen(item.status)) {
+                        totals.openActionCount++;
+                        if (!item.milestoneId) {
+                            totals.openBacklogActionCount++;
+                        }
+                    } else {
+                        totals.closedActionCount++;
+                    }
                 }
             }
             if(item.subType == Ols.Item.ACTION_SUBTYPE_TASK) {
-                totals.totalTaskCount++;
-                if (Ols.Status.isOpen(item.status)) {
-                    totals.openTaskCount++;
+                if(item.status == Ols.Status.NEW) {
+                    totals.newTaskCount++;
                 } else {
-                    totals.closedTaskCount++;
+                    totals.totalTaskCount++;
+                    if(item.status == Ols.Status.IN_TEST) {
+                        totals.inTestTaskCount++;
+                    } else if (Ols.Status.isOpen(item.status)) {
+                        totals.openTaskCount++;
+                    } else {
+                        totals.closedTaskCount++;
+                    }
                 }
             }
             if(item.subType == Ols.Item.ISSUE_SUBTYPE_BUG) {
-                totals.totalBugCount++;
-                if (Ols.Status.isOpen(item.status)) {
-                    totals.openBugCount++;
+                if(item.status == Ols.Status.NEW) {
+                    totals.newBugCount++;
                 } else {
-                    totals.closedBugCount++;
+                    totals.totalBugCount++;
+                    if(item.status == Ols.Status.IN_TEST) {
+                        totals.inTestBugCount++;
+                    } else if (Ols.Status.isOpen(item.status)) {
+                        totals.openBugCount++;
+                    } else {
+                        totals.closedBugCount++;
+                    }
                 }
             }
 
@@ -230,32 +254,54 @@ Meteor.publish("projectTotals", function (projectId) {
         },
         removed: function (id) {
             if(item.subType == Ols.Item.ACTION_SUBTYPE_TASK || item.subType == Ols.Item.ISSUE_SUBTYPE_BUG) {
-                totals.totalActionCount--;
-                if (Ols.Status.isOpen(item.status)) {
-                    totals.openActionCount--;
-                    if(!item.milestoneId ) {
-                        totals.openBacklogActionCount--;
-                    }
+                if(item.status == Ols.Status.NEW) {
+                    totals.newActionCount--;
                 } else {
-                    totals.closedActionCount--;
+                    totals.totalActionCount--;
+                    if(item.status == Ols.Status.IN_TEST) {
+                        totals.inTestActionCount--;
+                    } else if (Ols.Status.isOpen(item.status)) {
+                        totals.openActionCount--;
+                        if (!item.milestoneId) {
+                            totals.openBacklogActionCount--;
+                        }
+                    } else {
+                        totals.closedActionCount--;
+                    }
                 }
             }
 
             if(item.subType == Ols.Item.ACTION_SUBTYPE_TASK) {
-                totals.totalTaskCount--;
-                if (Ols.Status.isOpen(item.status)) {
-                    totals.openTaskCount--;
+                if(item.status == Ols.Status.NEW) {
+                    totals.newTaskCount--;
                 } else {
-                    totals.closedTaskCount--;
+                    totals.totalTaskCount--;
+                    if(item.status == Ols.Status.IN_TEST) {
+                        totals.inTestTaskCount--;
+                    } else if (Ols.Status.isOpen(item.status)) {
+                        totals.openTaskCount--;
+                    } else {
+                        if(item.status == Ols.Status.IN_TEST) {
+                            totals.inTestTaskCount--;
+                        } else {
+                            totals.closedTaskCount--;
+                        }
+                    }
                 }
             }
 
             if(item.subType == Ols.Item.ISSUE_SUBTYPE_BUG) {
-                totals.totalBugCount--;
-                if (Ols.Status.isOpen(item.status)) {
-                    totals.openBugCount--;
+                if(item.status == Ols.Status.NEW) {
+                    totals.newBugCount--;
                 } else {
-                    totals.closedBugCount--;
+                    totals.totalBugCount--;
+                    if(item.status == Ols.Status.IN_TEST) {
+                        totals.inTestBugCount--;
+                    } else if (Ols.Status.isOpen(item.status)) {
+                        totals.openBugCount--;
+                    } else {
+                        totals.closedBugCount--;
+                    }
                 }
             }
             self.changed("project-totals", projectId, totals);

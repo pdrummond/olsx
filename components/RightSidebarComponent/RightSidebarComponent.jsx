@@ -21,13 +21,17 @@ RightSidebarComponent = React.createClass({
                     </button>
                     <ul className="dropdown-menu" aria-labelledby="dropdownMenu1">
                         <li><a onClick={this.onProjectSummaryClicked} href="">Project Summary</a></li>
+                        <li><a onClick={this.onWorkItemsClicked} href="">Work Items</a></li>
+                        <li><a onClick={this.onAllItemsClicked} href="">All Items</a></li>
+                        <li role="separator" className="divider"></li>
                         <li><a onClick={this.onReleasesClicked} href="">Releases</a></li>
                         <li><a onClick={this.onMilestonesClicked} href="">Milestones</a></li>
+                        <li><a onClick={this.onBacklogClicked} href="">Backlog</a></li>
+                        <li role="separator" className="divider"></li>
                         <li><a onClick={this.onActionsClicked} href="">Tasks</a></li>
                         <li><a onClick={this.onIssuesClicked} href="">Bugs</a></li>
                         <li><a onClick={this.onQuestionsClicked} href="">Questions</a></li>
                         <li role="separator" className="divider"></li>
-                        <li><a onClick={this.onBacklogClicked} href="">Backlog</a></li>
                         <li><a onClick={this.onMembersClicked} href="">Members</a></li>
                         <li><a onClick={this.onArchivedClicked} href="">Archived</a></li>
                         <li role="separator" className="divider"></li>
@@ -84,6 +88,14 @@ RightSidebarComponent = React.createClass({
         FlowRouter.go('projectPageLatest', {projectId: this.props.projectId}, {'rightView': 'MY_ITEMS'});
     },
 
+    onWorkItemsClicked() {
+        FlowRouter.go('projectPageLatest', {projectId: this.props.projectId}, {'rightView': 'WORK_ITEMS'});
+    },
+
+    onAllItemsClicked() {
+        FlowRouter.go('projectPageLatest', {projectId: this.props.projectId}, {'rightView': 'ALL_ITEMS'});
+    },
+
     onItemsInProgressClicked() {
         FlowRouter.go('projectPageLatest', {projectId: this.props.projectId}, {'rightView': 'ITEMS_IN_PROGRESS'});
     },
@@ -115,6 +127,8 @@ RightSidebarComponent = React.createClass({
             case 'MEMBERS': return <MemberListContainer projectId={this.props.projectId} memberList={this.props.memberList}/>;
             case 'ARCHIVED': return <ArchivedListComponent projectId={this.props.projectId} />;
             case 'MY_ITEMS': return <MyItemsComponent projectId={this.props.projectId} />;
+            case 'WORK_ITEMS': return <WorkItemsComponent projectId={this.props.projectId} />;
+            case 'ALL_ITEMS': return <AllItemsComponent projectId={this.props.projectId} />;
             case 'ITEMS_IN_PROGRESS': return <InProgressItemsComponent projectId={this.props.projectId} />;
             case 'BLOCKED_ITEMS': return <BlockedItemsComponent projectId={this.props.projectId} />;
             case 'ITEMS_IN_TEST': return <InTestItemsComponent projectId={this.props.projectId} />;
@@ -137,6 +151,8 @@ RightSidebarComponent = React.createClass({
             case 'MEMBERS': return 'Members';
             case 'ARCHIVED': return 'Archived';
             case 'MY_ITEMS': return 'My Items';
+            case 'ALL_ITEMS': return 'All Items';
+            case 'WORK_ITEMS': return 'Work Items';
             case 'ITEMS_IN_PROGRESS': return 'Items In Progress';
             case 'BLOCKED_ITEMS': return 'Blocked Items';
             case 'ITEMS_IN_TEST': return 'Items In Test';

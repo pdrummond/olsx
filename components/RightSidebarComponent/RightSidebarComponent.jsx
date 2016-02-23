@@ -31,7 +31,7 @@ RightSidebarComponent = React.createClass({
                         <li><a onClick={this.onMembersClicked} href="">Members</a></li>
                         <li><a onClick={this.onArchivedClicked} href="">Archived</a></li>
                         <li role="separator" className="divider"></li>
-                        {/*<li><a onClick={this.onNewItemsClicked} href="">New Items</a></li>*/}
+                        <li><a onClick={this.onMyItemsClicked} href="">Items Assigned to Me</a></li>
                         <li><a onClick={this.onItemsInProgressClicked} href="">Items In Progress</a></li>
                         <li><a onClick={this.onBlockedItemsClicked} href="">Blocked Items</a></li>
                         <li><a onClick={this.onItemsInTestClicked} href="">Items In Test</a></li>
@@ -80,8 +80,8 @@ RightSidebarComponent = React.createClass({
         FlowRouter.go('projectPageLatest', {projectId: this.props.projectId}, {'rightView': 'ARCHIVED'});
     },
 
-    onNewItemsClicked() {
-        FlowRouter.go('projectPageLatest', {projectId: this.props.projectId}, {'rightView': 'NEW_ITEMS'});
+    onMyItemsClicked() {
+        FlowRouter.go('projectPageLatest', {projectId: this.props.projectId}, {'rightView': 'MY_ITEMS'});
     },
 
     onItemsInProgressClicked() {
@@ -114,7 +114,7 @@ RightSidebarComponent = React.createClass({
             case 'BACKLOG': return <BacklogComponent projectId={this.props.projectId} />;
             case 'MEMBERS': return <MemberListContainer projectId={this.props.projectId} memberList={this.props.memberList}/>;
             case 'ARCHIVED': return <ArchivedListComponent projectId={this.props.projectId} />;
-            case 'NEW_ITEMS': return <NewItemsComponent projectId={this.props.projectId} />;
+            case 'MY_ITEMS': return <MyItemsComponent projectId={this.props.projectId} />;
             case 'ITEMS_IN_PROGRESS': return <InProgressItemsComponent projectId={this.props.projectId} />;
             case 'BLOCKED_ITEMS': return <BlockedItemsComponent projectId={this.props.projectId} />;
             case 'ITEMS_IN_TEST': return <InTestItemsComponent projectId={this.props.projectId} />;
@@ -136,7 +136,7 @@ RightSidebarComponent = React.createClass({
             case 'BACKLOG': return 'Backlog';
             case 'MEMBERS': return 'Members';
             case 'ARCHIVED': return 'Archived';
-            case 'NEW_ITEMS': return 'New Items';
+            case 'MY_ITEMS': return 'My Items';
             case 'ITEMS_IN_PROGRESS': return 'Items In Progress';
             case 'BLOCKED_ITEMS': return 'Blocked Items';
             case 'ITEMS_IN_TEST': return 'Items In Test';

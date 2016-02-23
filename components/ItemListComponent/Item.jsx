@@ -33,6 +33,10 @@ Item = React.createClass({
             }).fetch();
             data.activityList = Activity.find({itemId:this.props.item._id}, {sort: {createdAt: -1}}).fetch();
             console.log("Item.getMeteorData() refList = " + JSON.stringify(data.refList));
+
+            if(this.props.item.assignee) {
+                data.assigneeProfileImage = Meteor.users.findOne({username: this.props.item.assignee}).profileImage;
+            }
         }
         return data;
     },
@@ -43,6 +47,13 @@ Item = React.createClass({
             width: '35px',
             position: 'relative',
             top: '5px'
+        },
+        assigneeProfileImage: {
+            width: '20px',
+            borderRadius: '20px'
+            /*position:'relative',
+             top:'5px'*/
+
         }
     },
 
@@ -66,6 +77,7 @@ Item = React.createClass({
                         {/*<span className="label label-default"><i className="fa fa-flag-checkered"></i> Milestone 1</span>
                          <span className="label label-primary"><i className="fa fa-flag"></i> Sprint 44</span>*/}
                         {this.renderMilestoneDropdown()}
+                        {this.renderAssigneeButton()}
                         {this.renderPriorityBadge()}
                     </div>
                     {this.renderSelectedLinks()}
@@ -121,6 +133,18 @@ Item = React.createClass({
             return this.renderQuestionStatusDropdown();
         } else {
             return this.renderItemStatusDropdown();
+        }
+    },
+
+    renderAssigneeButton() {
+        if(this.props.item.assignee) {
+            return (
+                <span style={{marginLeft:'5px'}}>
+                    <button className="btn btn-xs btn-borderless" onClick={this.onChangeAssigneeClicked}>
+                        <img style={this.styles.assigneeProfileImage} src={this.data.assigneeProfileImage} title={'Assigned to ' + this.props.item.assignee}/>
+                    </button>
+                </span>
+            );
         }
     },
 
@@ -264,6 +288,9 @@ Item = React.createClass({
                             <ul className="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenu1">
                                 <li><a href="">Show Details</a></li>
                                 <li><a onClick={this.onRenameClicked} href="">Rename</a></li>
+                                <li role="separator" className="divider"></li>
+                                <li><a onClick={this.onChangeAssigneeClicked} href="">Change Assignee</a></li>
+                                <li><a onClick={this.onRemoveAssigneeClicked} href="">Remove Assignee</a></li>
                                 <li role="separator" className="divider"></li>
                                 <li><a onClick={this.onSetPriorityClicked} href="">Set Priority</a></li>
                                 <li><a onClick={this.onRemovePriorityClicked} href="">Remove Priority</a></li>
@@ -564,6 +591,34 @@ Item = React.createClass({
                         }
                     }
                 });
+            }
+        });
+    },
+
+    onChangeAssigneeClicked(e) {
+        var self = this;
+        e.preventDefault();
+        bootbox.prompt({title: "Enter username to assign this " + this.props.item.subType + " to:", value: this.props.item.assignee, callback: function(username) {
+            if (username !== null && username.length > 0) {
+                Items.methods.setAssignee.call({
+                    itemId: self.props.item._id,
+                    assignee: username
+                }, (err) => {
+                    if (err) {
+                        toastr.error("Error assigning item: " + err.reason);
+                    }
+                });
+            }
+        }});
+    },
+
+    onRemoveAssigneeClicked(e) {
+        e.preventDefault();
+        Items.methods.removeAssignee.call({
+            itemId: this.props.item._id
+        }, (err) => {
+            if (err) {
+                toastr.error("Error unassigning item: " + err.reason);
             }
         });
     }

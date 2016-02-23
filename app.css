@@ -704,3 +704,12 @@ header.purple {
     border:1px solid orange;
     box-shadow: 0px 0px 4px orange;
 }
+
+.btn-borderless {
+    border:none;
+    background-color:white;
+}
+
+.btn-borderless:active {
+    box-shadow:none;
+}

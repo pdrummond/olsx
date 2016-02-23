@@ -6,7 +6,8 @@ ItemListComponent = React.createClass({
         filter: React.PropTypes.object,
         newItemType: React.PropTypes.string,
         newItemSubType: React.PropTypes.string,
-        newItemStatus: React.PropTypes.string
+        newItemStatus: React.PropTypes.string,
+        newItemAssignee: React.PropTypes.string
     },
 
     getDefaultProps() {
@@ -101,6 +102,7 @@ ItemListComponent = React.createClass({
             type: this.props.newItemType,
             subType:this.props.newItemSubType,
             status: this.props.newItemStatus,
+            assignee: this.props.newItemAssignee,
             milestoneId: this.data.milestoneIdParam
         }, (err, item) => {
             if (err) {
@@ -110,7 +112,7 @@ ItemListComponent = React.createClass({
                     console.error("Error adding item: " + JSON.stringify(err));
                 }
             }
-            self.refs.filterInput.value= ''
+            self.refs.filterInput.value= '';
             self.setState({'filterInput': ''});
         });
     }

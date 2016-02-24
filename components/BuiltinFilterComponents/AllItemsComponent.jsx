@@ -3,7 +3,7 @@ AllItemsComponent = React.createClass({
         return (
             <ItemListComponent
                 projectId={this.props.projectId}
-                filter={{}}
+                filter={{isArchived:false}}
             />
         )
     }

@@ -86,13 +86,15 @@ MessageList = React.createClass({
     },
 
     getRandomEmptyMessage() {
+        /*
         var msgs = [
             "So this project is empty right now, but not for long!",
             "An empty project this is.  Will you be the first to get things moving? :-)",
             "Who will be the first to add a message to this wonderful new project?",
             "Today, we are going to be super productive and creating this project was the first step",
         ];
-        return msgs[this.getRandomInt(msgs.length-1)];
+        return msgs[this.getRandomInt(msgs.length-1)];*/
+        return "Nothing to show here - be the first to add a message.";
     },
 
     /**

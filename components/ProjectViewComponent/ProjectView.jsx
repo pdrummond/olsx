@@ -89,6 +89,18 @@ ProjectView = React.createClass({
         }
     },
 
+    getCurrentItemClassName() {
+        var className = 'fa';
+        if(this.data.currentItem.subType == Ols.Item.ISSUE_SUBTYPE_BUG) {
+            className += ' fa-bug';
+        } else if(this.data.currentItem.subType == Ols.Item.ACTION_SUBTYPE_TASK) {
+            className += ' fa-exclamation-circle';
+        } else if(this.data.currentItem.subType == Ols.Item.INFO_SUBTYPE_QUESTION) {
+           className += ' fa-question';
+        }
+        return className;
+    },
+
     renderHeader() {
         if(this.isLoading) {
             return (
@@ -103,7 +115,7 @@ ProjectView = React.createClass({
                 return (
                     <header className={this.getHeaderClassName()}>
                         <h2>
-                            <i className="fa fa-tasks"></i> {this.data.currentItem.description} <span style={{color:'lightgray', fontSize:'16px'}}>{this.renderCurrentItemKey()}</span>
+                            <i className={this.getCurrentItemClassName()}></i> {this.data.currentItem.description} <span style={{color:'lightgray', fontSize:'16px'}}>{this.renderCurrentItemKey()}</span>
                         </h2>
                     </header>
                 );

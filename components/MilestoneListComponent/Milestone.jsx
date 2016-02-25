@@ -55,6 +55,7 @@ Milestone = React.createClass({
                     </div>
                     {this.renderReleasesDropdown()}
                 </div>
+                {this.renderDescription()}
                 {this.renderSelectedLinks()}
             </li>
         );
@@ -83,6 +84,7 @@ Milestone = React.createClass({
                             <ul className="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenu1">
                                 {/*<li><a href="">Set Due Date</a></li>*/}
                                 <li><a onClick={this.onRenameClicked} href="">Rename</a></li>
+                                <li><a onClick={this.onUpdateDescriptionClicked} href="">Update Description</a></li>
                                 {/*<li role="separator" className="divider"></li>
                                  <li><a href="">Activate Milestone</a></li>
                                  <li><a href="">Mark Complete</a></li>*/}
@@ -205,5 +207,48 @@ Milestone = React.createClass({
                 toastr.error("Error adding milestone to release: " + err.reason);
             }
         });
+    },
+
+    onUpdateDescriptionClicked() {
+        var self = this;
+        var description = "";
+        if(this.props.milestone.description) {
+            description = this.props.milestone.description;
+        }
+        bootbox.dialog({
+            message: '<textarea id="update-milestone-description-textarea" rows=10 style="width:100%;border:1px solid lightgray" type="text" name="content">' + description + '</textarea>',
+            title: "Edit Message",
+            buttons: {
+                main: {
+                    label: "Save",
+                    className: "btn-primary",
+                    callback: function (result) {
+                        var description = $('#update-milestone-description-textarea').val();
+                        if(description != null) {
+                            description = description.trim();
+                            Milestones.methods.setDescription.call({
+                                milestoneId: self.props.milestone._id,
+                                description
+                            }, (err) => {
+                                if(err) {
+                                    toastr.error("Error updating milestone description: " + err.reason);
+                                }
+                            });
+                        }
+                    }
+                },
+                cancel: {
+                    label: 'Cancel',
+                    className: 'btn-default'
+                }
+            }
+        });
+    },
+
+    renderDescription() {
+        if(this.props.milestone.description) {
+            return <p className="milestone-description">{this.props.milestone.description}</p>;
+        }
     }
+
 });

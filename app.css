@@ -748,3 +748,9 @@ header.black {
 .btn-borderless:active {
     box-shadow:none;
 }
+
+.milestone-description {
+    padding-left: 40px;
+    font-size:12px;
+    margin-top:5px;
+}

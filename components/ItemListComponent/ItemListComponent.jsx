@@ -35,7 +35,7 @@ ItemListComponent = React.createClass({
         if(itemsHandle.ready() && refsHandle.ready() && milestonesHandle.ready()) {
             var inputFilter = Ols.Filter.parseString(this.state.filterInput);
             var filter = this.props.filter ? _.extend(inputFilter, this.props.filter) : _.extend(inputFilter, {isArchived:false});
-            data.itemList = Items.find(filter, {sort: {priority: -1, updatedAt: -1}}).fetch();
+            data.itemList = Items.find(filter, {sort: {priority: -1, createdAt: -1}}).fetch();
 
             data.milestoneList = Milestones.find({}, {sort: {createdAt: 1}}).fetch();
 

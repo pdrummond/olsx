@@ -510,6 +510,10 @@ header.black {
     margin:0;
 }
 
+.markdown-content p {
+    margin-top: 10px;
+}
+
 .markdown-content code {
     background-color: #f5f5f5;
     font-family: Consolas, Monaco, Lucida Console, Liberation Mono, DejaVu Sans Mono, Bitstream Vera Sans Mono, Courier New, 'Bitstream Vera Sans Mono', Consolas, Courier, monospace;

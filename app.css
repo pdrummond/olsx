@@ -472,6 +472,31 @@ header.black {
     right: 10px;
 }
 
+.markdown-content h1 {
+    color: orange;
+    font-size: 25px;
+    font-weight: 100;
+}
+
+.markdown-content h2 {
+    color: orange;
+    font-size: 20px;
+    font-weight: 100;
+}
+
+.markdown-content h3 {
+    color: orange;
+    font-size: 18px;
+    font-weight: 100;
+}
+
+.markdown-content h4 {
+    color: orange;
+    font-size: 16px;
+    font-weight: 100;
+}
+
+
 .markdown-content ul {
     padding-left:30px;
     margin:10px;
@@ -525,16 +550,16 @@ header.black {
     padding:10px;
 }
 
-.item-description {
+.item-title {
     padding-left:35px;
 }
 
-.item-description:hover {
+.item-title:hover {
     cursor:pointer;
     color:#058AFF !important;
 }
 
-.ref-list, .activity-list {
+.ref-list, .activity-list, .item-description {
     margin:0;
     padding: 5px;
     padding-left:15px;
@@ -666,7 +691,13 @@ header.black {
     height: 100%;
 }
 
-#item-detail-component .ref-list, #item-detail-component .activity-list {
+.right-sidebar-container #item-detail-component .item-description {
+    padding-top: 15px;
+    font-size: 14px;
+}
+
+
+#item-detail-component .ref-list, #item-detail-component .activity-list, #item-detail-component .item-description {
     max-height: none;
     overflow-y: auto;
     height: calc(100% - 124px);

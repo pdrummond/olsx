@@ -16,7 +16,9 @@ Item = React.createClass({
     getInitialState() {
         return {
             isSelected: false,
-            showRefList: this.props.detailMode
+            showRefList: false,
+            showActivityList: false,
+            showDescription: this.props.detailMode
         }
     },
 
@@ -63,9 +65,9 @@ Item = React.createClass({
                 <div className="item-wrapper">
                     {this.renderTypeDropdown()}
                     <div style={{paddingLeft: '0px'}}>
-                        <div onClick={this.onDescriptionClicked}
-                             className="item-description"
-                             style={this.getDescriptionStyle()}>
+                        <div onClick={this.onTitleClicked}
+                             className="item-title"
+                             style={this.getTitleStyle()}>
                             {this.props.item.description}
                         </div>
                         <div style={{fontSize:'12px',color:'gray', paddingLeft:'35px', paddingTop:'5px', paddingBottom:'5px'}}>
@@ -82,13 +84,14 @@ Item = React.createClass({
                     </div>
                     {this.renderSelectedLinks()}
                 </div>
+                {this.renderDescription()}
                 {this.renderRefList()}
                 {this.renderActivityList()}
             </li>
         )
     },
 
-    getDescriptionStyle() {
+    getTitleStyle() {
         var style = {fontSize: '14px', fontWeight: 'bold', color:'gray'};
         if(Ols.Status.isDone(this.props.item.status)) {
             style.textDecoration = 'line-through';
@@ -259,6 +262,23 @@ Item = React.createClass({
         }
     },
 
+    renderDescription() {
+      if(this.state.showDescription) {
+          return (
+              <div className="item-description markdown-content"
+                   dangerouslySetInnerHTML={ this.getHtmlContent(this.props.item.content) } />
+          );
+      }
+    },
+
+    getHtmlContent: function(content) {
+        if ( content ) {
+            return { __html: parseMarkdown(content) };
+        } else {
+            return {__html: '<i>No Description</i>'};
+        }
+    },
+
     renderRefList() {
         if(this.state.showRefList) {
             return <RefList refList={this.data.refList} />;
@@ -287,6 +307,7 @@ Item = React.createClass({
                             </button>
                             <ul className="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenu1">
                                 <li><a href="">Show Details</a></li>
+                                <li><a onClick={this.onUpdateDescriptionClicked} href="">Update Description</a></li>
                                 <li><a onClick={this.onRenameClicked} href="">Rename</a></li>
                                 <li role="separator" className="divider"></li>
                                 <li><a onClick={this.onChangeAssigneeClicked} href="">Change Assignee</a></li>
@@ -308,6 +329,14 @@ Item = React.createClass({
         }
     },
 
+    getDescriptionLinkClassName() {
+        var className = 'btn btn-xs btn-link ';
+        if(this.state.showDescription) {
+            className += 'active';
+        }
+        return className;
+    },
+
     getRefsLinkClassName() {
         var className = 'btn btn-xs btn-link ';
         if(this.state.showRefList) {
@@ -325,7 +354,9 @@ Item = React.createClass({
     },
 
     renderDetailLink() {
-        if(!this.props.detailMode) {
+        if(this.props.detailMode) {
+            return <button type="button" className={this.getDescriptionLinkClassName()} onClick={this.onDescriptionClicked}><i className='fa fa-book'></i> Description</button>
+        } else {
             return <button type="button" className="btn btn-xs btn-link" onClick={this.onDetailClicked}><i className={this.getItemTypeClassName('fa')}></i> Details</button>
         }
     },
@@ -334,7 +365,7 @@ Item = React.createClass({
         return this.props.item.isArchived? 'Restore':'Archive';
     },
 
-    onDescriptionClicked: function() {
+    onTitleClicked: function() {
         this.setState({'isSelected': !this.state.isSelected});
     },
 
@@ -353,6 +384,12 @@ Item = React.createClass({
         });
     },
 
+    onDescriptionClicked: function() {
+        if(this.state.showDescription == false) {
+            this.setState({showRefList: false, showActivityList: false, showDescription: true});
+        }
+    },
+
     onRefsClicked: function() {
         if(this.state.showRefList == true) {
             //If ref list is already showing then allow it to be collapsed if not in detail mode.
@@ -361,7 +398,7 @@ Item = React.createClass({
             }
         } else {
             //If ref list is not showing, then we show it and make sure the activity list is hidden.
-            this.setState({showRefList: true, showActivityList: false});
+            this.setState({showRefList: true, showActivityList: false, showDescription:false});
         }
     },
 
@@ -373,7 +410,7 @@ Item = React.createClass({
             }
         } else {
             //If activity list is not showing, then we show it and make sure the ref list is hidden.
-            this.setState({showActivityList: true, showRefList: false});
+            this.setState({showActivityList: true, showRefList: false, showDescription:false});
         }
     },
 
@@ -619,6 +656,42 @@ Item = React.createClass({
         }, (err) => {
             if (err) {
                 toastr.error("Error unassigning item: " + err.reason);
+            }
+        });
+    },
+
+    onUpdateDescriptionClicked() {
+        var self = this;
+        var description = "";
+        if(this.props.item.content) {
+            description = this.props.item.content;
+        }
+        bootbox.dialog({
+            message: '<textarea id="update-item-description-textarea" rows=10 style="width:100%;border:1px solid lightgray" type="text" name="content">' + description + '</textarea>',
+            title: "Edit Message",
+            buttons: {
+                main: {
+                    label: "Save",
+                    className: "btn-primary",
+                    callback: function (result) {
+                        var description = $('#update-item-description-textarea').val();
+                        if(description != null) {
+                            description = description.trim();
+                            Items.methods.setDescription.call({
+                                itemId: self.props.item._id,
+                                description
+                            }, (err) => {
+                                if(err) {
+                                    toastr.error("Error updating item description: " + err.reason);
+                                }
+                            });
+                        }
+                    }
+                },
+                cancel: {
+                    label: 'Cancel',
+                    className: 'btn-default'
+                }
             }
         });
     }

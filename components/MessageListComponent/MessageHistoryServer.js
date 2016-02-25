@@ -78,7 +78,7 @@ if(Meteor.isServer) {
              We only do this if there is no selected item.
              */
 
-            if(opts.currentItemId == false && result.messages && result.messages.length > 0) {
+            if(!opts.currentItemId && result.messages && result.messages.length > 0) {
 
                 var olderMessagesCount = ServerMessages.find({
                     projectId: opts.projectId,

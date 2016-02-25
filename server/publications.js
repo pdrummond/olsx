@@ -9,6 +9,10 @@ Meteor.publish("projects", function () {
 
 Meteor.publish("items", function(projectId) {
     if(Members.findOne({userId: this.userId, projectId})) {
+        /*var projectIds = Members.find({userId: this.userId}).map(function (member) {
+            return member.projectId;
+        });
+        return Items.find({projectId: {$in: projectIds}});*/
         return Items.find({projectId});
     } else {
         return null;

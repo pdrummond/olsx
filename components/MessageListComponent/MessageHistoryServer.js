@@ -5,13 +5,13 @@ if(Meteor.isServer) {
             console.log('> loadMessages(' + JSON.stringify(opts) + ')');
 
             /*
-                If no start message seq is provided, then we need to return the latest page of results.
+             If no start message seq is provided, then we need to return the latest page of results.
              */
-            if(opts.startMessageSeq == 0) {
+            if (opts.startMessageSeq == 0) {
                 console.log('-- start message is 0 so finding latest page of messages...');
 
                 var latestMessage = ServerMessages.findOne({projectId: opts.projectId}, {sort: {createdAt: -1}});
-                if(latestMessage) {
+                if (latestMessage) {
                     var latestSeq = latestMessage.seq;
                     console.log('-- seq for latest message is ' + latestSeq);
                     opts.startMessageSeq = (latestSeq - opts.messagesCountLimit) + 1;
@@ -26,8 +26,8 @@ if(Meteor.isServer) {
             }
 
             /*
-                This result structure id returned to the client.  It consists of the page of messages, and two booleans
-                which define whether the back and forward links will be displayed.
+             This result structure id returned to the client.  It consists of the page of messages, and two booleans
+             which define whether the back and forward links will be displayed.
              */
 
             var result = {
@@ -37,24 +37,48 @@ if(Meteor.isServer) {
             };
 
             /*
-                Fetch a page of messages.  A page has a length of opts.messagesCountLimit and begins with the
-                message with a seq of opts.startMessageSeq.
+             This is the query data which is passed to the collection to filter the message by project
+             */
+            var query = {projectId: opts.projectId};
+            var options = {sort: {seq: 1}};
+
+            /*
+                If an item is selected then we only want to return messages that contain a ref to the selected
+                item.
              */
 
-            result.messages = ServerMessages.find({projectId: opts.projectId, seq: {$gte: opts.startMessageSeq}}, {
-                limit: opts.messagesCountLimit+1,
-                sort: {seq: 1}
-            }).fetch();
+            if (opts.currentItemId) {
+                var messageIds = Refs.find({itemId: opts.currentItemId}).map(function (ref) {
+                    return ref.messageId;
+                });
+                console.log("messageIds:" + JSON.stringify(messageIds));
+                query._id = {$in: messageIds};
+            } else {
+                /*
+                    If an item isn't selected then we need to page the results.
+                 */
+                query.seq = {$gte: opts.startMessageSeq};
+                options.limit = opts.messagesCountLimit+1;
+            }
+
+            /*
+             Fetch a page of messages.  A page has a length of opts.messagesCountLimit and begins with the
+             message with a seq of opts.startMessageSeq.
+             */
+            console.log("messages query: "+ JSON.stringify(query));
+            result.messages = ServerMessages.find(query, options).fetch();
             console.log("-- Fetched " + result.messages.length + " messages for this page");
 
             console.log('-- Latest page message is: ' + JSON.stringify(result.messages[result.messages.length-1], null, 4));
 
             /*
-                Now we need to see if there are any older/newer messages than the current page in order to determine
-                whether the back and forward links are shown.
+             Now we need to see if there are any older/newer messages than the current page in order to determine
+             whether the back and forward links are shown.
+
+             We only do this if there is no selected item.
              */
 
-            if(result.messages && result.messages.length > 0) {
+            if(opts.currentItemId == false && result.messages && result.messages.length > 0) {
 
                 var olderMessagesCount = ServerMessages.find({
                     projectId: opts.projectId,
@@ -77,25 +101,25 @@ if(Meteor.isServer) {
         saveMessage: function(message) {
             try {
                 console.log("> saveMessage(). "
-                + "messageType=" + message.messageType
-                + ", projectId=" + message.projectId
-                + ", content=" + (message.content ? Ols.StringUtils.truncate(message.content, 100) : ""));
+                    + "messageType=" + message.messageType
+                    + ", projectId=" + message.projectId
+                    + ", content=" + (message.content ? Ols.StringUtils.truncate(message.content, 100) : ""));
 
                 var commandName;
                 //Need to detect command before saving the message to ensure message.isCommand = true
                 //is persisted.
                 //Commands are disabled for now - they may return later though
                 /*if (message.content && message.content.startsWith('/')) {
-                    console.log("-- message has been recognised as a command (" + message.content + ")");
-                    var commandData = message.content.split(" ");
-                    commandName = commandData[0];
-                    message.isCommand = Ols.Command.commandExists(commandName);
-                    if (message.isCommand) {
-                        console.log("-- message is a recognised command and will be executed after message has been saved");
-                    } else {
-                        console.error("-- message is NOT a recognised command so will just be added as a normal chat message");
-                    }
-                }*/
+                 console.log("-- message has been recognised as a command (" + message.content + ")");
+                 var commandData = message.content.split(" ");
+                 commandName = commandData[0];
+                 message.isCommand = Ols.Command.commandExists(commandName);
+                 if (message.isCommand) {
+                 console.log("-- message is a recognised command and will be executed after message has been saved");
+                 } else {
+                 console.error("-- message is NOT a recognised command so will just be added as a normal chat message");
+                 }
+                 }*/
 
                 message = Meteor.call('insertAndBroadcastMessage', message);
 
@@ -109,19 +133,19 @@ if(Meteor.isServer) {
 
                 //Commands are disabled for now - they may return later though
                 /*if (commandName != null) {
-                    console.log("-- command detected (" + message.content + ")");
-                    if (message.isCommand) {
-                        Ols.Command.executeCommand(commandName, commandData, message);
-                    } else {
-                        console.error("-- command is not valid (" + message.content + "). Generating error message...");
-                        Meteor.call('systemErrorMessage', message.projectId, 'Invalid command: "' + commandName + "'");
-                    }
-                }
-                if(message.content.startsWith("@loopbot")) {
-                    console.log("-- Detected @loopbot at start of message " + message.seq);
-                    console.log("-- Sending message " + message.seq + " to loopbot for further processing...");
-                    Ols.LoopBot.onResponseReceived(message);
-                }*/
+                 console.log("-- command detected (" + message.content + ")");
+                 if (message.isCommand) {
+                 Ols.Command.executeCommand(commandName, commandData, message);
+                 } else {
+                 console.error("-- command is not valid (" + message.content + "). Generating error message...");
+                 Meteor.call('systemErrorMessage', message.projectId, 'Invalid command: "' + commandName + "'");
+                 }
+                 }
+                 if(message.content.startsWith("@loopbot")) {
+                 console.log("-- Detected @loopbot at start of message " + message.seq);
+                 console.log("-- Sending message " + message.seq + " to loopbot for further processing...");
+                 Ols.LoopBot.onResponseReceived(message);
+                 }*/
                 console.log("< saveMessage()");
                 return message;
             } catch(err) {

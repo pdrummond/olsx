@@ -6,7 +6,7 @@ ItemListComponent = React.createClass({
         filter: React.PropTypes.object,
         newItemType: React.PropTypes.string,
         newItemSubType: React.PropTypes.string,
-        newItemStatus: React.PropTypes.string,
+        newItemStatus: React.PropTypes.number,
         newItemAssignee: React.PropTypes.string
     },
 

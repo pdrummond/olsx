@@ -460,6 +460,10 @@ header.purple {
     border-bottom: 5px solid #755286;
 }
 
+header.black {
+    background: black;
+    border-bottom: 5px solid gray;
+}
 
 .header-buttons {
     float: right;

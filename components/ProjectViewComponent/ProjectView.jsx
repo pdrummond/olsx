@@ -6,10 +6,18 @@ ProjectView = React.createClass({
         var data = {};
         data.currentProject = {};
         data.currentProjectId = FlowRouter.getParam('projectId');
+        data.currentItemId = FlowRouter.getQueryParam('itemId');
         var currentProjectHandle = Meteor.subscribe('currentProject', data.currentProjectId);
         var membersHandle = Meteor.subscribe('currentProjectMembers', data.currentProjectId);
+        if(data.currentItemId) {
+            var currentItemHandle = Meteor.subscribe('currentItem', data.currentItemId);
+            data.currentItemHandleIsReady = currentItemHandle.ready();
+        } else {
+            data.currentItemHandleIsReady = true;
+        }
+
         data.isLoading = true;
-        if(membersHandle.ready() && currentProjectHandle.ready()) {
+        if(membersHandle.ready() && currentProjectHandle.ready() && data.currentItemHandleIsReady) {
             data.authInProcess = Meteor.loggingIn();
             data.canShow = Meteor.user() != null && Members.findOne({userId: Meteor.userId()}) != null;
 
@@ -20,9 +28,16 @@ ProjectView = React.createClass({
             data.messagesCountLimit = parseInt(FlowRouter.getParam('messagesCountLimit')) || Ols.DEFAULT_PAGE_SIZE;
             data.doScrollBottom = FlowRouter.getQueryParam('scrollBottom') != null;
             data.doScrollTop = FlowRouter.getQueryParam('scrollTop') != null;
+
+            data.currentItem = Items.findOne(data.currentItemId);
+
             data.isLoading = false;
         }
         return data;
+    },
+
+    renderCurrentItemKey() {
+        return "#" + this.data.currentItem.projectKey + "-" + this.data.currentItem.seq;
     },
 
     render() {
@@ -57,6 +72,7 @@ ProjectView = React.createClass({
                     <MessageListContainer
                         ref="messageListContainer"
                         projectId={this.data.currentProject._id}
+                        currentItem={this.data.currentItem}
                         startMessageSeq={this.data.startMessageSeq}
                         messagesCountLimit={this.data.messagesCountLimit}
                         onOtherProjectNewMessage={this.props.onOtherProjectNewMessage} />
@@ -66,24 +82,39 @@ ProjectView = React.createClass({
     },
 
     getHeaderClassName() {
-      return this.data.currentProject.theme || 'blue';
+        if(this.data.currentItem) {
+            return 'black';
+        } else {
+            return this.data.currentProject.theme || 'blue';
+        }
     },
 
     renderHeader() {
         if(this.isLoading) {
             return (
-            <header className={this.getHeaderClassName()}>
-                <h2>
-                    <i className="fa fa-spin fa-2x fa-spinner" style={{color:'#01588A', position:'relative', top:'-10px'}}></i>
-                </h2>
-            </header>
-            );
-        } else {
-            return(
                 <header className={this.getHeaderClassName()}>
                     <h2>
-                        <i className="fa fa-bullseye"></i> {this.data.currentProject.title} <span className="pull-right dropdown">
-                        <button className="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown">
+                        <i className="fa fa-spin fa-2x fa-spinner" style={{color:'#01588A', position:'relative', top:'-10px'}}></i>
+                    </h2>
+                </header>
+            );
+        } else {
+            if(this.data.currentItem) {
+                return (
+                    <header className={this.getHeaderClassName()}>
+                        <h2>
+                            <i className="fa fa-tasks"></i> {this.data.currentItem.description} <span style={{color:'lightgray', fontSize:'16px'}}>{this.renderCurrentItemKey()}</span>
+                        </h2>
+                    </header>
+                );
+            } else {
+                return (
+                    <header className={this.getHeaderClassName()}>
+                        <h2>
+                            <i className="fa fa-bullseye"></i> {this.data.currentProject.title} <span
+                            className="pull-right dropdown">
+                        <button className="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1"
+                                data-toggle="dropdown">
                             <span className="caret"></span>
                         </button>
                         <ul className="dropdown-menu" aria-labelledby="dropdownMenu1">
@@ -97,9 +128,10 @@ ProjectView = React.createClass({
                             <li><a href="#" onClick={this.onDeleteLinkClicked}>Delete Project</a></li>
                         </ul>
                     </span>
-                    </h2>
-                </header>
-            );
+                        </h2>
+                    </header>
+                );
+            }
         }
     },
 

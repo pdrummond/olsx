@@ -6,7 +6,7 @@ MessageListContainer = React.createClass({
         projectId: React.PropTypes.string,
         startMessageSeq: React.PropTypes.number,
         messagesCountLimit: React.PropTypes.number,
-
+        currentItem: React.PropTypes.object,
         onOtherProjectNewMessage: React.PropTypes.func
     },
 
@@ -22,7 +22,31 @@ MessageListContainer = React.createClass({
         var self = this;
         Streamy.on('incomingMessage', function(msg) {
             console.log("incoming message received: " + JSON.stringify(msg, null, 4));
+
+            /*
+                When a new message arrives we need to determine if it lives in the current project.  If not, then
+                it's a new message for another project and we need to show a notification badge in the left-sidebar.
+
+                If it is for this project, then if the user is at the end of the history, then we can just add the
+                msg, but if the user has scrolled back, we don't want to affect their position, so we show a
+                "New Messages" toast instead.
+
+                We also need to check for "detail mode" - if the message history is only showing the messages for
+                one task, then being in the same project isn't good enough - we need to check that the message contains
+                a ref to the item.  Rather than check the Refs collection which would be quite heavyweight, we just
+                use a string comparision to test for the ref.
+
+             */
+            var ok = false;
             if(msg.projectId == self.props.projectId) {
+                ok = true;
+            }
+            if(ok && self.props.currentItem) {
+                var currentItemKey = '#' + self.props.currentItem.projectKey + '-' + self.props.currentItem.seq;
+                ok = msg.content.indexOf(currentItemKey) != -1;
+            }
+
+            if(ok) {
                 var incomingMessageCount = 0;
                 if (self.isInScrollBack()/* && msg.createdBy != Meteor.userId()*/) {
                     incomingMessageCount = self.state.incomingMessageCount || 0;
@@ -53,7 +77,8 @@ MessageListContainer = React.createClass({
                 self.props.onOtherProjectNewMessage(msg);
             }
         });
-        return {};
+        return {
+        };
     },
 
     render() {
@@ -108,10 +133,16 @@ MessageListContainer = React.createClass({
     loadMessages(callback) {
         console.log("loadMessages");
         var self = this;
+
+        var currentItemId;
+        if(this.props.currentItem) {
+            currentItemId = this.props.currentItem._id;
+        }
         Meteor.call('loadMessages', {
             projectId: this.props.projectId,
             startMessageSeq: this.props.startMessageSeq,
-            messagesCountLimit: this.props.messagesCountLimit
+            messagesCountLimit: this.props.messagesCountLimit,
+            currentItemId: currentItemId,
         }, function (err, result) {
             if (err) {
                 toastr.error('Error loading messages', err.reason);
@@ -140,7 +171,14 @@ MessageListContainer = React.createClass({
         });
     },
 
+    renderCurrentItemKey() {
+        return "#" + this.props.currentItem.projectKey + "-" + this.props.currentItem.seq;
+    },
+
     onMessageAdded:function(content) {
+        if(this.props.currentItem) {
+            content = this.renderCurrentItemKey() + ": " + content;
+        }
         let msg = this.insertClientMessage(content);
         if(!this.isInScrollBack()) {
             this.setState({incomingMessageCount: 0, messages: this.state.messages.concat([msg])});
@@ -180,10 +218,10 @@ MessageListContainer = React.createClass({
     isInScrollBack: function() {
         var inScrollBack = false;//this.getHistoryMode() != 'latest';
         if(!inScrollBack) {
-           /*
-                If showing latest messages, but user has scrolled up then
-                this is also considered 'scroll back' so check for this here
-           */
+            /*
+             If showing latest messages, but user has scrolled up then
+             this is also considered 'scroll back' so check for this here
+             */
             inScrollBack = !this.refs.messageList.isScrollBottom();
         }
         console.log('inScrollBack = ' + inScrollBack);

@@ -15,6 +15,7 @@ Ols.Item = {
     FEATURE_SUBTYPE_FEATURE: 'feature',
     FEATURE_SUBTYPE_ENHANCEMENT: 'enhancement',
 
+    INFO_SUBTYPE_DISCUSSION: 'discussion',
     INFO_SUBTYPE_QUESTION: 'question',
     INFO_SUBTYPE_IDEA: 'idea',
     INFO_SUBTYPE_WISH: 'wish'

@@ -97,6 +97,8 @@ ProjectView = React.createClass({
             className += ' fa-exclamation-circle';
         } else if(this.data.currentItem.subType == Ols.Item.INFO_SUBTYPE_QUESTION) {
            className += ' fa-question';
+        } else if(this.data.currentItem.subType == Ols.Item.INFO_SUBTYPE_DISCUSSION) {
+            className += ' fa-comments-o';
         }
         return className;
     },

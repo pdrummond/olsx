@@ -108,6 +108,7 @@ Item = React.createClass({
                 <ul className="dropdown-menu" aria-labelledby="dropdownMenu1">
                     <li><a onClick={this.onTaskTypeClicked} href="#"><i className="fa fa-exclamation-circle"></i> Task</a></li>
                     <li><a onClick={this.onBugTypeClicked} href="#"><i className="fa fa-bug"></i> Bug</a></li>
+                    <li><a onClick={this.onDiscussionTypeClicked} href="#"><i className="fa fa-comments-o"></i> Discussion</a></li>
                     <li><a onClick={this.onQuestionTypeClicked} href="#"><i className="fa fa-question-circle"></i> Question</a></li>
                 </ul>
             </span>
@@ -118,6 +119,7 @@ Item = React.createClass({
         switch(this.props.item.subType) {
             case Ols.Item.ACTION_SUBTYPE_TASK: className += ' fa-exclamation-circle'; break;
             case Ols.Item.ISSUE_SUBTYPE_BUG: className += ' fa-bug'; break;
+            case Ols.Item.INFO_SUBTYPE_DISCUSSION: className += ' fa-comments-o'; break;
             case Ols.Item.INFO_SUBTYPE_QUESTION: className += ' fa-question-circle'; break;
         }
         return className;
@@ -525,6 +527,11 @@ Item = React.createClass({
                 toastr.error("Error moving item to backlog: " + err.reason);
             }
         });
+    },
+
+    onDiscussionTypeClicked(e) {
+        e.preventDefault();
+        this.updateItemType(Ols.Item.ITEM_TYPE_INFO, Ols.Item.INFO_SUBTYPE_DISCUSSION);
     },
 
     onBugTypeClicked(e) {

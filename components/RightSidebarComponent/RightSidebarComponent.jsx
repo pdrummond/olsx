@@ -21,17 +21,18 @@ RightSidebarComponent = React.createClass({
                     </button>
                     <ul className="dropdown-menu" aria-labelledby="dropdownMenu1">
                         <li><a onClick={this.onProjectSummaryClicked} href="">Project Summary</a></li>
-                        <li><a onClick={this.onWorkItemsClicked} href="">Work Items</a></li>
-                        <li><a onClick={this.onAllItemsClicked} href="">All Items</a></li>
+                        <li role="separator" className="divider"></li>
+                        <li><a onClick={this.onDiscussionsClicked} href="">Discussions</a></li>
+                        <li><a onClick={this.onActionsClicked} href="">Tasks</a></li>
+                        <li><a onClick={this.onIssuesClicked} href="">Bugs</a></li>
+                        <li><a onClick={this.onQuestionsClicked} href="">Questions</a></li>
                         <li role="separator" className="divider"></li>
                         <li><a onClick={this.onReleasesClicked} href="">Releases</a></li>
                         <li><a onClick={this.onMilestonesClicked} href="">Milestones</a></li>
                         <li><a onClick={this.onBacklogClicked} href="">Backlog</a></li>
                         <li role="separator" className="divider"></li>
-                        <li><a onClick={this.onActionsClicked} href="">Tasks</a></li>
-                        <li><a onClick={this.onIssuesClicked} href="">Bugs</a></li>
-                        <li><a onClick={this.onQuestionsClicked} href="">Questions</a></li>
-                        <li role="separator" className="divider"></li>
+                        <li><a onClick={this.onWorkItemsClicked} href="">Work Items</a></li>
+                        <li><a onClick={this.onAllItemsClicked} href="">All Items</a></li>
                         <li><a onClick={this.onMembersClicked} href="">Members</a></li>
                         <li><a onClick={this.onArchivedClicked} href="">Archived</a></li>
                         <li role="separator" className="divider"></li>
@@ -62,6 +63,10 @@ RightSidebarComponent = React.createClass({
 
     onMembersClicked() {
         FlowRouter.go('projectPageLatest', {projectId: this.props.projectId}, {'rightView': 'MEMBERS'});
+    },
+
+    onDiscussionsClicked() {
+        FlowRouter.go('projectPageLatest', {projectId: this.props.projectId}, {'rightView': 'DISCUSSIONS'});
     },
 
     onActionsClicked() {
@@ -120,6 +125,7 @@ RightSidebarComponent = React.createClass({
             case 'RELEASE_DETAIL': return <ReleaseDetailComponent/>;
             case 'MILESTONE_DETAIL': return <MilestoneDetailComponent projectId={this.props.projectId} />;
             case 'ACTIONS': return <ActionListComponent projectId={this.props.projectId} />;
+            case 'DISCUSSIONS': return <DiscussionItemsComponent projectId={this.props.projectId} />;
             case 'ISSUES': return <IssueListComponent projectId={this.props.projectId} />;
             case 'QUESTIONS': return <QuestionListComponent projectId={this.props.projectId} />;
             case 'ITEM_DETAIL': return <ItemDetailComponent projectId={this.props.projectId} />;
@@ -145,6 +151,7 @@ RightSidebarComponent = React.createClass({
             case 'RELEASE_DETAIL': return 'Release Detail';
             case 'ITEM_DETAIL': return 'Item Detail';
             case 'ACTIONS': return 'Tasks';
+            case 'DISCUSSIONS': return 'Discussions';
             case 'ISSUES': return 'Bugs';
             case 'QUESTIONS': return 'Questions';
             case 'BACKLOG': return 'Backlog';

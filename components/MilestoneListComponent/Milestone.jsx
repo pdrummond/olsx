@@ -85,9 +85,9 @@ Milestone = React.createClass({
                                 {/*<li><a href="">Set Due Date</a></li>*/}
                                 <li><a onClick={this.onRenameClicked} href="">Rename</a></li>
                                 <li><a onClick={this.onUpdateDescriptionClicked} href="">Update Description</a></li>
-                                {/*<li role="separator" className="divider"></li>
-                                 <li><a href="">Activate Milestone</a></li>
-                                 <li><a href="">Mark Complete</a></li>*/}
+                                <li role="separator" className="divider"></li>
+                                 <li><a onClick={this.onStartMilestoneClicked} href="">Start Milestone</a></li>
+                                 <li><a onClick={this.onFinishMilestoneClicked} href="">Finish Milestone</a></li>
                             </ul>
                         </div>
                     </div>
@@ -138,6 +138,32 @@ Milestone = React.createClass({
         });
     },
 
+    onStartMilestoneClicked(e) {
+        e.preventDefault();
+        var self = this;
+        Milestones.methods.setActive.call({
+            milestoneId: self.props.milestone._id,
+            isActive: true
+        }, (err) => {
+            if(err) {
+                toastr.error("Error starting milestone: " + err.reason);
+            }
+        });
+    },
+
+    onFinishMilestoneClicked(e) {
+        e.preventDefault();
+        var self = this;
+        Milestones.methods.setActive.call({
+            milestoneId: self.props.milestone._id,
+            isActive: false
+        }, (err) => {
+            if(err) {
+                toastr.error("Error finishing milestone: " + err.reason);
+            }
+        });
+    },
+
     onRenameClicked(e) {
         e.preventDefault();
         var self = this;
@@ -170,10 +196,18 @@ Milestone = React.createClass({
 
     },
 
+    renderActiveLabel() {
+        if(this.props.milestone.isActive) {
+            return <label className="label label-success">open</label>;
+        } else {
+            return <label className="label label-default">finished</label>;
+        }
+    },
+
     renderReleasesDropdown() {
         return (
             <span>
-                <label className="label label-success">open</label>
+                {this.renderActiveLabel()}
                 <span className="dropdown pull-right">
                     <button className="btn btn-xs btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
                         {this.renderReleaseLabel()} <span className="caret"></span>

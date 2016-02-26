@@ -12,26 +12,28 @@ MessageList = React.createClass({
             );
         } else {
             return this.props.messages.map((message) => {
-                switch(message.messageType) {
-                    case Ols.MESSAGE_TYPE_LOOPBOT:
-                        return <LoopBotMessage key={message._id} message={message}/>;
-                        break;
-                    case Ols.MESSAGE_TYPE_CUSTOM:
-                        var componentFn = Ols.Command.getComponent(message.customMessageType);
-                        var component = componentFn(message);
-                        return component;
-                        break;
-                    case Ols.MESSAGE_TYPE_SYSTEM:
-                        return <SystemMessage key={message._id} message={message}/>;
-                        break;
-                    case Ols.MESSAGE_TYPE_CHAT:
-                        return <ChatMessage key={message._id} message={message}/>;
-                        break;
-                    default: {
-                        console.error("Unrecognised message type: " + message.messageType);
-                        break;
+                    switch (message.messageType) {
+                        case Ols.MESSAGE_TYPE_LOOPBOT:
+                            return <LoopBotMessage key={message._id} message={message}/>;
+                            break;
+                        case Ols.MESSAGE_TYPE_CUSTOM:
+                            var componentFn = Ols.Command.getComponent(message.customMessageType);
+                            var component = componentFn(message);
+                            return component;
+                            break;
+                        case Ols.MESSAGE_TYPE_SYSTEM:
+                            return <SystemMessage key={message._id} message={message}/>;
+                            break;
+                        case Ols.MESSAGE_TYPE_CHAT:
+                            return <ChatMessage key={message._id} message={message}/>;
+                            break;
+                        default:
+                        {
+                            console.error("Unrecognised message type: " + message.messageType);
+                            break;
+                        }
                     }
-                }
+
             });
         }
 

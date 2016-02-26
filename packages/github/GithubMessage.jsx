@@ -12,19 +12,24 @@ GithubMessage = React.createClass({
     },
 
     render() {
-        return (
-            <li className="message-item github-message">
-                <img style={this.styles.profileImage} src="https://assets-cdn.github.com/images/modules/logos_page/GitHub-Mark.png" title={'Message ' + this.props.message.seq}/>
-                <div style={{paddingLeft:'50px'}}>
-                    <div><b>{this.props.message.createdByName}</b>
-                        <span className="message-created-at"> {moment(this.props.message.createdAt).fromNow()} </span>
+        try {
+            return (
+                <li className="message-item github-message">
+                    <img style={this.styles.profileImage} src="https://assets-cdn.github.com/images/modules/logos_page/GitHub-Mark.png" title={'Message ' + this.props.message.seq}/>
+                    <div style={{paddingLeft:'50px'}}>
+                        <div><b>{this.props.message.createdByName}</b>
+                            <span className="message-created-at"> {moment(this.props.message.createdAt).fromNow()} </span>
+                        </div>
+                        <div className="message-content markdown-content">
+                            {this.renderContent()}
+                        </div>
                     </div>
-                    <div className="message-content markdown-content">
-                        {this.renderContent()}
-                    </div>
-                </div>
-            </li>
-        );
+                </li>
+            );
+        } catch(err) {
+            console.log("Error rendering message: " + JSON.stringify(err));
+            return <p style={{padding:'10px', color:'red'}}>Unexpected error rendering message {this.props.message.seq}</p>;
+        }
     },
 
     renderContent() {

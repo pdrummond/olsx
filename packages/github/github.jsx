@@ -93,7 +93,7 @@ function findItemRefs(projectId, message, data) {
                   if (seq != null) {
                       var item = Items.findOne({projectId: projectId, seq});
                       if (item != null) {
-                          console.log("-- item found with seq " + seq + ".  Adding ref...");
+                          console.log("-- item found with seq " + seq + ".  Adding ref for message " + message._id + " to item " + item._id);
                           Refs.methods.addRef.call({
                               messageId: message._id,
                               projectId: projectId,
@@ -101,7 +101,7 @@ function findItemRefs(projectId, message, data) {
                               itemId: item._id,
                               itemSeq: seq
                           }, (err, ref) => {
-                              console.log("-- Add ref done");
+                              console.log("-- Add ref done: " + JSON.stringify(err));
                               if (err) {
                                   if (err.message) {
                                       console.error("Error adding ref: " + err.message);

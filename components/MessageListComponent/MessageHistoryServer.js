@@ -152,9 +152,9 @@ if(Meteor.isServer) {
                 console.error("Unexpected exception in MessageHistoryServer.saveMessage: " + err.type);
                 console.error("Error JSON: " + JSON.stringify(err));
             }
-        },
+          },
 
-        insertAndBroadcastMessage: function(message) {
+          insertAndBroadcastMessage: function(message) {
             var now = new Date();
             message.createdAt = now;
             message.updatedAt = now;
@@ -212,7 +212,7 @@ if(Meteor.isServer) {
                         var seq = parseInt(matches[1]);
                         console.log("-- ref to item " + seq + " found for message " + message.seq);
                         if (seq != null) {
-                            var item = Items.findOne({projectId: message.projectId, seq, seq});
+                            var item = Items.findOne({projectId: message.projectId, seq});
                             if (item != null) {
                                 console.log("-- item found with seq " + seq + ".  Adding ref...");
                                 Refs.methods.addRef.call({

@@ -23,7 +23,7 @@ Item = React.createClass({
     },
 
     getMeteorData() {
-      console.log("Item.getMeteorData: " + this.props.item._id);
+      //console.log("Item.getMeteorData: " + this.props.item._id);
         var data = {};
         data.refList = [];
         var activityHandle = Meteor.subscribe('itemActivity', this.props.item._id);

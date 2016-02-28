@@ -15,16 +15,18 @@ if(Meteor.isServer) {
             JsonRoutes.sendResult(res, 404, "{'ok': false, 'error': 'project doesn't exist}");
         } else {
            console.log("project is valid: " + JSON.stringify(project));
+           var data = {
+               eventType: eventType,
+               event: req.body
+           };
 
-            Meteor.call('saveMessage', {
+
+          var message = Meteor.call('saveMessage', {
                 projectId: project._id,
                 messageType: Ols.MESSAGE_TYPE_CUSTOM,
                 customMessageType: 'github',
                 isIntegration: true,
-                data: {
-                    eventType: eventType,
-                    event: req.body
-                },
+                data: data,
                 createdBy: GITHUB,
                 updatedBy: GITHUB,
                 createdByName: GITHUB,
@@ -38,6 +40,7 @@ if(Meteor.isServer) {
                     JsonRoutes.sendResult(res, 200);
                 }
             });
+            findItemRefs(projectId, message, data);
         }
 
         /*var project = Ols.Project.get(req.params.projectId);
@@ -69,8 +72,65 @@ if(Meteor.isServer) {
     });
 }
 
+function findItemRefs(projectId, message, data) {
+  console.log("-- finding item refs for project " + projectId)
+  switch(data.eventType) {
+    case 'push':
+    console.log('-- github event type is push - checking commit messages for refs');
+    data.event.commits.forEach(function(commit) {
+      if(commit.message) {
+          console.log("-- checking for refs in commit " + commit.id);
+          var projectKey = Projects.findOne(projectId).key;
+          console.log("-- project key for commit " + commit.id + " is " + projectKey);
+          var re = new RegExp('#' + projectKey + '-([\\d]+)', 'g');
+          var matches;
+          do {
+              matches = re.exec(commit.message);
+              if (matches) {
+                  var seq = parseInt(matches[1]);
+                  console.log("-- ref to item " + seq + " found in commit " + commit.id);
+                  if (seq != null) {
+                      var item = Items.findOne({projectId: projectId, seq});
+                      if (item != null) {
+                          console.log("-- item found with seq " + seq + ".  Adding ref...");
+                          Refs.methods.addRef.call({
+                              messageId: message._id,
+                              projectId: projectId,
+                              messageSeq: message.seq,
+                              itemId: item._id,
+                              itemSeq: seq
+                          }, (err, ref) => {
+                              if (err) {
+                                  if (err.message) {
+                                      console.error("Error adding ref: " + err.message);
+                                  } else {
+                                      console.error("- Error adding ref: " + err.reason);
+                                  }
+                              } else {
+                                  console.log("-- ref " + ref._id + " successfully created for item " + seq);
+                              }
+                          });
+                      } else {
+                        console.log("-- Cannot find item for seq " + seq + ". Ignoring ref");
+                      }
+                  } else {
+                      console.log("-- Seq " + seq + " not found. Ignoring ref.");
+                  }
+              } else {
+                  console.log("-- no more refs found");
+              }
+          } while (matches);
+      } else {
+          console.log("-- Ignoring ref detection in commit " + commit.id + " as it has no message field");
+      }
+    });
+    break;
+    default:
+      console.log('-- github event type is ' + data.eventType + ' - not looking for refs');
+      break;
+  }
+}
+
 Ols.Command.defineComponent('github', function(ctx) {
     return <GithubMessage key={ctx._id} message={ctx}/>;
 });
-
-

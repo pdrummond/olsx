@@ -101,7 +101,7 @@ function findItemRefs(projectId, message, data) {
                               itemId: item._id,
                               itemSeq: seq
                           }, (err, ref) => {
-                              console.log("-- Add ref done: " + JSON.stringify(err));
+                              console.log("-- Add ref done: err: " + JSON.stringify(err) + "ref: " + JSON.stringify(ref));
                               if (err) {
                                   if (err.message) {
                                       console.error("Error adding ref: " + err.message);

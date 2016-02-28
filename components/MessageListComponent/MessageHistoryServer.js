@@ -314,7 +314,14 @@ if(Meteor.isServer) {
                 $set: {content: content, isEdited: true, isDeleted:false, updatedAt: new Date()}
             });
 
-            Ols.Message.systemSuccessMessage(message.projectId, Meteor.user().username + " edited message " + message.seq);
+            if(Meteor.isServer) {
+                Ols.Activity.addActivity({
+                    projectId: message.projectId,
+                    itemId: messageId,
+                    type: Ols.ActivityType.ACTIVITY_TYPE_MESSAGE,
+                    longDescription: " edited message [" + message.seq + "](/project/" + message.projectId + "/start-message/" + message.seq + '?selectStartMessage=true)'
+                });
+            }
 
             //TODO: Need to do more than this to deal with refs properly
             //This deals with the most obvious case - editing a message in order to add a ref.
@@ -354,7 +361,14 @@ if(Meteor.isServer) {
                 $set: {content: deletedMessageContent, isDeleted:true, updatedAt: new Date()}
             });
 
-            Ols.Message.systemSuccessMessage(message.projectId, Meteor.user().username + " deleted message " + message.seq);
+            if(Meteor.isServer) {
+                Ols.Activity.addActivity({
+                    projectId: message.projectId,
+                    itemId: messageId,
+                    type: Ols.ActivityType.ACTIVITY_TYPE_MESSAGE,
+                    longDescription: " deleted message [" + message.seq + "](/project/" + message.projectId + "/start-message/" + message.seq + '?selectStartMessage=true)'
+                });
+            }
 
             //TODO: Need to remove refs
 

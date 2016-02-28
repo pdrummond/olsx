@@ -37,7 +37,7 @@ if(Meteor.isServer) {
                     throw new Meteor.Error('Github.saveMessage.failed', "Failed to save Github Message: " + JSON.stringify(err));
                 } else {
                     console.log("-- github custom message saved successfully. Checking for refs..");
-                    findItemRefs(projectId, message, data);
+                    findItemRefs(project._id, message, data);
                     console.log("-- github refs check complete - sending 200 back to github");
                     JsonRoutes.sendResult(res, 200);
                 }

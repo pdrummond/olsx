@@ -17,7 +17,6 @@ ProjectPage = React.createClass({
     },
 
     getMeteorData() {
-        console.log("ProjectPage.getMeteorData()");
         var data = {};
         data.projectList = [];
         var projectsHandle = Meteor.subscribe('projects');
@@ -26,7 +25,6 @@ ProjectPage = React.createClass({
 
         if(projectsHandle.ready() && usersHandle.ready() && userStatusHandle.ready()) {
             data.projectList = Projects.find({}, {sort: {updatedAt: -1}}).fetch();
-            console.log("ProjectPage.getMeteorData: " + JSON.stringify(data.projectList));
             data.authInProcess = Meteor.loggingIn();
         }
         return data;

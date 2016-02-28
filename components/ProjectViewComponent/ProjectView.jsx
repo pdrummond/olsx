@@ -2,7 +2,6 @@ ProjectView = React.createClass({
     mixins: [ReactMeteorData],
 
     getMeteorData() {
-        console.log("getMeteorData()");
         var data = {};
         data.currentProject = {};
         data.currentProjectId = FlowRouter.getParam('projectId');
@@ -208,7 +207,7 @@ ProjectView = React.createClass({
     },
 
     componentDidUpdate: function () {
-        console.trace("ProjectView.componentDidUpdate");
+        //console.trace("ProjectView.componentDidUpdate");
         if (this.data.canShow) {
             var self = this;
             if (this.data.currentProject) {

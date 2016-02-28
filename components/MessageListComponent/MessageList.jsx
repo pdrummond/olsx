@@ -1,7 +1,6 @@
 MessageList = React.createClass({
 
     renderMessages() {
-        console.log('> renderMessage');
         if(this.props.messages == null || this.props.messages.length == 0) {
             return (
                 <div>

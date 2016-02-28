@@ -23,6 +23,7 @@ Item = React.createClass({
     },
 
     getMeteorData() {
+      console.log("Item.getMeteorData: " + this.props.item._id);
         var data = {};
         data.refList = [];
         var activityHandle = Meteor.subscribe('itemActivity', this.props.item._id);
@@ -34,7 +35,6 @@ Item = React.createClass({
                 sort: {createdAt: 1}
             }).fetch();
             data.activityList = Activity.find({itemId:this.props.item._id}, {sort: {createdAt: -1}}).fetch();
-            console.log("Item.getMeteorData() refList = " + JSON.stringify(data.refList));
 
             if(this.props.item.assignee) {
                 data.assigneeProfileImage = Meteor.users.findOne({username: this.props.item.assignee}).profileImage;
@@ -701,4 +701,3 @@ Item = React.createClass({
         });
     }
 });
-

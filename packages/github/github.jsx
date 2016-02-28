@@ -36,7 +36,7 @@ if(Meteor.isServer) {
                     JsonRoutes.sendResult(res, 404, "{'ok':false, 'error': 'saveMessage failed: " + err.reason + "'}");
                     throw new Meteor.Error('Github.saveMessage.failed', "Failed to save Github Message: " + JSON.stringify(err));
                 } else {
-                    console.log("-- github custom message saved successfully. Checking for refs..");
+                    console.log("-- github custom message " + msg.seq + " saved successfully. Checking for refs..");
                     findItemRefs(project._id, msg, data);
                     console.log("-- github refs check complete - sending 200 back to github");
                     JsonRoutes.sendResult(res, 200);
@@ -74,7 +74,7 @@ if(Meteor.isServer) {
 }
 
 function findItemRefs(projectId, message, data) {
-  console.log("-- finding item refs for project " + projectId)
+  console.log("-- finding item refs for project " + projectId + ", message:" + JSON.stringify(message));
   switch(data.eventType) {
     case 'push':
     console.log('-- github event type is push - checking commit messages for refs');
@@ -101,6 +101,7 @@ function findItemRefs(projectId, message, data) {
                               itemId: item._id,
                               itemSeq: seq
                           }, (err, ref) => {
+                              console.log("-- Add ref done");
                               if (err) {
                                   if (err.message) {
                                       console.error("Error adding ref: " + err.message);

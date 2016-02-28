@@ -54,6 +54,11 @@ ChatMessage = React.createClass({
                 <ul className="dropdown-menu" aria-labelledby="dropdownMenu1">
                     <li><a onClick={this.onEditClicked} href="#">Edit Message</a></li>
                     <li role="separator" className="divider"></li>
+                    <li><a onClick={this.onCreateTaskClicked} href="#">Create Task from this message</a></li>
+                    <li><a onClick={this.onCreateBugClicked} href="#">Create Bug from this message</a></li>
+                    <li><a onClick={this.onCreateQuestionClicked} href="#">Create Question from this message</a></li>
+                    <li><a onClick={this.onCreateDiscussionClicked} href="#">Create Discussion from this message</a></li>
+                    <li role="separator" className="divider"></li>
                     <li><a onClick={this.onAddRefClicked} href="#">Add Item Reference</a></li>
                     <li role="separator" className="divider"></li>
                     <li><a onClick={this.onDeleteClicked} href="#">Delete Message</a></li>
@@ -102,6 +107,41 @@ ChatMessage = React.createClass({
           });
         }
       }});
+    },
+
+    onCreateTaskClicked() {
+      this.addItem(Ols.Item.ITEM_TYPE_ACTION, Ols.Item.ACTION_SUBTYPE_TASK);
+    },
+
+    onCreateBugClicked() {
+      this.addItem(Ols.Item.ITEM_TYPE_ISSUE, Ols.Item.ISSUE_SUBTYPE_BUG);
+    },
+
+    onCreateDiscussionClicked() {
+      this.addItem(Ols.Item.ITEM_TYPE_INFO, Ols.Item.INFO_SUBTYPE_DISCUSSION);
+    },
+
+    onCreateQuestionClicked() {
+      this.addItem(Ols.Item.ITEM_TYPE_INFO, Ols.Item.INFO_SUBTYPE_QUESTION);
+    },
+
+    addItem(type, subType) {
+        var self = this;
+        Items.methods.addItem.call({
+            description: this.props.message.content,
+            projectId: this.props.message.projectId,
+            type: type,
+            subType: subType,
+            status: Ols.Status.OPEN
+        }, (err, item) => {
+            if (err) {
+                if (err.reason) {
+                    toastr.error("Error adding item from message: " + err.reason);
+                } else {
+                    console.error("Error adding item from message: " + JSON.stringify(err));
+                }
+            }
+        });
     },
 
     onEditClicked() {

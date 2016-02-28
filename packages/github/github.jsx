@@ -20,7 +20,6 @@ if(Meteor.isServer) {
                event: req.body
            };
 
-
           var message = Meteor.call('saveMessage', {
                 projectId: project._id,
                 messageType: Ols.MESSAGE_TYPE_CUSTOM,
@@ -33,14 +32,16 @@ if(Meteor.isServer) {
                 updatedByName: GITHUB
             }, function (err, msg) {
                 if (err != null) {
-                    JsonRoutes.sendResult(res, 404, "{'ok':false, 'error': 'saveMessage failed: " + err.reason + "'}");
                     console.error("-- error saving github custom message " + JSON.stringify(err));
+                    JsonRoutes.sendResult(res, 404, "{'ok':false, 'error': 'saveMessage failed: " + err.reason + "'}");
                     throw new Meteor.Error('Github.saveMessage.failed', "Failed to save Github Message: " + JSON.stringify(err));
                 } else {
+                    console.log("-- github custom message saved successfully. Checking for refs..");
+                    findItemRefs(projectId, message, data);
+                    console.log("-- github refs check complete - sending 200 back to github");
                     JsonRoutes.sendResult(res, 200);
                 }
             });
-            findItemRefs(projectId, message, data);
         }
 
         /*var project = Ols.Project.get(req.params.projectId);

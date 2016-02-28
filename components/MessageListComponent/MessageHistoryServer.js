@@ -69,7 +69,7 @@ if(Meteor.isServer) {
             result.messages = ServerMessages.find(query, options).fetch();
             console.log("-- Fetched " + result.messages.length + " messages for this page");
 
-            console.log('-- Latest page message is: ' + JSON.stringify(result.messages[result.messages.length-1], null, 4));
+            //console.log('-- Latest page message is: ' + JSON.stringify(result.messages[result.messages.length-1], null, 4));
 
             /*
              Now we need to see if there are any older/newer messages than the current page in order to determine

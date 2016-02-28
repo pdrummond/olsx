@@ -49,7 +49,7 @@ ProjectListContainer = React.createClass({
                             if (key.length > 0) {
                                 Projects.methods.addProject.call({title, key}, (err) => {
                                     if (err) {
-                                        toastr.error('Oops! Something went wrong creating project - please try again.');
+                                        toastr.error('Error creating project: ' + err.reason);
                                         console.error('Error creating project: ' + err);
                                     }
                                 });

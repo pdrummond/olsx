@@ -334,6 +334,62 @@ if(Meteor.isServer) {
             return content;
         },
 
+        addRefToMessage: function(projectId, messageId, itemSeq) {
+            check(messageId, String);
+            check(itemSeq, Number);
+            if (!this.userId) {
+                throw new Meteor.Error("addRefToMessage.not-authenticated");
+            }
+            var message = ServerMessages.findOne(messageId);
+            if (message == null) {
+                throw new Meteor.Error("addRefToMessage.message-not-exist", "Message " + messageId + " does not exist");
+            }
+            var userIsAuthor = Meteor.userId() == message.createdBy;
+
+            var member = Members.findOne({userId: Meteor.userId(), projectId: message.projectId});
+
+            if(member == null && !userIsAuthor) {
+                throw new Meteor.Error("addRefToMessage.not-authorised", "Only project admins or the message author can add references to messages");
+            }
+
+            var item = Items.findOne({projectId, seq: itemSeq});
+            if(item == null) {
+              throw new Meteor.Error("addRefToMessage.not-exists", "No item exists for seq " + itemSeq);
+            }
+            var ref = Refs.methods.addRef.call({
+                messageId: message._id,
+                projectId: message.projectId,
+                messageSeq: message.seq,
+                messageContent: message.content,
+                itemId: item._id,
+                itemSeq
+            });
+            if(ref == null) {
+              throw new Meteor.Error("addRefToMessage.error-creating-ref", "Unable to create ref ");
+            }
+
+            var itemKey = "#" + item.projectKey + "-" + item.seq;
+            var content = message.content + " (" + itemKey + ")";
+
+            if(message.messageType == Ols.MESSAGE_TYPE_CHAT) {
+              ServerMessages.update(messageId, {
+                  $set: {content: content, isEdited: false, isDeleted:false, updatedAt: new Date()}
+              });
+            }
+
+            if(Meteor.isServer) {
+                Ols.Activity.addActivity({
+                    projectId: message.projectId,
+                    itemId: messageId,
+                    type: Ols.ActivityType.ACTIVITY_TYPE_MESSAGE,
+                    longDescription: " Added reference to **" + itemKey + "** in message [" + message.seq + "](/project/" + message.projectId + "/start-message/" + message.seq + '?selectStartMessage=true)'
+                });
+            }
+
+            return content;
+        },
+
+
         deleteMessage: function(messageId) {
             check(messageId, String);
 

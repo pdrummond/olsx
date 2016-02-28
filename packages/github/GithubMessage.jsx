@@ -19,6 +19,7 @@ GithubMessage = React.createClass({
                     <div style={{paddingLeft:'50px'}}>
                         <div><b>{this.props.message.createdByName}</b>
                             <span className="message-created-at"> {moment(this.props.message.createdAt).fromNow()} </span>
+                              {this.renderMessageDropdown()}
                         </div>
                         <div className="message-content markdown-content">
                             {this.renderContent()}
@@ -118,5 +119,33 @@ GithubMessage = React.createClass({
             </span>
         );
 
+    },
+
+    renderMessageDropdown() {
+        return (
+            <span className="dropdown">
+                <button className="btn btn-xs btn-default dropdown-toggle" style={{color:'gray', backgroundColor:'none', border:'none'}} type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                    <span className="caret"></span>
+                </button>
+                <ul className="dropdown-menu" aria-labelledby="dropdownMenu1">
+                    <li><a onClick={this.onAddRefClicked} href="#">Add Item Reference</a></li>
+                </ul>
+            </span>
+        );
+    },
+
+    onAddRefClicked(e) {
+      e.preventDefault();
+      var self = this;
+      bootbox.prompt({title: "Enter item seq (i.e: 'For #OLS-42 enter 42'):", callback: function(seq) {
+        if (seq !== null) {
+          seq = parseInt(seq.trim());
+          Meteor.call('addRefToMessage', self.props.message.projectId, self.props.message._id, seq, (err, content) => {
+            if(err) {
+              toastr.error("Error adding ref to message: " + err.reason);
+            }
+          });
+        }
+      }});
     }
 });

@@ -54,6 +54,8 @@ ChatMessage = React.createClass({
                 <ul className="dropdown-menu" aria-labelledby="dropdownMenu1">
                     <li><a onClick={this.onEditClicked} href="#">Edit Message</a></li>
                     <li role="separator" className="divider"></li>
+                    <li><a onClick={this.onAddRefClicked} href="#">Add Item Reference</a></li>
+                    <li role="separator" className="divider"></li>
                     <li><a onClick={this.onDeleteClicked} href="#">Delete Message</a></li>
                 </ul>
             </span>
@@ -79,10 +81,33 @@ ChatMessage = React.createClass({
         FlowRouter.setQueryParams({selectStartMessage: null});
     },
 
+    onAddRefClicked(e) {
+      e.preventDefault();
+      var self = this;
+      bootbox.prompt({title: "Enter item seq (i.e: 'For #OLS-42 enter 42'):", callback: function(seq) {
+        if (seq !== null) {
+          seq = parseInt(seq.trim());
+          Meteor.call('addRefToMessage', self.props.message.projectId, self.props.message._id, seq, (err, content) => {
+            if(err) {
+              toastr.error("Error adding ref to message: " + err.reason);
+            } else {
+              //I know this is bad-form, but it's an exception because messages are special in that
+              //there is the ServerMessage/ClientMessage split.  So updating the server message isn't
+              //enough - we have to update the client message separately.
+              self.props.message.content = content;
+              self.props.message.isDeleted = false; //message may have been previously deleted
+              self.props.message.isEdited = false;
+              self.forceUpdate();
+            }
+          });
+        }
+      }});
+    },
+
     onEditClicked() {
         var self = this;
         bootbox.dialog({
-            message: '<textarea id="edit-chat-message-textarea" rows=10 style="width:100%;border:1px solid lightgray" type="text" name="content">' + this.props.message.content + '</textarea>',
+            message: '<textarea id="edit-chat-message-textarea" autofocus rows=10 style="width:100%;border:1px solid lightgray" type="text" name="content">' + this.props.message.content + '</textarea>',
             title: "Edit Message",
             buttons: {
                 main: {

@@ -64,7 +64,16 @@ Release = React.createClass({
 
     renderDescription() {
         if(this.props.release.description) {
-            return <p style={{marginTop:'5px'}}>{this.props.release.description}</p>;
+          return (
+              <div className="milestone-description markdown-content"
+                   dangerouslySetInnerHTML={ this.getHtmlContent(this.props.release.description) } />
+          );
+        }
+    },
+
+    getHtmlContent: function(content) {
+        if ( content ) {
+            return { __html: parseMarkdown(content) };
         }
     },
 
@@ -148,16 +157,22 @@ Release = React.createClass({
     },
 
     onDeleteClicked(e) {
-        e.preventDefault();
-        Releases.methods.removeRelease.call({
-            releaseId: this.props.release._id,
-        }, (err) => {
+      e.preventDefault();
+      e.preventDefault();
+      var self = this;
+      bootbox.confirm("Are you sure you want to permanently delete this release?  Consider archiving it instead, if you just want to hide it from view without destroying it forever.", function(result) {
+        if(result == true) {
+          Releases.methods.removeRelease.call({
+            releaseId: self.props.release._id,
+          }, (err) => {
             if(err) {
-                toastr.error("Error removing release: " + err.reason);
+              toastr.error("Error removing release: " + err.reason);
             } else {
-                FlowRouter.setQueryParams({'rightView': 'RELEASES'});
+              FlowRouter.setQueryParams({'rightView': 'RELEASES'});
             }
-        });
+          });
+        }
+      });
     },
 
     onUpdateDescriptionClicked() {

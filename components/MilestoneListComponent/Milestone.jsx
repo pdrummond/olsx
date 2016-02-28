@@ -126,16 +126,22 @@ Milestone = React.createClass({
     },
 
     onDeleteClicked(e) {
-        e.preventDefault();
-        Milestones.methods.removeMilestone.call({
-            milestoneId: this.props.milestone._id,
-        }, (err) => {
+      e.preventDefault();
+      e.preventDefault();
+      var self = this;
+      bootbox.confirm("Are you sure you want to permanently delete this milestone?  Consider archiving it instead, if you just want to hide it from view without destroying it forever.", function(result) {
+        if(result == true) {
+          Milestones.methods.removeMilestone.call({
+            milestoneId: self.props.milestone._id,
+          }, (err) => {
             if(err) {
-                toastr.error("Error removing milestone: " + err.reason);
+              toastr.error("Error removing milestone: " + err.reason);
             } else {
-                FlowRouter.setQueryParams({'rightView': 'MILESTONES'});
+              FlowRouter.setQueryParams({'rightView': 'MILESTONES'});
             }
-        });
+          });
+        }
+      });
     },
 
     onStartMilestoneClicked(e) {
@@ -281,8 +287,17 @@ Milestone = React.createClass({
 
     renderDescription() {
         if(this.props.milestone.description) {
-            return <p className="milestone-description">{this.props.milestone.description}</p>;
+          return (
+              <div className="milestone-description markdown-content"
+                   dangerouslySetInnerHTML={ this.getHtmlContent(this.props.milestone.description) } />
+          );
         }
-    }
+    },
+
+    getHtmlContent: function(content) {
+        if ( content ) {
+            return { __html: parseMarkdown(content) };
+        }
+    },
 
 });

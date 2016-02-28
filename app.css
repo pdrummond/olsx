@@ -533,6 +533,11 @@ header.black {
     font-style: italic;
 }
 
+.activity-item .markdown-content blockquote {
+  font-size:12px;
+}
+
+
 .item-list {
     margin-top:10px;
 }
@@ -755,7 +760,6 @@ header.black {
 }
 
 .milestone-description {
-    padding-left: 40px;
     font-size:12px;
     margin-top:5px;
 }

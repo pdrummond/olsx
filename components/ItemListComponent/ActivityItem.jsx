@@ -22,7 +22,7 @@ ActivityItem = React.createClass({
         return (
             <li className="activity-item" onClick={this.onClick}>
                 <span style={{fontSize:'12px',color:'#575757', fontWeight:'bold',fontStyle:'italic'}}>
-                      <i className="fa fa-dot-circle-o"></i> {this.props.activityItem.content}
+                      <span className="markdown-content" dangerouslySetInnerHTML={ this.getHtmlContent(this.props.activityItem.content) } />
                 </span>
                 <div style={{fontSize:'10px',color:'gray', fontStyle:'italic'}}>
                     {moment(this.props.activityItem.createdAt).fromNow()}

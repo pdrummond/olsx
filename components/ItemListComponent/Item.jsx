@@ -419,8 +419,7 @@ Item = React.createClass({
     onArchivedClicked() {
         if(this.props.item.isArchived) {
             Items.methods.restoreItem.call({
-                projectId: this.props.item.projectId,
-                seq: this.props.item.seq,
+                itemId: this.props.item._id
             }, (err) => {
                 if (err) {
                     toastr.error("Error restoring item: " + err.reason);
@@ -428,8 +427,7 @@ Item = React.createClass({
             });
         } else {
             Items.methods.archiveItem.call({
-                projectId: this.props.item.projectId,
-                seq: this.props.item.seq,
+                itemId: this.props.item._id
             }, (err) => {
                 if (err) {
                     toastr.error("Error archiving item: " + err.reason);

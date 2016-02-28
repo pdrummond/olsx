@@ -10,6 +10,7 @@ Package.onUse(function(api) {
     'lib.js',
     'command-api.js',
     'message-api.js',
+    'activity-api.js',
     'filter-api.js',
     'stringutils-api.js',
     'loopbot-api.js',

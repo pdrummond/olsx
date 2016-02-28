@@ -21,6 +21,7 @@ MessageList = React.createClass({
                             var component = componentFn(message);
                             return component;
                             break;
+                        case Ols.MESSAGE_TYPE_ACTIVITY:
                         case Ols.MESSAGE_TYPE_SYSTEM:
                             return <SystemMessage key={message._id} message={message}/>;
                             break;

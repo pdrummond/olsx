@@ -44,7 +44,7 @@ if(Meteor.isServer) {
 
             /*
                 If an item is selected then we only want to return messages that contain a ref to the selected
-                item.
+                item. Or, in the case of activity messages, we can simply query for the 'itemId' field.
              */
 
             if (opts.currentItemId) {
@@ -52,7 +52,7 @@ if(Meteor.isServer) {
                     return ref.messageId;
                 });
                 console.log("messageIds:" + JSON.stringify(messageIds));
-                query._id = {$in: messageIds};
+                query.$or = [{itemId: opts.currentItemId}, {_id: {$in: messageIds}}];
             } else {
                 /*
                     If an item isn't selected then we need to page the results.
@@ -248,21 +248,27 @@ if(Meteor.isServer) {
             }
         },
 
-        systemSuccessMessage: function(projectId, content, callback) {
+        //TODO: Rename this to system activity message or something
+        systemSuccessMessage: function(projectId, content, itemId, data) {
             console.log("-- saving system success message for project " + projectId + ": " + content);
+
+            var userId = Meteor.userId();
+            var username = Meteor.user().username;
+
+
             return Meteor.call('insertAndBroadcastMessage', {
                 projectId: projectId,
-                userId: Meteor.userId(),
-                username: Meteor.user().username,
-                createdBy: Ols.SYSTEM_USERID,
-                createdByName: Ols.SYSTEM_USERNAME,
-                updatedBy: Ols.SYSTEM_USERID,
-                updatedByName: Ols.SYSTEM_USERNAME,
+                createdBy: userId,
+                createdByName: username,
+                updatedBy: userId,
+                updatedByName: username,
                 createdAt: new Date(),
                 content: content,
-                messageType: Ols.MESSAGE_TYPE_SYSTEM,
+                messageType: Ols.MESSAGE_TYPE_ACTIVITY,
                 isSystem: true,
-                isSuccess: true
+                isSuccess: true,
+                itemId,
+                data
             });
             console.log("-- system success message saved");
         },

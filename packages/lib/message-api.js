@@ -8,7 +8,7 @@ MessageApi.prototype.systemErrorMessage = function(projectId, errMsg) {
 };
 
 MessageApi.prototype.systemSuccessMessage = function(projectId, msg, itemId) {
-    return Meteor.call('systemSuccessMessage', projectId, msg);
+    return Meteor.call('systemSuccessMessage', projectId, msg, itemId);
 };
 
 MessageApi.prototype.saveMessage = function(projectId, errMsg) {

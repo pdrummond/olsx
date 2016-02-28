@@ -524,6 +524,7 @@ header.black {
 }
 
 .markdown-content blockquote {
+    margin-top:5px;
     border-left: 2px solid #aaa;
     padding: 10px;
     padding-left: 20px;

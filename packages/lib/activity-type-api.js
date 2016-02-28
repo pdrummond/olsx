@@ -1,3 +1,3 @@
-Ols.Activity = {
-    ACTIVITY_TYPE_STANDARD: 'standard'
+Ols.ActivityType = {
+    ACTIVITY_TYPE_ITEM: 'item'
 };

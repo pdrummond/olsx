@@ -34,16 +34,20 @@ MessageListContainer = React.createClass({
                 We also need to check for "detail mode" - if the message history is only showing the messages for
                 one task, then being in the same project isn't good enough - we need to check that the message contains
                 a ref to the item.  Rather than check the Refs collection which would be quite heavyweight, we just
-                use a string comparision to test for the ref.
-
+                use a string comparison to test for the ref.  That is, unless the message is an activity message, in
+                which case it will already have an itemId so we can just check for that instead.
              */
             var ok = false;
             if(msg.projectId == self.props.projectId) {
                 ok = true;
             }
             if(ok && self.props.currentItem) {
-                var currentItemKey = '#' + self.props.currentItem.projectKey + '-' + self.props.currentItem.seq;
-                ok = msg.content.indexOf(currentItemKey) != -1;
+                if(msg.itemId == self.props.currentItem._id) {
+                    ok = true;
+                } else {
+                    var currentItemKey = '#' + self.props.currentItem.projectKey + '-' + self.props.currentItem.seq;
+                    ok = msg.content.indexOf(currentItemKey) != -1;
+                }
             }
 
             if(ok) {
@@ -142,7 +146,7 @@ MessageListContainer = React.createClass({
             projectId: this.props.projectId,
             startMessageSeq: this.props.startMessageSeq,
             messagesCountLimit: this.props.messagesCountLimit,
-            currentItemId: currentItemId,
+            currentItemId: currentItemId
         }, function (err, result) {
             if (err) {
                 toastr.error('Error loading messages', err.reason);

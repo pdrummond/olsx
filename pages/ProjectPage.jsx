@@ -41,9 +41,11 @@ ProjectPage = React.createClass({
            return (
                <div className="main-container">
                    <div className="empty-project-list">
-                       <p><b>Welcome to OpenLoops</b></p>
+                       <p><b style={{fontSize:'20px'}}>Welcome to OpenLoops</b></p>
                        <div><i className="fa fa-adjust" style={{'fontSize':'20em', 'color': '#703470'}}></i></div>
                        <p>Please login or sign-up to continue</p>
+                       <p>To do so, click on the sign-in link at top-right of this page</p>
+                       <p><i>Not exactly intuitive I know -  I'm working on it - but there is soooo much to do! ;-)</i></p>
                    </div>
                </div>
            );

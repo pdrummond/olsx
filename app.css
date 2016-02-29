@@ -340,7 +340,7 @@ input {
 
 
 .empty-project-list {
-    width: 400px;
+    width: 500px;
     margin: auto auto;
     margin-top: 200px;
     color: gray;
@@ -447,6 +447,11 @@ header {
     transition: background-color 1000ms ease;
 }
 
+header h2 {
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
 header.blue {
     background: #0079BF;
     border-bottom: 5px solid #01588A;
@@ -474,7 +479,7 @@ header.black {
 
 header.conversation {
     background: #E6E6E6;
-    border-bottom: 1px solid lightgray;
+    border-bottom: 5px solid lightgray;
     color:gray;
 }
 

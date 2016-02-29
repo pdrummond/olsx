@@ -1,9 +1,18 @@
 Accounts.onCreateUser(function(options, user) {
     console.log("newUser: " + JSON.stringify(user));
 
-    var email = user.emails[0].address;
+    var gravatarSource;
+    var email;
+    if(user.emails) {
+        email = user.emails[0].address;
+        gravatarSource = email;
+    } else {
+        gravatarSource = user.username;
+    }
 
-    user.profileImage = Gravatar.imageUrl(email, {size: 50, default: 'wavatar'});
+    user.profileImage = Gravatar.imageUrl(gravatarSource, {size: 50, default: 'wavatar'});
+
+
 
     // We still want the default hook's 'profile' behavior.
     if (options.profile) {

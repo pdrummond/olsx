@@ -45,9 +45,9 @@ ProjectView = React.createClass({
             return (
                 <div className="view-container">
                     <div className="empty-project-list">
-                        <p><b>Welcome to OpenLoops!</b></p>
-                        <div><i className="fa fa-smile-o" style={{'fontSize':'20em', 'color': '#FF7503'}}></i></div>
-                        <p>To get started, either create a new project or select an existing one.</p>
+                        <p><b style={{fontSize:'20px'}}>Hello {Meteor.user().username}, welcome to OpenLoops :-) </b></p>
+                        <div><img src='/images/loopbot-medium.png'/></div>
+                        <p style={{marginTop:'10px'}}>To get started, just click on one of the top-left buttons to create a project or a conversation.</p>
                     </div>
                 </div>
             );

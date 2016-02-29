@@ -7,9 +7,10 @@ MemberListContainer = React.createClass({
                     <input className="new-member-input"
                            type="text"
                            ref="textInput"
-                           placeholder="Type email/username to add member"/>
+                           placeholder="Type username to add member"/>
                 </form>
                 <MemberList
+                    showMembersOnly={this.props.showMembersOnly}
                     memberList={this.props.memberList} />
             </div>
         )

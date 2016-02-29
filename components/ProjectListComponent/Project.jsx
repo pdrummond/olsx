@@ -10,8 +10,8 @@ Project = React.createClass({
         return (
             <li onClick={this.onClick} className={this.getClassName()}>
                 <div>
-                    <span className="project-title"><i className="fa fa-bullseye"></i> {this.props.project.title}
-                        <small style={{color:'lightgray', marginLeft:'2px', fontWeight:'bold'}}>{this.props.project.key}</small>
+                    <span className="project-title"><i className={this.getProjectTitleClassName()}></i> {this.props.project.title}
+                        {this.renderProjectKey()}
                     </span>
                     <div>
                         <div style={{fontSize:'12px', color:'gray', position:'relative'}}>
@@ -25,6 +25,20 @@ Project = React.createClass({
 
             </li>
         )
+    },
+
+    renderProjectKey() {
+        if(this.props.project.type == Ols.Project.PROJECT_TYPE_STANDARD) {
+            return <small style={{color:'lightgray', marginLeft:'2px', fontWeight:'bold'}}>{this.props.project.key}</small>;
+        }
+    },
+
+    getProjectTitleClassName() {
+        if(this.props.project.type == Ols.Project.PROJECT_TYPE_STANDARD) {
+            return "fa fa-bullseye";
+        } else {
+            return "fa fa-comments";
+        }
     },
 
     getClassName() {

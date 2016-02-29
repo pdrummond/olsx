@@ -7,6 +7,14 @@ Member = React.createClass({
         }
     },
 
+    getProjectTypeLabel: function() {
+        if(this.props.showMembersOnly) {
+            return 'conversation';
+        } else {
+            return 'project';
+        }
+    },
+
     getMeteorData() {
         var user = Meteor.users.findOne(this.props.member.userId);
         var data = {};
@@ -16,7 +24,7 @@ Member = React.createClass({
                     ? 'viewing' : 'online'
                 : 'offline';
         switch(data.userStatus) {
-            case 'viewing': data.userStatusLabel = 'Viewing this project'; break;
+            case 'viewing': data.userStatusLabel = 'Viewing this ' + this.getProjectTypeLabel(); break;
             case 'online': data.userStatusLabel = 'Online, elsewhere'; break;
             case 'offline': data.userStatusLabel = 'Offline'; break;
         }

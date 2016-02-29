@@ -18,7 +18,16 @@ MessageListContainer = React.createClass({
         }
     },
 
+    componentDidMount: function () {
+        //console.trace("MessageListContainer.componentDidMount");
+    },
+
+    componentDidUpdate: function () {
+        //console.trace("MessageListContainer.componentDidUpdate");
+    },
+
     getMeteorData() {
+        //console.trace("MessageListContainer.getMeteorData");
         var self = this;
         Streamy.on('incomingMessage', function(msg) {
             console.log("incoming message received: " + JSON.stringify(msg, null, 4));
@@ -94,6 +103,7 @@ MessageListContainer = React.createClass({
                 showBackwardLink={this.state.showBackwardLink}
                 incomingMessageCount={this.state.incomingMessageCount}
                 projectId={this.props.projectId}
+                projectType={this.props.projectType}
                 onMessageAdded={this.onMessageAdded}
                 onUserIsTyping={this.onUserIsTyping}
                 onLoadOlderLinkClicked={this.onLoadOlderLinkClicked}

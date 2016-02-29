@@ -13,6 +13,22 @@ RightSidebarComponent = React.createClass({
     },
 
     render() {
+        if(this.props.showMembersOnly) {
+            return (
+            <div className="right-sidebar-container">
+                <div className="dropdown">
+                    <button className="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                        Members <span className="caret"></span>
+                    </button>
+                    <ul className="dropdown-menu" aria-labelledby="dropdownMenu1">
+                        <li className="dropdown-header">Only Member View is available for conversations</li>
+                    </ul>
+                </div>
+                {this.renderMembersComponent()}
+            </div>
+            );
+        } else {
+
         return (
             <div className="right-sidebar-container">
                 <div className="dropdown">
@@ -44,9 +60,9 @@ RightSidebarComponent = React.createClass({
                     </ul>
                 </div>
                 {this.renderSelectedComponent()}
-
             </div>
         )
+        }
     },
 
     onProjectSummaryClicked() {
@@ -115,6 +131,10 @@ RightSidebarComponent = React.createClass({
 
     onClosedItemsClicked() {
         FlowRouter.go('projectPageLatest', {projectId: this.props.projectId}, {'rightView': 'CLOSED_ITEMS'});
+    },
+
+    renderMembersComponent() {
+        return <MemberListContainer showMembersOnly={true} projectId={this.props.projectId} memberList={this.props.memberList}/>;
     },
 
     renderSelectedComponent() {

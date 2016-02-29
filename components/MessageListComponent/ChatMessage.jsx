@@ -58,8 +58,8 @@ ChatMessage = React.createClass({
                     <li><a onClick={this.onCreateBugClicked} href="#">Create Bug from this message</a></li>
                     <li><a onClick={this.onCreateQuestionClicked} href="#">Create Question from this message</a></li>
                     <li><a onClick={this.onCreateDiscussionClicked} href="#">Create Discussion from this message</a></li>
-                    <li role="separator" className="divider"></li>
-                    <li><a onClick={this.onAddRefClicked} href="#">Add Item Reference</a></li>
+                    <li className={this.props.projectType == Ols.Project.PROJECT_TYPE_STANDARD ? 'divider':'divider hide'} role="separator"></li>
+                    <li className={this.props.projectType == Ols.Project.PROJECT_TYPE_STANDARD ? '':'hide'}><a onClick={this.onAddRefClicked} href="#">Add Item Reference</a></li>
                     <li role="separator" className="divider"></li>
                     <li><a onClick={this.onDeleteClicked} href="#">Delete Message</a></li>
                 </ul>
@@ -127,12 +127,28 @@ ChatMessage = React.createClass({
 
     addItem(type, subType) {
         var self = this;
+        if(this.props.projectType == Ols.Project.PROJECT_TYPE_STANDARD) {
+            this.doAddItem(this.props.message.projectId, type, subType);
+        } else {
+            bootbox.prompt({title: "Enter Project ID (!!this is temporary for POC only!!!):", callback: function(projectId) {
+                if (projectId !== null) {
+                    projectId = projectId.trim();
+                    if(projectId.length > 0) {
+                        self.doAddItem(projectId, type, subType)
+                    }
+                }
+            }});
+        }
+    },
+
+    doAddItem(projectId, type, subType) {
         Items.methods.addItem.call({
             description: this.props.message.content,
-            projectId: this.props.message.projectId,
+            projectId: projectId,
             type: type,
             subType: subType,
-            status: Ols.Status.OPEN
+            status: Ols.Status.OPEN,
+            createdFromMessageId: this.props.message._id
         }, (err, item) => {
             if (err) {
                 if (err.reason) {

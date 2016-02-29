@@ -9,14 +9,15 @@ ProjectPage = React.createClass({
     },
 
     componentDidMount: function () {
-        console.trace("ProjectPage.componentDidMount");
+        //console.trace("ProjectPage.componentDidMount");
     },
 
     componentDidUpdate: function () {
-        console.trace("ProjectPage.componentDidUpdate");
+        //console.trace("ProjectPage.componentDidUpdate");
     },
 
     getMeteorData() {
+        //console.trace("ProjectPage.getMeteorData");
         var data = {};
         data.projectList = [];
         var projectsHandle = Meteor.subscribe('projects');

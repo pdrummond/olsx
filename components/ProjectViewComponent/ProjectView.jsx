@@ -2,6 +2,7 @@ ProjectView = React.createClass({
     mixins: [ReactMeteorData],
 
     getMeteorData() {
+        //console.trace("ProjectView.getMeteorData");
         var data = {};
         data.currentProject = {};
         data.currentProjectId = FlowRouter.getParam('projectId');
@@ -50,41 +51,55 @@ ProjectView = React.createClass({
                     </div>
                 </div>
             );
-        } else if(this.data.canShow == false) {
-            return (
-                <div className="view-container">
-                    <div className="empty-project-list">
-                        <p><b>Computer says no!</b></p>
-                        <div><i className="fa fa-frown-o" style={{'fontSize':'20em', 'color': '#703470'}}></i></div>
-                        <p>Sorry, you aren't a member of this project</p>
-                    </div>
-                </div>
-            );
         } else {
             return (
-                <div className="view-container">
-                    <RightSidebarComponent
-                        projectId={this.data.currentProject._id}
-                        memberList={this.data.memberList}
-                    />
+                <div className={this.getProjectContainerClassName()}>
+                    {this.renderRightSidebar()}
                     {this.renderHeader()}
                     <MessageListContainer
                         ref="messageListContainer"
                         projectId={this.data.currentProject._id}
+                        projectType={this.data.currentProject.type}
                         currentItem={this.data.currentItem}
                         startMessageSeq={this.data.startMessageSeq}
                         messagesCountLimit={this.data.messagesCountLimit}
                         onOtherProjectNewMessage={this.props.onOtherProjectNewMessage} />
                 </div>
             );
+
+        }
+    },
+
+    renderRightSidebar() {
+        if(this.data.currentProject.type == Ols.Project.PROJECT_TYPE_STANDARD) {
+            return <RightSidebarComponent
+                projectId={this.data.currentProject._id}
+                memberList={this.data.memberList}
+            />;
+        } else {
+            return <RightSidebarComponent
+                projectId={this.data.currentProject._id}
+                memberList={this.data.memberList}
+                showMembersOnly={true}
+            />;
+        }
+    },
+
+    getProjectContainerClassName() {
+        if(this.data.currentProject.type == Ols.Project.PROJECT_TYPE_STANDARD) {
+            return 'view-container project-container';
+        } else {
+            return 'view-container conversation-container';
         }
     },
 
     getHeaderClassName() {
-        if(this.data.currentItem) {
+        if(this.data.currentProject.type == Ols.Project.PROJECT_TYPE_CONVERSATION) {
+            return 'conversation';
+        } else if(this.data.currentItem) {
             return 'black';
         } else {
-            return this.data.currentProject.theme || 'blue';
+            return this.data.currentProject.theme || '';
         }
     },
 
@@ -124,27 +139,54 @@ ProjectView = React.createClass({
                 return (
                     <header className={this.getHeaderClassName()}>
                         <h2>
-                            <i className="fa fa-bullseye"></i> {this.data.currentProject.title} <span
+                            <i className={this.getProjectTitleClassName()}></i> {this.data.currentProject.title} <span
                             className="pull-right dropdown">
                         <button className="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1"
                                 data-toggle="dropdown">
                             <span className="caret"></span>
                         </button>
-                        <ul className="dropdown-menu" aria-labelledby="dropdownMenu1">
-                            <li><a onClick={this.onRenameLinkClicked} href="#">Rename Project</a></li>
-                            <li role="separator" className="divider"></li>
-                            <li><a onClick={this.onBlueThemeLinkClicked} href="#">Set Blue Theme</a></li>
-                            <li><a onClick={this.onRedThemeLinkClicked} href="#">Set Red Theme</a></li>
-                            <li><a onClick={this.onGreenThemeLinkClicked} href="#">Set Green Theme</a></li>
-                            <li><a onClick={this.onPurpleThemeLinkClicked} href="#">Set Purple Theme</a></li>
-                            <li role="separator" className="divider"></li>
-                            <li><a href="#" onClick={this.onDeleteLinkClicked}>Delete Project</a></li>
-                        </ul>
+                        {this.renderDropdownMenu()}
                     </span>
                         </h2>
                     </header>
                 );
             }
+        }
+    },
+
+    getProjectTypeLabel() {
+        return this.data.currentProject.type == Ols.Project.PROJECT_TYPE_STANDARD ? 'project' : 'conversation';
+    },
+
+    renderDropdownMenu() {
+        if(this.data.currentProject.type == Ols.Project.PROJECT_TYPE_STANDARD) {
+            return (
+                <ul className="dropdown-menu" aria-labelledby="dropdownMenu1">
+                    <li><a onClick={this.onRenameLinkClicked} href="#">Rename Project</a></li>
+                    <li role="separator" className="divider"></li>
+                    <li><a onClick={this.onBlueThemeLinkClicked} href="#">Set Blue Theme</a></li>
+                    <li><a onClick={this.onRedThemeLinkClicked} href="#">Set Red Theme</a></li>
+                    <li><a onClick={this.onGreenThemeLinkClicked} href="#">Set Green Theme</a></li>
+                    <li><a onClick={this.onPurpleThemeLinkClicked} href="#">Set Purple Theme</a></li>
+                    <li role="separator" className="divider"></li>
+                    <li><a href="#" onClick={this.onDeleteLinkClicked}>Delete Project</a></li>
+                </ul>
+            );
+        } else {
+            return (
+                <ul className="dropdown-menu" aria-labelledby="dropdownMenu1">
+                    <li><a onClick={this.onRenameLinkClicked} href="#">Rename Conversation</a></li>
+                    <li><a href="#" onClick={this.onDeleteLinkClicked}>Delete Conversation</a></li>
+                </ul>
+            );
+        }
+    },
+
+    getProjectTitleClassName() {
+        if(this.data.currentProject.type == Ols.Project.PROJECT_TYPE_STANDARD) {
+            return "fa fa-bullseye";
+        } else {
+            return "fa fa-comments";
         }
     },
 
@@ -178,7 +220,7 @@ ProjectView = React.createClass({
     onRenameLinkClicked: function(e) {
         e.preventDefault();
         var self = this;
-        bootbox.prompt({title: "Enter new project title:", value: this.data.currentProject.title, callback: function(title) {
+        bootbox.prompt({title: "Enter new " + this.getProjectTypeLabel() + " title:", value: this.data.currentProject.title, callback: function(title) {
             if (title !== null) {
                 Projects.methods.setTitle.call({
                     projectId: self.data.currentProject._id,
@@ -195,7 +237,7 @@ ProjectView = React.createClass({
     onDeleteLinkClicked: function(e) {
         var self = this;
         e.preventDefault();
-        bootbox.confirm("Are you sure you want to permanently delete this project?  Consider archiving it instead, if you just want to hide it from view without destroying it forever.", function(result) {
+        bootbox.confirm("Are you sure you want to permanently delete this " + this.getProjectTypeLabel() + "?  Consider archiving it instead, if you just want to hide it from view without destroying it forever.", function(result) {
             if (result == true) {
                 self.props.onDeleteLinkClicked(self.data.currentProjectId);
             }
@@ -203,7 +245,7 @@ ProjectView = React.createClass({
     },
 
     componentDidMount: function () {
-        // console.trace("ProjectPage.componentDidMount");
+        //console.trace("ProjectView.componentDidMount");
     },
 
     componentDidUpdate: function () {

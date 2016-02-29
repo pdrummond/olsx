@@ -22,8 +22,16 @@ Item = React.createClass({
         }
     },
 
+    componentDidMount: function () {
+        //console.trace("Item.componentDidMount");
+    },
+
+    componentDidUpdate: function () {
+        //console.trace("Item.componentDidUpdate");
+    },
+
     getMeteorData() {
-      //console.log("Item.getMeteorData: " + this.props.item._id);
+        //console.trace("Item.getMeteorData");
         var data = {};
         data.refList = [];
         var activityHandle = Meteor.subscribe('itemActivity', this.props.item._id);

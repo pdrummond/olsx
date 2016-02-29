@@ -174,7 +174,7 @@ Item = React.createClass({
         }
     },
 
-    renderItemStatusDropdown() {
+    renderBasicStatusDropdown() {
         return (
             <div className="btn-group">
                 <button type="button" className="btn btn-xs btn-default dropdown-toggle" data-toggle="dropdown" style={{border:'none', marginRight:'5px', backgroundColor:Ols.Status.getStatusColor(this.props.item.status)}}>
@@ -193,7 +193,7 @@ Item = React.createClass({
         );
     },
 
-    renderBasicStatusDropdown() {
+    renderItemStatusDropdown() {
         return (
             <div className="btn-group">
                 <button type="button" className="btn btn-xs btn-default dropdown-toggle" data-toggle="dropdown" style={{border:'none', marginRight:'5px', backgroundColor:Ols.Status.getStatusColor(this.props.item.status)}}>

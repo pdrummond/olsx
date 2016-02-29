@@ -17,12 +17,18 @@ ProjectListContainer = React.createClass({
     render() {
         return (
             <div className="project-list-container">
-                <div className="btn-group btn-group-justified" role="group" style={{padding:'5px'}}>
-                    <div className="btn-group" role="group">
-                        <button type="button" className="btn btn-default" onClick={this.onNewConversationClicked}>New Conversation</button>
+                <div className="btn-toolbar" role="toolbar" style={{marginTop:'20px', padding:'5px'}}>
+                    <div className="btn-group" role="group" style={{marginLeft:'15px'}}>
+                        <button type="button" className="btn btn-default" onClick={this.onNewConversationClicked}><i style={{color:'gray'}} className="fa fa-comments-o"></i> New Conversation</button>
                     </div>
-                    <div className="btn-group" role="group">
-                        <button type="button" className="btn btn-default" onClick={this.onNewProjectClicked}>New Project</button>
+                    <div className="btn-group" role="group" style={{marginLeft:'20px'}}>
+                        <button type="button" className="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                            <i style={{color:'gray'}} className="fa fa-bullseye"></i> New Project <span className="caret"></span>
+                        </button>
+                        <ul className="dropdown-menu">
+                            <li><a href="#" onClick={this.onNewProjectBasicTemplateClicked}>Basic Template</a></li>
+                            <li><a href="#" onClick={this.onNewProjectSoftwareTemplateClicked}>Software Development Template</a></li>
+                        </ul>
                     </div>
                 </div>
 
@@ -58,10 +64,18 @@ ProjectListContainer = React.createClass({
         });
     },
 
-    onNewProjectClicked(event) {
-        var self = this;
+    onNewProjectBasicTemplateClicked(event) {
         event.preventDefault();
+        this.addProject(Ols.Project.PROJECT_TEMPLATE_BASIC);
+    },
 
+    onNewProjectSoftwareTemplateClicked(event) {
+        event.preventDefault();
+        this.addProject(Ols.Project.PROJECT_TEMPLATE_SOFTWARE);
+    },
+
+    addProject(template) {
+        var self = this;
         bootbox.prompt({
             title: "Enter project title",
             callback: function (title) {
@@ -75,7 +89,7 @@ ProjectListContainer = React.createClass({
                                 if(key != null) {
                                     key = key.trim();
                                     if (key.length > 0) {
-                                        Projects.methods.addProject.call({type:Ols.Project.PROJECT_TYPE_STANDARD, title, key}, (err) => {
+                                        Projects.methods.addProject.call({type:Ols.Project.PROJECT_TYPE_STANDARD, title, key, template}, (err) => {
                                             if (err) {
                                                 toastr.error('Error creating project: ' + err.reason);
                                                 console.error('Error creating project: ' + err);

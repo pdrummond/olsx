@@ -3,6 +3,7 @@ Item = React.createClass({
 
     propTypes: {
         item: React.PropTypes.object.isRequired,
+        projectType: React.PropTypes.string,
         milestoneList: React.PropTypes.array.isRequired,
         detailMode: React.PropTypes.bool
     },
@@ -108,26 +109,34 @@ Item = React.createClass({
     },
 
     renderTypeDropdown() {
-        return(
-            <span className="dropdown pull-left" style={{width:'35px'}}>
-                <button className="item-type-dropdown-button btn btn-xs btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+        if(this.isBasicProject()) {
+            return (
+                <button style={{width:'35px'}} className="pull-left item-type-dropdown-button btn btn-xs btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown">
                     <i style={this.styles.itemIcon} className={this.getItemTypeClassName('fa fa-2x')}></i>
                 </button>
-                <ul className="dropdown-menu" aria-labelledby="dropdownMenu1">
-                    <li><a onClick={this.onTaskTypeClicked} href="#"><i className="fa fa-exclamation-circle"></i> Task</a></li>
-                    <li><a onClick={this.onBugTypeClicked} href="#"><i className="fa fa-bug"></i> Bug</a></li>
-                    <li><a onClick={this.onDiscussionTypeClicked} href="#"><i className="fa fa-comments-o"></i> Discussion</a></li>
-                    <li><a onClick={this.onQuestionTypeClicked} href="#"><i className="fa fa-question-circle"></i> Question</a></li>
-                </ul>
-            </span>
-        );
+            );
+        } else {
+            return(
+                <span className="dropdown pull-left" style={{width:'35px'}}>
+                    <button className="item-type-dropdown-button btn btn-xs btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                        <i style={this.styles.itemIcon} className={this.getItemTypeClassName('fa fa-2x')}></i>
+                    </button>
+                    <ul className="dropdown-menu" aria-labelledby="dropdownMenu1">
+                        <li><a onClick={this.onTaskTypeClicked} href="#"><i className="fa fa-exclamation-circle"></i> Task</a></li>
+                        <li><a onClick={this.onBugTypeClicked} href="#"><i className="fa fa-bug"></i> Bug</a></li>
+                        <li><a onClick={this.onDiscussionTypeClicked} href="#"><i className="fa fa-comment"></i> Discussion</a></li>
+                        <li><a onClick={this.onQuestionTypeClicked} href="#"><i className="fa fa-question-circle"></i> Question</a></li>
+                    </ul>
+                </span>
+            );
+        }
     },
 
     getItemTypeClassName(className) {
         switch(this.props.item.subType) {
             case Ols.Item.ACTION_SUBTYPE_TASK: className += ' fa-exclamation-circle'; break;
             case Ols.Item.ISSUE_SUBTYPE_BUG: className += ' fa-bug'; break;
-            case Ols.Item.INFO_SUBTYPE_DISCUSSION: className += ' fa-comments-o'; break;
+            case Ols.Item.INFO_SUBTYPE_DISCUSSION: className += ' fa-comment'; break;
             case Ols.Item.INFO_SUBTYPE_QUESTION: className += ' fa-question-circle'; break;
         }
         return className;
@@ -145,7 +154,11 @@ Item = React.createClass({
         if(this.props.item.subType == 'question') {
             return this.renderQuestionStatusDropdown();
         } else {
-            return this.renderItemStatusDropdown();
+            if(this.props.projectTemplate == Ols.Project.PROJECT_TEMPLATE_BASIC) {
+                return this.renderBasicStatusDropdown();
+            } else {
+                return this.renderItemStatusDropdown();
+            }
         }
     },
 
@@ -162,6 +175,25 @@ Item = React.createClass({
     },
 
     renderItemStatusDropdown() {
+        return (
+            <div className="btn-group">
+                <button type="button" className="btn btn-xs btn-default dropdown-toggle" data-toggle="dropdown" style={{border:'none', marginRight:'5px', backgroundColor:Ols.Status.getStatusColor(this.props.item.status)}}>
+                    <span className="label label-borderless"><i className="fa fa-circle"></i> {Ols.Status.getStatusLabel(this.props.item.status)}</span>
+                </button>
+                <ul className="dropdown-menu">
+                    {/*<li><a href="" onClick={this.onStatusNewClicked}> <i className="fa fa-circle" style={{color: Ols.Status.getStatusColor(Ols.Status.NEW)}}></i> New</a></li>*/}
+                    <li><a href="" onClick={this.onStatusOpenClicked}> <i className="fa fa-circle" style={{color: Ols.Status.getStatusColor(Ols.Status.OPEN)}}></i> Open</a></li>
+                    <li><a href="" onClick={this.onStatusInProgressClicked}> <i className="fa fa-circle" style={{color: Ols.Status.getStatusColor(Ols.Status.IN_PROGRESS)}}></i> In Progress</a></li>
+                    <li><a href="" onClick={this.onStatusBlockedClicked}> <i className="fa fa-circle" style={{color: Ols.Status.getStatusColor(Ols.Status.BLOCKED)}}></i> Blocked</a></li>
+                    <li role="separator" className="divider"></li>
+                    <li><a href="" onClick={this.onStatusDoneClicked}> <i className="fa fa-circle" style={{color: Ols.Status.getStatusColor(Ols.Status.DONE)}}></i> Done</a></li>
+                    <li><a href="" onClick={this.onStatusRejectedClicked}> <i className="fa fa-circle" style={{color: Ols.Status.getStatusColor(Ols.Status.REJECTED)}}></i> Rejected</a></li>
+                </ul>
+            </div>
+        );
+    },
+
+    renderBasicStatusDropdown() {
         return (
             <div className="btn-group">
                 <button type="button" className="btn btn-xs btn-default dropdown-toggle" data-toggle="dropdown" style={{border:'none', marginRight:'5px', backgroundColor:Ols.Status.getStatusColor(this.props.item.status)}}>
@@ -226,19 +258,25 @@ Item = React.createClass({
         return className;
     },
 
+    isBasicProject() {
+        return this.props.projectTemplate == Ols.Project.PROJECT_TEMPLATE_BASIC;
+    },
+
     renderMilestoneDropdown() {
-        return (
-            <span className="dropdown">
-                <button className={this.getMilestoneDropdownClassName()} type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                    {this.renderMilestoneLabel()} <span className="caret"></span>
-                </button>
-                <ul className="dropdown-menu" aria-labelledby="dropdownMenu1">
-                    {this.renderMilestoneDropdownItems()}
-                    <li role="separator" className="divider"></li>
-                    <li><a onClick={this.onBacklogClicked} href="#">Backlog</a></li>
-                </ul>
-            </span>
-        );
+        if(!this.isBasicProject()) {
+            return (
+                <span className="dropdown">
+                    <button className={this.getMilestoneDropdownClassName()} type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                        {this.renderMilestoneLabel()} <span className="caret"></span>
+                    </button>
+                    <ul className="dropdown-menu" aria-labelledby="dropdownMenu1">
+                        {this.renderMilestoneDropdownItems()}
+                        <li role="separator" className="divider"></li>
+                        <li><a onClick={this.onBacklogClicked} href="#">Backlog</a></li>
+                    </ul>
+                </span>
+            );
+        }
     },
 
     renderMilestoneDropdownItems() {
@@ -311,25 +349,7 @@ Item = React.createClass({
                         <button type="button" className={this.getActivityLinkClassName()} onClick={this.onActivityClicked}><i className="fa fa-exchange"></i> Activity</button>
                     </div>
                     <div className="pull-right">
-                        <div className="dropdown" style={{position:'relative',top:'0px'}}>
-                            <button className="btn btn-xs btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                                <i className="fa fa-ellipsis-v"></i>
-                            </button>
-                            <ul className="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenu1">
-                                <li><a href="">Show Details</a></li>
-                                <li><a onClick={this.onUpdateDescriptionClicked} href="">Update Description</a></li>
-                                <li><a onClick={this.onRenameClicked} href="">Rename</a></li>
-                                <li role="separator" className="divider"></li>
-                                <li><a onClick={this.onChangeAssigneeClicked} href="">Change Assignee</a></li>
-                                <li><a onClick={this.onRemoveAssigneeClicked} href="">Remove Assignee</a></li>
-                                <li role="separator" className="divider"></li>
-                                <li><a onClick={this.onSetPriorityClicked} href="">Set Priority</a></li>
-                                <li><a onClick={this.onRemovePriorityClicked} href="">Remove Priority</a></li>
-                                <li role="separator" className="divider"></li>
-                                <li><a href="" onClick={this.onArchivedClicked}>{this.renderArchiveLabel()}</a></li>
-                                <li><a href="" onClick={this.onDeleteClicked}>Delete</a></li>
-                            </ul>
-                        </div>
+                        {this.renderItemDropdown()}
                     </div>
 
                 </div>
@@ -337,6 +357,30 @@ Item = React.createClass({
         } else {
             return <div></div>
         }
+    },
+
+    renderItemDropdown() {
+        return (
+            <div className="dropdown" style={{position:'relative',top:'0px'}}>
+                <button className="btn btn-xs btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                    <i className="fa fa-ellipsis-v"></i>
+                </button>
+                <ul className="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenu1">
+                    <li><a onClick={this.onUpdateDescriptionClicked} href="">Update Description</a></li>
+                    <li><a onClick={this.onRenameClicked} href="">Rename</a></li>
+                    <li role="separator" className="divider"></li>
+                    <li><a onClick={this.onAssignToMeClicked} href="">Assign to me</a></li>
+                    <li><a onClick={this.onChangeAssigneeClicked} href="">Change Assignee</a></li>
+                    <li><a onClick={this.onRemoveAssigneeClicked} href="">Remove Assignee</a></li>
+                    <li role="separator" className="divider"></li>
+                    <li><a onClick={this.onSetPriorityClicked} href="">Set Priority</a></li>
+                    <li><a onClick={this.onRemovePriorityClicked} href="">Remove Priority</a></li>
+                    <li role="separator" className="divider"></li>
+                    <li><a href="" onClick={this.onArchivedClicked}>{this.renderArchiveLabel()}</a></li>
+                    <li><a href="" onClick={this.onDeleteClicked}>Delete</a></li>
+                </ul>
+            </div>
+        );
     },
 
     getDescriptionLinkClassName() {
@@ -641,6 +685,18 @@ Item = React.createClass({
                         }
                     }
                 });
+            }
+        });
+    },
+
+    onAssignToMeClicked(e) {
+        e.preventDefault();
+        Items.methods.setAssignee.call({
+            itemId: self.props.item._id,
+            assignee: Meteor.user().username,
+        }, (err) => {
+            if (err) {
+                toastr.error("Error assigning item to current user: " + err.reason);
             }
         });
     },

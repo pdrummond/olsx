@@ -71,18 +71,10 @@ ProjectView = React.createClass({
     },
 
     renderRightSidebar() {
-        if(this.data.currentProject.type == Ols.Project.PROJECT_TYPE_STANDARD) {
-            return <RightSidebarComponent
-                projectId={this.data.currentProject._id}
-                memberList={this.data.memberList}
-            />;
-        } else {
-            return <RightSidebarComponent
-                projectId={this.data.currentProject._id}
-                memberList={this.data.memberList}
-                showMembersOnly={true}
-            />;
-        }
+        return <RightSidebarComponent
+            projectId={this.data.currentProject._id}
+            memberList={this.data.memberList}
+            currentProject={this.data.currentProject} />;
     },
 
     getProjectContainerClassName() {
@@ -99,7 +91,7 @@ ProjectView = React.createClass({
         } else if(this.data.currentItem) {
             return 'black';
         } else {
-            return this.data.currentProject.theme || '';
+            return this.data.currentProject.theme || 'blue';
         }
     },
 
@@ -112,7 +104,7 @@ ProjectView = React.createClass({
         } else if(this.data.currentItem.subType == Ols.Item.INFO_SUBTYPE_QUESTION) {
            className += ' fa-question';
         } else if(this.data.currentItem.subType == Ols.Item.INFO_SUBTYPE_DISCUSSION) {
-            className += ' fa-comments-o';
+            className += ' fa-comment';
         }
         return className;
     },

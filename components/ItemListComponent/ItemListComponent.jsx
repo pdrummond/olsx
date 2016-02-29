@@ -3,6 +3,7 @@ ItemListComponent = React.createClass({
 
     propTypes: {
         projectId: React.PropTypes.string.isRequired,
+        projectTemplate: React.PropTypes.string,
         filter: React.PropTypes.object,
         newItemType: React.PropTypes.string,
         newItemSubType: React.PropTypes.string,
@@ -51,12 +52,16 @@ ItemListComponent = React.createClass({
                     <input className="filter-item-input"
                            type="text"
                            ref="filterInput"
-                           placeholder="Type here to create item/filter list"
+                           placeholder={this.renderPlaceholder()}
                            onKeyUp={this.onKeyUp} />
                 </form>
                 {this.renderItemList()}
             </div>
         )
+    },
+
+    renderPlaceholder() {
+        return "Type here to create " + this.props.newItemSubType + "/filter list";
     },
 
     renderItemList() {
@@ -68,6 +73,7 @@ ItemListComponent = React.createClass({
             }
         } else {
             return <ItemList
+                projectTemplate={this.props.projectTemplate}
                 milestoneList={this.data.milestoneList}
                 itemList={this.data.itemList}/>
         }

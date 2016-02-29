@@ -29,7 +29,7 @@ ItemDetailComponent = React.createClass({
         } else {
             return (
                 <div id="item-detail-component">
-                    <Item item={this.data.currentItem} detailMode={true} milestoneList={this.data.milestoneList} />
+                    <Item projectTemplate={this.props.projectTemplate} item={this.data.currentItem} detailMode={true} milestoneList={this.data.milestoneList} />
                 </div>
             );
         }

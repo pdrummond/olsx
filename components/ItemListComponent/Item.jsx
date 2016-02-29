@@ -692,8 +692,8 @@ Item = React.createClass({
     onAssignToMeClicked(e) {
         e.preventDefault();
         Items.methods.setAssignee.call({
-            itemId: self.props.item._id,
-            assignee: Meteor.user().username,
+            itemId: this.props.item._id,
+            assignee: Meteor.user().username
         }, (err) => {
             if (err) {
                 toastr.error("Error assigning item to current user: " + err.reason);

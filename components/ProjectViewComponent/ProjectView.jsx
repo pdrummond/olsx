@@ -41,7 +41,7 @@ ProjectView = React.createClass({
     },
 
     render() {
-        if (this.data.currentProjectId == null) {
+        if (this.data.currentProjectId == null && Meteor.user() != null) {
             return (
                 <div className="view-container">
                     <div className="empty-project-list">

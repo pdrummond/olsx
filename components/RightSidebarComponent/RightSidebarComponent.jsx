@@ -37,7 +37,7 @@ RightSidebarComponent = React.createClass({
                             </button>
                             <ul className="dropdown-menu" aria-labelledby="dropdownMenu1">
                                 <li><a onClick={this.onActionsClicked} href="">Open Tasks</a></li>
-                                <li><a onClick={this.onArchivedClicked} href="">Archived Task</a></li>
+                                <li><a onClick={this.onArchivedClicked} href="">Archived Tasks</a></li>
                                 <li role="separator" className="divider"></li>
                                 <li><a onClick={this.onMyItemsClicked} href="">My Tasks</a></li>
                                 <li><a onClick={this.onItemsInProgressClicked} href="">Tasks In Progress</a></li>

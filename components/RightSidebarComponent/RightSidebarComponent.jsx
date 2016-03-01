@@ -80,6 +80,7 @@ RightSidebarComponent = React.createClass({
                                 <li><a onClick={this.onBlockedItemsClicked} href="">Blocked Items</a></li>
                                 <li><a onClick={this.onItemsInTestClicked} href="">Items In Test</a></li>
                                 <li><a onClick={this.onClosedItemsClicked} href="">Closed Items</a></li>
+                                <li><a onClick={this.onOutOfScopeItemsClicked} href="">Out of Scope Items</a></li>
                             </ul>
                         </div>
                         {this.renderSelectedComponent()}
@@ -157,6 +158,10 @@ RightSidebarComponent = React.createClass({
         FlowRouter.go('projectPageLatest', {projectId: this.props.projectId}, {'rightView': 'CLOSED_ITEMS'});
     },
 
+    onOutOfScopeItemsClicked() {
+        FlowRouter.go('projectPageLatest', {projectId: this.props.projectId}, {'rightView': 'OUT_OF_SCOPE_ITEMS'});
+    },
+
     renderMembersComponent() {
         return <MemberListContainer
             showMembersOnly={this.props.currentProject.type == Ols.Project.PROJECT_TYPE_CONVERSATION}
@@ -196,6 +201,7 @@ RightSidebarComponent = React.createClass({
                 case 'ALL_ITEMS': return <AllItemsComponent projectId={this.props.projectId} projectTemplate={this.props.currentProject.template} />;
                 case 'ITEMS_IN_PROGRESS': return <InProgressItemsComponent projectId={this.props.projectId} projectTemplate={this.props.currentProject.template} />;
                 case 'BLOCKED_ITEMS': return <BlockedItemsComponent projectId={this.props.projectId} projectTemplate={this.props.currentProject.template} />;
+                case 'OUT_OF_SCOPE_ITEMS': return <OutOfScopeItemsComponent projectId={this.props.projectId} projectTemplate={this.props.currentProject.template} />;
                 case 'ITEMS_IN_TEST': return <InTestItemsComponent projectId={this.props.projectId} projectTemplate={this.props.currentProject.template} />;
                 case 'CLOSED_ITEMS': return <ClosedItemsComponent projectId={this.props.projectId} projectTemplate={this.props.currentProject.template} />;
             }
@@ -222,6 +228,7 @@ RightSidebarComponent = React.createClass({
             case 'WORK_ITEMS': return 'Work Items';
             case 'ITEMS_IN_PROGRESS': return this.isBasicProject()?'Tasks In Progress':'Items In Progress';
             case 'BLOCKED_ITEMS': return this.isBasicProject()?'Blocked Tasks':'Blocked Items';
+            case 'OUT_OF_SCOPE_ITEMS': return 'Out of Scope Items';
             case 'ITEMS_IN_TEST': return 'Items In Test';
             case 'CLOSED_ITEMS': return this.isBasicProject()?'Closed Tasks':'Closed Items';
         }

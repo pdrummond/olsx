@@ -27,10 +27,8 @@ chrismbeckett:toastr
 accounts-ui
 accounts-password
 osv:mongo-counter
-ols:task-command
 ols:lib
 jparker:gravatar
-ols:project-command
 yasaricli:slugify
 mdg:validated-method
 aldeed:simple-schema
@@ -46,3 +44,4 @@ mizzao:bootboxjs
 
 check
 ols:github
+markoshust:material-ui

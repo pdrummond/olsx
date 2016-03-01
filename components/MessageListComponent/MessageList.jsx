@@ -25,7 +25,11 @@ MessageList = React.createClass({
                             return <SystemMessage key={message._id} message={message}/>;
                             break;
                         case Ols.MESSAGE_TYPE_CHAT:
-                            return <ChatMessage projectType={this.props.projectType} key={message._id} message={message}/>;
+                            return <ChatMessage
+                                projectType={this.props.projectType}
+                                key={message._id}
+                                message={message}
+                                onAddItem={this.props.onAddItem}/>;
                             break;
                         default:
                         {

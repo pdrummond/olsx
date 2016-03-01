@@ -56,6 +56,7 @@ less@2.5.1
 livedata@1.0.15
 localstorage@1.0.5
 logging@1.0.8
+markoshust:material-ui@0.14.2
 mdg:validated-method@1.0.1
 mdg:validation-error@0.2.0
 meteor@1.1.10
@@ -78,8 +79,6 @@ oaf:html5-desktop-notifications@1.0.0
 observe-sequence@1.0.7
 ols:github@0.0.1
 ols:lib@0.0.1
-ols:project-command@0.0.1
-ols:task-command@0.0.1
 ordered-dict@1.0.4
 osv:mongo-counter@0.2.1
 peerlibrary:assert@0.2.5

@@ -1,10 +1,13 @@
+const { Snackbar } = mui;
 
 ProjectPage = React.createClass({
     mixins: [ReactMeteorData],
 
     getInitialState() {
         return {
-            incomingMessages: []
+            incomingMessages: [],
+            snackBarMessage: '',
+            showSnackBar: false
         };
     },
 
@@ -52,13 +55,24 @@ ProjectPage = React.createClass({
         } else {
             return (
                 <div className="view-container">
+                    <ProjectSelectorComponent
+                        ref="projectSelectorComponent"
+                        projectList={this.data.projectList}
+                        onProjectSelected={this.onProjectSelected}/>
                     <ProjectListContainer
                         incomingMessages={this.state.incomingMessages}
                         onProjectClicked={this.onProjectClicked}
                         projectList={this.data.projectList}/>
                     <ProjectView
+                        onAddItem={this.onAddItem}
                         onDeleteLinkClicked={this.onDeleteLinkClicked}
                         onOtherProjectNewMessage={this.onOtherProjectNewMessage}/>
+                    <Snackbar
+                        open={this.state.showSnackBar}
+                        message={this.state.snackBarMessage}
+                        autoHideDuration={4000}
+                        onRequestClose={this.onSnackBarClose}
+                        />
                 </div>
             );
         }
@@ -97,5 +111,48 @@ ProjectPage = React.createClass({
             }
         });
         FlowRouter.go('homePage');
+    },
+
+    onProjectSelected(projectId, message, type, subType) {
+        this.doAddItem(projectId, message, type, subType);
+    },
+
+    onAddItem(message, type, subType) {
+        var self = this;
+        if(this.props.projectType == Ols.Project.PROJECT_TYPE_STANDARD) {
+            this.doAddItem(message.projectId, message, type, subType);
+        } else {
+            this.refs.projectSelectorComponent.setState({open:true, title: 'Create ' + subType + ' in which project?', message, type, subType})
+        }
+    },
+
+    doAddItem(projectId, message, type, subType) {
+        var self = this;
+        Items.methods.addItem.call({
+            description: message.content,
+            projectId: projectId,
+            type: type,
+            subType: subType,
+            status: Ols.Status.OPEN,
+            createdFromMessageId: message._id
+        }, (err, item) => {
+            if (err) {
+                if (err.reason) {
+                    toastr.error("Error adding item from message: " + err.reason);
+                } else {
+                    console.error("Error adding item from message: " + JSON.stringify(err));
+                }
+            } else {
+                self.showSnackBarMessage("The " + subType + " was successfully created in your chosen project");
+            }
+        });
+    },
+
+    showSnackBarMessage(msg) {
+        this.setState({'showSnackBar': true, 'snackBarMessage': msg});
+    },
+
+    onSnackBarClose() {
+        this.setState({'showSnackBar': false, 'snackBarMessage': ''});
     }
 });

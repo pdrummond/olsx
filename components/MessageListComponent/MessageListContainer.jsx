@@ -109,7 +109,8 @@ MessageListContainer = React.createClass({
                 onLoadOlderLinkClicked={this.onLoadOlderLinkClicked}
                 onLoadNewerLinkClicked={this.onLoadNewerLinkClicked}
                 onIncomingMessageToastClicked={this.onIncomingMessageToastClicked}
-            />
+                onAddItem={this.props.onAddItem}
+                />
         )
     },
 

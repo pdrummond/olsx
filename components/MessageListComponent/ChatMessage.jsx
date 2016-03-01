@@ -126,38 +126,7 @@ ChatMessage = React.createClass({
     },
 
     addItem(type, subType) {
-        var self = this;
-        if(this.props.projectType == Ols.Project.PROJECT_TYPE_STANDARD) {
-            this.doAddItem(this.props.message.projectId, type, subType);
-        } else {
-            bootbox.prompt({title: "Enter Project ID (!!this is temporary for POC only!!!):", callback: function(projectId) {
-                if (projectId !== null) {
-                    projectId = projectId.trim();
-                    if(projectId.length > 0) {
-                        self.doAddItem(projectId, type, subType)
-                    }
-                }
-            }});
-        }
-    },
-
-    doAddItem(projectId, type, subType) {
-        Items.methods.addItem.call({
-            description: this.props.message.content,
-            projectId: projectId,
-            type: type,
-            subType: subType,
-            status: Ols.Status.OPEN,
-            createdFromMessageId: this.props.message._id
-        }, (err, item) => {
-            if (err) {
-                if (err.reason) {
-                    toastr.error("Error adding item from message: " + err.reason);
-                } else {
-                    console.error("Error adding item from message: " + JSON.stringify(err));
-                }
-            }
-        });
+        this.props.onAddItem(this.props.message, type, subType);
     },
 
     onEditClicked() {

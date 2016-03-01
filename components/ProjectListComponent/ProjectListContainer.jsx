@@ -17,6 +17,7 @@ ProjectListContainer = React.createClass({
     render() {
         return (
             <div className="project-list-container">
+                <ProjectSelectorComponent/>
                 <div className="btn-toolbar" role="toolbar" style={{marginTop:'20px', padding:'5px'}}>
                     <div className="btn-group" role="group" style={{marginLeft:'15px'}}>
                         <button type="button" className="btn btn-default" onClick={this.onNewConversationClicked}><i style={{color:'gray'}} className="fa fa-comments-o"></i> New Conversation</button>

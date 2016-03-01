@@ -63,7 +63,8 @@ ProjectView = React.createClass({
                         currentItem={this.data.currentItem}
                         startMessageSeq={this.data.startMessageSeq}
                         messagesCountLimit={this.data.messagesCountLimit}
-                        onOtherProjectNewMessage={this.props.onOtherProjectNewMessage} />
+                        onOtherProjectNewMessage={this.props.onOtherProjectNewMessage}
+                        onAddItem={this.props.onAddItem} />
                 </div>
             );
 

@@ -17,7 +17,8 @@ ProjectListContainer = React.createClass({
     render() {
         return (
             <div className="project-list-container">
-                <ProjectSelectorComponent/>
+
+                <AccountsUIWrapper className='pull-right' />
                 <div className="btn-toolbar" role="toolbar" style={{marginTop:'20px', padding:'5px'}}>
                     <div className="btn-group" role="group" style={{marginLeft:'15px'}}>
                         <button type="button" className="btn btn-default" onClick={this.onNewConversationClicked}><i style={{color:'gray'}} className="fa fa-comments-o"></i> New Conversation</button>
@@ -27,13 +28,13 @@ ProjectListContainer = React.createClass({
                             <i style={{color:'gray'}} className="fa fa-bullseye"></i> New Project <span className="caret"></span>
                         </button>
                         <ul className="dropdown-menu">
-                            <li><a href="#" onClick={this.onNewProjectBasicTemplateClicked}>Basic Template</a></li>
-                            <li><a href="#" onClick={this.onNewProjectSoftwareTemplateClicked}>Software Development Template</a></li>
+                            <li className="dropdown-header">Select Project Template</li>
+                            <li><a href="#" onClick={this.onNewProjectBasicTemplateClicked}>Basic Task List</a></li>
+                            <li><a href="#" onClick={this.onNewProjectSoftwareTemplateClicked}>Software Development</a></li>
                         </ul>
                     </div>
                 </div>
-
-
+                <ProjectSelectorComponent/>
                 <ProjectList
                     currentProjectId={this.data.currentProjectId}
                     projectList={this.props.projectList}

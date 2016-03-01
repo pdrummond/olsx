@@ -1,18 +1,9 @@
-const { AppBar, IconButton, IconMenu, LeftNav } = mui;
-const { MenuItem } = mui.Menus;
-const { NavigationMoreVert } = mui.SvgIcons;
 const Styles = mui.Styles;
 const Colors = Styles.Colors;
 
 MainLayout = React.createClass({
     childContextTypes : {
         muiTheme: React.PropTypes.object
-    },
-
-    getInitialState() {
-        return {
-            open: false
-        };
     },
 
     getChildContext() {
@@ -27,8 +18,7 @@ MainLayout = React.createClass({
 
     render() {
         return (
-            <div id="app-wrapper">
-                <AccountsUIWrapper />
+            <div id="app-wrapper">            
                 <main>{this.props.content}</main>
             </div>
         );

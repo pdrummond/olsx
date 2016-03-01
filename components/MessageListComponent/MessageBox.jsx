@@ -18,6 +18,7 @@ MessageBox = React.createClass({
                               autofocus="autofocus"
                     />
                 </form>
+                <button onClick={this.onCreateMessageClicked} style={{position:'relative', top:'-5px'}} className="pull-right btn btn-link"><i className="fa fa-paper-plane"></i> Create Message</button>
             </div>
         )
     },
@@ -33,12 +34,20 @@ MessageBox = React.createClass({
     onKeyDown: function(event) {
         // Trap the ENTER_KEY_CODE to send the message
         if (event.keyCode === Ols.Keys.ENTER_KEY_CODE && event.shiftKey == false) {
-            var content = this.state.content.trim();
-            if (content) {
-                this.props.onMessageAdded(content);
-            }
-            this.setState({content: ''});
+            this.doCreateMessage();
         }
     },
+
+    onCreateMessageClicked() {
+        this.doCreateMessage();
+    },
+
+    doCreateMessage() {
+        var content = this.state.content.trim();
+        if (content) {
+            this.props.onMessageAdded(content);
+        }
+        this.setState({content: ''});
+    }
 
 })

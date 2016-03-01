@@ -23,6 +23,7 @@ RightSidebarComponent = React.createClass({
                         <ul className="dropdown-menu" aria-labelledby="dropdownMenu1">
                             <li className="dropdown-header">Only Member View is available for conversations</li>
                         </ul>
+                    
                     </div>
                     {this.renderMembersComponent()}
                 </div>

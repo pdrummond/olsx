@@ -54,8 +54,7 @@ ProjectView = React.createClass({
         } else {
             return (
                 <div className={this.getProjectContainerClassName()}>
-                    {this.renderRightSidebar()}
-                    {this.renderHeader()}
+                    {this.renderRightSidebar()}                    
                     <MessageListContainer
                         ref="messageListContainer"
                         projectId={this.data.currentProject._id}
@@ -181,60 +180,6 @@ ProjectView = React.createClass({
         } else {
             return "fa fa-comments";
         }
-    },
-
-    onBlueThemeLinkClicked() {
-        this.updateProjectTheme("blue");
-    },
-
-    onRedThemeLinkClicked() {
-        this.updateProjectTheme("red");
-    },
-
-    onGreenThemeLinkClicked() {
-        this.updateProjectTheme("green");
-    },
-
-    onPurpleThemeLinkClicked() {
-        this.updateProjectTheme("purple");
-    },
-
-    updateProjectTheme: function(theme) {
-        Projects.methods.setTheme.call({
-            projectId: this.data.currentProject._id,
-            theme,
-        }, (err) => {
-            if(err) {
-                toastr.error("Error changing theme for project: " + err.reason);
-            }
-        });
-    },
-
-    onRenameLinkClicked: function(e) {
-        e.preventDefault();
-        var self = this;
-        bootbox.prompt({title: "Enter new " + this.getProjectTypeLabel() + " title:", value: this.data.currentProject.title, callback: function(title) {
-            if (title !== null) {
-                Projects.methods.setTitle.call({
-                    projectId: self.data.currentProject._id,
-                    title: title
-                }, (err) => {
-                    if(err) {
-                        toastr.error("Error renaming project: " + err.reason);
-                    }
-                });
-            }
-        }});
-    },
-
-    onDeleteLinkClicked: function(e) {
-        var self = this;
-        e.preventDefault();
-        bootbox.confirm("Are you sure you want to permanently delete this " + this.getProjectTypeLabel() + "?  Consider archiving it instead, if you just want to hide it from view without destroying it forever.", function(result) {
-            if (result == true) {
-                self.props.onDeleteLinkClicked(self.data.currentProjectId);
-            }
-        });
     },
 
     componentDidMount: function () {

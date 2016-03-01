@@ -4,7 +4,9 @@ html, body {
 }
 
 body {
-    font-family: 'Open Sans', sans-serif;
+    /*font-family: 'Open Sans', sans-serif;*/
+    font-family: 'Roboto', sans-serif;
+
     margin: 0 auto;
     color: #333;
 }
@@ -150,12 +152,12 @@ h2 a {
 }
 
 .view-container.project-container {
-    padding-left: 350px;
+    padding-left: 0px;
     padding-right: 400px;
 }
 
 .view-container.conversation-container {
-    padding-left: 350px;
+    padding-left: 0px;
     padding-right: 400px;
 }
 
@@ -165,7 +167,7 @@ main {
 }
 
 .message-list {
-    height: calc(100% - 230px);
+    height: calc(100% - 200px);
     overflow-y: auto;
     margin: 0;
     padding-left:5px;
@@ -185,7 +187,7 @@ main {
     resize:none;
     outline:none;
     border-radius:5px;
-    margin-left:7px;
+    margin-left:12px;
 }
 
 .message-item {
@@ -257,16 +259,22 @@ main {
     width: 100%;
     text-align: center;
     color: gray;
+    margin-top:10px;
 }
 
-@media(max-width: 1380px) {
-    header h2 {
-        font-size:20px;
+
+@media(max-width: 650px) {
+    .view-container.project-container {
+        padding-left: 0px;
+        padding-right: 0px;
     }
-}
 
-@media(max-width: 905px) {
-    .message-list-wrapper, header {
+    .view-container.conversation-container {
+        padding-left: 0px;
+        padding-right: 0px;
+    }
+
+    .right-sidebar-container {
         display:none;
     }
 }
@@ -277,12 +285,12 @@ main {
 }
 
 .project-list-container {
-    position: absolute;
+    /*position: absolute;
     left: 0px;
     top:0px;
     width:350px;
     height:100%;
-    box-shadow: 0 0px 6px rgba(0,0,0,0.35);
+    box-shadow: 0 0px 6px rgba(0,0,0,0.35);*/
 }
 
 .project-list {
@@ -376,13 +384,14 @@ input {
 }
 
 .right-sidebar-container {
+
     position: absolute;
     right: 0px;
-    top: 0px;
+    top: 65px;
     padding: 10px;
     width: 400px;
     background: whitesmoke;
-    height: 100%;
+    height: calc(100% - 65px);
     border-left:1px solid lightgray;
     overflow:auto;
 
@@ -452,33 +461,33 @@ header h2 {
     margin-bottom: 5px;
 }
 
-header.blue {
-    background: #0079BF;
+.theme-blue {
+    background-color: #0079BF !important;
     border-bottom: 5px solid #01588A;
 }
 
-header.red {
-    background: #B04632;
+.theme-red {
+    background-color: #B04632 !important;
     border-bottom: 5px solid #963C2B;
 }
 
-header.green {
-    background: #519839;
+.theme-green {
+    background-color: #519839 !important;
     border-bottom: 5px solid #458131;
 }
 
-header.purple {
-    background: #89609E;
+.theme-purple {
+    background-color: #89609E !important;
     border-bottom: 5px solid #755286;
 }
 
-header.black {
-    background: black;
+.theme-black {
+    background-color: black !important;
     border-bottom: 5px solid gray;
 }
 
-header.conversation {
-    background: #E6E6E6;
+.theme-conversation {
+    background-color: #E6E6E6 !important;
     border-bottom: 5px solid lightgray;
     color:gray;
 }
@@ -785,4 +794,8 @@ header.conversation {
     padding-left:40px;
     font-size:12px;
     margin-top:5px;
+}
+
+.bootbox.modal {
+    top:100px;
 }

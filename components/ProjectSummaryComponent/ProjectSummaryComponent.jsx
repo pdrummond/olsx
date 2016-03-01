@@ -24,13 +24,10 @@ ProjectSummaryComponent = React.createClass({
                 data.openBugCount = counts.openBugCount;
                 data.closedBugCount = counts.closedBugCount;
                 data.openBacklogActionCount = counts.openBacklogActionCount;
-                data.newActionCount = counts.newActionCount;
                 data.inTestActionCount = counts.inTestActionCount;
-                data.newTaskCount = counts.newTaskCount;
                 data.inTestTaskCount = counts.inTestTaskCount;
-                data.newBugCount = counts.newBugCount;
                 data.inTestBugCount = counts.inTestBugCount;
-                
+
             }
             data.currentProject = Projects.findOne(this.props.projectId);
             data.currentRelease = Releases.findOne(data.currentProject.currentReleaseId);

@@ -65,7 +65,7 @@ Release = React.createClass({
     renderDescription() {
         if(this.props.release.description) {
           return (
-              <div className="milestone-description markdown-content"
+              <div className="release-description markdown-content"
                    dangerouslySetInnerHTML={ this.getHtmlContent(this.props.release.description) } />
           );
         }

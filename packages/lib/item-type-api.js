@@ -18,5 +18,9 @@ Ols.Item = {
     INFO_SUBTYPE_DISCUSSION: 'discussion',
     INFO_SUBTYPE_QUESTION: 'question',
     INFO_SUBTYPE_IDEA: 'idea',
-    INFO_SUBTYPE_WISH: 'wish'
+    INFO_SUBTYPE_WISH: 'wish',
+
+    isDoable: function(subType) {
+        return (subType == Ols.Item.ACTION_SUBTYPE_TASK || subType == Ols.Item.ISSUE_SUBTYPE_BUG);
+    }
 };

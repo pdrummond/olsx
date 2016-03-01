@@ -143,28 +143,97 @@ Meteor.publish("milestoneTaskCounts", function (milestoneId) {
     var openCount = 0;
     var doneCount = 0;
     var initializing = true;
-    var handle = Items.find({milestoneId: milestoneId}).observeChanges({
-        added: function (id, fields) {
-            totalCount++;
-            if(Ols.Status.isOpen(fields.status)) {
-                openCount++;
-            } else {
-                doneCount++;
+    var handle = Items.find({milestoneId: milestoneId}).observe({
+        added: function (item) {
+            if(item.subType == Ols.Item.ACTION_SUBTYPE_TASK || item.subType == Ols.Item.ISSUE_SUBTYPE_BUG) {
+                if(Ols.Status.isOpen(item.status) || item.status == Ols.Status.DONE) {
+                    if(item.status == Ols.Status.DONE) {
+                        doneCount++;
+                    } else {
+                        openCount++;
+                    }
+                    totalCount++;
+                }
             }
             if (!initializing) {
                 self.changed("milestone-task-counts", milestoneId, {totalCount, openCount, doneCount});
             }
         },
-        removed: function (id) {
-            totalCount--;
-            if(Ols.Status.isOpen(fields.status)) {
-                openCount--;
-            } else {
-                doneCount--;
+        removed: function (item) {
+            if(item.subType == Ols.Item.ACTION_SUBTYPE_TASK || item.subType == Ols.Item.ISSUE_SUBTYPE_BUG) {
+                if(Ols.Status.isOpen(item.status) || item.status == Ols.Status.DONE) {
+                    if(item.status == Ols.Status.DONE) {
+                        doneCount--;
+                    } else {
+                        openCount--;
+                    }
+                    totalCount--;
+                }
             }
             self.changed("milestone-task-counts", milestoneId, {totalCount, openCount, doneCount});
+        },
+
+        changed: function(changedItem, existingItem) {
+            /*
+                Leaving this for now - there must be a better way than trying to figure out
+                every single scenario.  Maybe just get it to refresh the milestone view?
+            */
+            //console.log("milestone-counts: CHANGES DETECTED");
+            //console.log("-- existing item " + existingItem._id + " is " + existingItem.subType);
+            //console.log("-- changed item " + changedItem.id + " is " + changedItem.subType);
+            //Only one field can change at a time so we need to check for either the subType change
+            //or the status change.  If it's subType, we still need to take the status into account!
+
+            //If the subType has changed
+            /*if(existingItem.subType != changedItem.subType) {
+                if(!Ols.Item.isDoable(existingItem.subType) && Ols.Item.isDoable(changedItem.subType)) {
+                    if(!Ols.Status.isInvalidType(existingItem.status)) {
+                        if(changedItem.status == Ols.Status.DONE) {
+                            doneCount++;
+                        } else {
+                            openCount++;
+                        }
+                        totalCount++;
+                    }
+                } else {
+                    if(!Ols.Status.isInvalidType(existingItem.status)) {
+                        if(changedItem.status == Ols.Status.DONE) {
+                            doneCount--;
+                        } else {
+                            openCount--;
+                        }
+                        totalCount--;
+                    }
+
+                }
+            } else if(existingItem.status != changedItem.status) {
+                //If item wasn't open before and it is open now
+                if(!Ols.Status.isOpen(existingItem.status) && Ols.Status.isOpen(changedItem.status)) {
+                    openCount++;
+                    //If item was done before, and it's open now, then need to decrease done count
+                    if(existingItem.status == Ols.Status.DONE) {
+                        doneCount--;
+                    }
+                    //If item was rejected before, then now it's open, need to increase the total count
+                    if(existingItem.status != Ols.Status.DONE) {
+                        totalCount++;
+                    }
+                //If item was open before and it isn't open now
+                } else {
+                    openCount--;
+                    //If item is done and rejected then, decrease the total count
+                    if(changedItem.status != Ols.Status.DONE) {
+                        totalCount--;
+                    }
+                    //If item is done and not rejected, then increase the done count.
+                    if(changedItem.status == Ols.Status.DONE) {
+                        doneCount++;
+                    }
+                }
+            }
+            self.changed("milestone-task-counts", milestoneId, {totalCount, openCount, doneCount});*/
         }
-        // don't care about moved or changed
+
     });
 
     // Observe only returns after the initial added callbacks have
@@ -187,68 +256,88 @@ Meteor.publish("projectTotals", function (projectId) {
     var self = this;
     var totals = {
         totalActionCount:0,
-        newActionCount:0,
         inTestActionCount:0,
         openActionCount:0,
         closedActionCount:0,
-        newBugCount:0,
         inTestBugCount:0,
         totalBugCount:0,
         openBugCount:0,
         closedBugCount:0,
         totalTaskCount:0,
-        newTaskCount:0,
         inTestTaskCount:0,
         openTaskCount:0,
         closedTaskCount:0,
         openBacklogActionCount:0
     };
     var initializing = true;
-    var handle = Items.find({projectId: projectId}).observeChanges({
-        added: function (id, item) {
+    /*
+        An 'action' in this context refers to either a bug or an action (it's
+        bascically something that needs to be done and therefore it affects the
+        completion status).
+
+        The logic goes like this: only actions and bugs are counted.  Of those
+        items, only those that are either open or done are counted - rejected,
+        dups, and out-of-scope items are ignored.  All open items are counted
+        as open - of those items, the ones that are in-test have a special
+        count, but in-test items are still open.
+
+    */
+    var handle = Items.find({projectId: projectId}).observe({
+        added: function (item) {
             if(item.subType == Ols.Item.ACTION_SUBTYPE_TASK || item.subType == Ols.Item.ISSUE_SUBTYPE_BUG) {
-                if(item.status == Ols.Status.NEW) {
-                    totals.newActionCount++;
-                } else {
-                    totals.totalActionCount++;
-                    if(item.status == Ols.Status.IN_TEST) {
-                        totals.inTestActionCount++;
-                    } else if (Ols.Status.isOpen(item.status)) {
-                        totals.openActionCount++;
-                        if (!item.milestoneId) {
-                            totals.openBacklogActionCount++;
-                        }
-                    } else {
+                if(Ols.Status.isOpen(item.status) || item.status == Ols.Status.DONE) {
+                    if(item.status == Ols.Status.DONE) {
                         totals.closedActionCount++;
+                    } else {
+                        totals.openActionCount++;
                     }
+                    totals.totalActionCount++;
+                }
+
+                if(item.status == Ols.Status.IN_TEST) {
+                    totals.inTestActionCount++;
+                }
+
+                if (Ols.Status.isOpen(item.status) && !item.milestoneId) {
+                    totals.openBacklogActionCount++;
                 }
             }
+
             if(item.subType == Ols.Item.ACTION_SUBTYPE_TASK) {
-                if(item.status == Ols.Status.NEW) {
-                    totals.newTaskCount++;
-                } else {
-                    totals.totalTaskCount++;
-                    if(item.status == Ols.Status.IN_TEST) {
-                        totals.inTestTaskCount++;
-                    } else if (Ols.Status.isOpen(item.status)) {
-                        totals.openTaskCount++;
-                    } else {
+                if(Ols.Status.isOpen(item.status) || item.status == Ols.Status.DONE) {
+                    if(item.status == Ols.Status.DONE) {
                         totals.closedTaskCount++;
+                    } else {
+                        totals.openTaskCount++;
                     }
+                    totals.totalTaskCount++;
+                }
+
+                if(item.status == Ols.Status.IN_TEST) {
+                    totals.inTestTaskCount++;
+                }
+
+                if (Ols.Status.isOpen(item.status) && !item.milestoneId) {
+                    totals.openBacklogTaskCount++;
                 }
             }
+
             if(item.subType == Ols.Item.ISSUE_SUBTYPE_BUG) {
-                if(item.status == Ols.Status.NEW) {
-                    totals.newBugCount++;
-                } else {
-                    totals.totalBugCount++;
-                    if(item.status == Ols.Status.IN_TEST) {
-                        totals.inTestBugCount++;
-                    } else if (Ols.Status.isOpen(item.status)) {
-                        totals.openBugCount++;
-                    } else {
+                if(Ols.Status.isOpen(item.status) || item.status == Ols.Status.DONE) {
+                    if(item.status == Ols.Status.DONE) {
                         totals.closedBugCount++;
+                    } else {
+                        totals.openBugCount++;
                     }
+                    totals.totalBugCount++;
+                }
+
+                if(item.status == Ols.Status.IN_TEST) {
+                    totals.inTestBugCount++;
+                }
+
+                if (Ols.Status.isOpen(item.status) && !item.milestoneId) {
+                    totals.openBacklogBugCount++;
                 }
             }
 
@@ -256,58 +345,69 @@ Meteor.publish("projectTotals", function (projectId) {
                 self.changed("project-totals", projectId, totals);
             }
         },
-        removed: function (id) {
+        removed: function (item) {
             if(item.subType == Ols.Item.ACTION_SUBTYPE_TASK || item.subType == Ols.Item.ISSUE_SUBTYPE_BUG) {
-                if(item.status == Ols.Status.NEW) {
-                    totals.newActionCount--;
-                } else {
-                    totals.totalActionCount--;
-                    if(item.status == Ols.Status.IN_TEST) {
-                        totals.inTestActionCount--;
-                    } else if (Ols.Status.isOpen(item.status)) {
-                        totals.openActionCount--;
-                        if (!item.milestoneId) {
-                            totals.openBacklogActionCount--;
-                        }
-                    } else {
+                if(Ols.Status.isOpen(item.status) || item.status == Ols.Status.DONE) {
+                    if(item.status == Ols.Status.DONE) {
                         totals.closedActionCount--;
+                    } else {
+                        totals.openActionCount--;
                     }
+                    totals.totalActionCount--;
+                }
+
+                if(item.status == Ols.Status.IN_TEST) {
+                    totals.inTestActionCount--;
+                }
+
+                if (Ols.Status.isOpen(item.status) && !item.milestoneId) {
+                        totals.openBacklogActionCount--;
                 }
             }
 
             if(item.subType == Ols.Item.ACTION_SUBTYPE_TASK) {
-                if(item.status == Ols.Status.NEW) {
-                    totals.newTaskCount--;
-                } else {
-                    totals.totalTaskCount--;
-                    if(item.status == Ols.Status.IN_TEST) {
-                        totals.inTestTaskCount--;
-                    } else if (Ols.Status.isOpen(item.status)) {
-                        totals.openTaskCount--;
+                if(Ols.Status.isOpen(item.status) || item.status == Ols.Status.DONE) {
+                    if(item.status == Ols.Status.DONE) {
+                        totals.closedTaskCount--;
                     } else {
-                        if(item.status == Ols.Status.IN_TEST) {
-                            totals.inTestTaskCount--;
-                        } else {
-                            totals.closedTaskCount--;
-                        }
+                        totals.openTaskCount--;
                     }
+                    totals.totalTaskCount--;
+                }
+
+                if(item.status == Ols.Status.IN_TEST) {
+                    totals.inTestTaskCount--;
+                }
+
+                if (Ols.Status.isOpen(item.status) && !item.milestoneId) {
+                    totals.openBacklogTaskCount--;
                 }
             }
 
             if(item.subType == Ols.Item.ISSUE_SUBTYPE_BUG) {
-                if(item.status == Ols.Status.NEW) {
-                    totals.newBugCount--;
-                } else {
-                    totals.totalBugCount--;
-                    if(item.status == Ols.Status.IN_TEST) {
-                        totals.inTestBugCount--;
-                    } else if (Ols.Status.isOpen(item.status)) {
-                        totals.openBugCount--;
-                    } else {
+                if(Ols.Status.isOpen(item.status) || item.status == Ols.Status.DONE) {
+                    if(item.status == Ols.Status.DONE) {
                         totals.closedBugCount--;
+                    } else {
+                        totals.openBugCount--;
                     }
+                    totals.totalBugCount--;
+                }
+
+                if(item.status == Ols.Status.IN_TEST) {
+                    totals.inTestBugCount--;
+                }
+
+                if (Ols.Status.isOpen(item.status) && !item.milestoneId) {
+                    totals.openBacklogBugCount--;
                 }
             }
+
+
+            if (!initializing) {
+                self.changed("project-totals", projectId, totals);
+            }
+
             self.changed("project-totals", projectId, totals);
         }
         // don't care about moved or changed

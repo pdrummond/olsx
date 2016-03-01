@@ -777,7 +777,12 @@ header.conversation {
     box-shadow:none;
 }
 
+.release-description {
+    margin-top: 5px;
+}
+
 .milestone-description {
+    padding-left:40px;
     font-size:12px;
     margin-top:5px;
 }

@@ -72,8 +72,9 @@ Ols.Status = {
 
     isDone: function(status) {
         return !this.isOpen(status);
+    },
+
+    isInvalidType: function(status) {
+        return status >= Ols.Status.REJECTED;
     }
 };
-
-
-

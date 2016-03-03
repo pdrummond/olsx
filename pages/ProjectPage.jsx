@@ -1,6 +1,6 @@
-const { AppBar, IconButton, IconMenu, LeftNav, Snackbar, Divider } = mui;
+const { AppBar, IconButton, FontIcon, IconMenu, LeftNav, Snackbar, Divider, RaisedButton, FlatButton, Toolbar, ToolbarGroup, ToolbarSeparator, ToolbarTitle, DropDownMenu } = mui;
 const { MenuItem } = mui.Menus;
-const { NavigationMoreVert } = mui.SvgIcons;
+const { ContentAdd, ActionReorder, NavigationMoreVert, NavigationExpandMore } = mui.SvgIcons;
 const Styles = mui.Styles;
 const Colors = Styles.Colors;
 
@@ -43,9 +43,17 @@ ProjectPage = React.createClass({
         } else {
             currentProjectHandleReady = true;
         }
-        if(projectsHandle.ready() && currentProjectHandleReady && usersHandle.ready() && userStatusHandle.ready()) {
+        data.currentItemId = FlowRouter.getQueryParam('itemId');
+        if(data.currentItemId) {
+            var currentItemHandle = Meteor.subscribe('currentItem', data.currentItemId);
+            data.currentItemHandleIsReady = currentItemHandle.ready();
+        } else {
+            data.currentItemHandleIsReady = true;
+        }
+        if(projectsHandle.ready() && currentProjectHandleReady && usersHandle.ready() && userStatusHandle.ready() && data.currentItemHandleIsReady) {
             data.currentProject = Projects.findOne(data.currentProjectId);
             data.projectList = Projects.find({}, {sort: {updatedAt: -1}}).fetch();
+            data.currentItem = Items.findOne(data.currentItemId);
             console.log("ProjectPage.getMeteorData: projects: " + data.projectList.length);
         }
         console.trace("ProjectPage.getMeteorData: " + JSON.stringify(_.keys(data)));
@@ -73,16 +81,41 @@ ProjectPage = React.createClass({
            );
         } else {
             return (
-                <div className="view-container">
 
-                    <AppBar
-                        title={this.data.currentProject ? this.data.currentProject.title : "OpenLoops"}
-                        onLeftIconButtonTouchTap={this.handleToggle}
-                        className={this.data.currentProject ? 'theme-' + this.data.currentProject.theme : "theme-blue"}
-                        iconElementRight={
-                            this.renderAppBarIconMenu()
-                        }
-                        />
+                <div className="view-container">
+                    {/*}<AppBar
+                            title={this.data.currentProject ? this.data.currentProject.title : "OpenLoops"}
+                            onLeftIconButtonTouchTap={this.handleToggle}
+
+                            iconElementRight={
+                                this.renderAppBarIconMenu()
+                            }
+                            />*/}
+                    <Toolbar className={this.data.currentProject ? 'theme-' + this.data.currentProject.theme : "theme-blue"}>
+                        <ToolbarGroup firstChild={true} float="left">
+                            <IconButton touch={true} onClick={this.handleToggle} style={{color:'white', position:'relative', top:'5px'}}>
+                                <ActionReorder/>
+                            </IconButton>
+                        </ToolbarGroup>
+                        <ToolbarGroup>
+                        <ToolbarTitle text={this.getProjectOrItemTitle()} style={{color:'white'}}></ToolbarTitle>
+                        </ToolbarGroup>
+                        <ToolbarGroup float="right">
+                            {this.renderAppBarIconMenu()}
+                            <ToolbarSeparator />
+                            <RaisedButton label="Create" icon={<ContentAdd />}/>
+                            <DropDownMenu value={1} onChange={this.handleChange} style={{color:'white'}}>
+                                <MenuItem value={1} primaryText="Project Summary" />
+                                <MenuItem value={2} primaryText="All Items" />
+                                <MenuItem value={3} primaryText="Backlog" />
+                                <MenuItem value={4} primaryText="Work Items" />
+                                <MenuItem value={5} primaryText="Tasks" />
+                                <MenuItem value={6} primaryText="Bugs" />
+                                <MenuItem value={7} primaryText="Discussions" />
+                            </DropDownMenu>
+                        </ToolbarGroup>
+                    </Toolbar>
+
                         <LeftNav
                             width={350}
                             docked={false}
@@ -110,6 +143,16 @@ ProjectPage = React.createClass({
                         />
                 </div>
             );
+        }
+    },
+
+    getProjectOrItemTitle() {
+        if(this.data.currentItem) {
+            return this.data.currentItem.description;
+        } else if(this.data.currentProject ) {
+            return this.data.currentProject.title;
+        } else {
+            return '';
         }
     },
 

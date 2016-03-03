@@ -1,6 +1,6 @@
 const { AppBar, IconButton, FontIcon, IconMenu, LeftNav, Snackbar, Divider, RaisedButton, FlatButton, Toolbar, ToolbarGroup, ToolbarSeparator, ToolbarTitle, DropDownMenu } = mui;
 const { MenuItem } = mui.Menus;
-const { ContentAdd, ActionReorder, NavigationMoreVert, NavigationExpandMore } = mui.SvgIcons;
+const { ActionBugReport, AlertError, DeviceGraphicEq, CommunicationChat, ContentAdd, ActionReorder, NavigationMoreVert, NavigationExpandMore } = mui.SvgIcons;
 const Styles = mui.Styles;
 const Colors = Styles.Colors;
 
@@ -91,20 +91,24 @@ ProjectPage = React.createClass({
                                 this.renderAppBarIconMenu()
                             }
                             />*/}
-                    <Toolbar className={this.data.currentProject ? 'theme-' + this.data.currentProject.theme : "theme-blue"}>
+                    <Toolbar className={this.getToolbarClassName()} style={{height:'60px'}}>
                         <ToolbarGroup firstChild={true} float="left">
                             <IconButton touch={true} onClick={this.handleToggle} style={{color:'white', position:'relative', top:'5px'}}>
-                                <ActionReorder/>
+                                <ActionReorder color={Colors.white}/>
                             </IconButton>
                         </ToolbarGroup>
+                        <ToolbarGroup>{this.renderProjectTypeIcon()}</ToolbarGroup>
                         <ToolbarGroup>
-                        <ToolbarTitle text={this.getProjectOrItemTitle()} style={{color:'white'}}></ToolbarTitle>
+                                <ToolbarTitle text={this.getProjectOrItemTitle()} style={{color:'white'}}>
+
+                                </ToolbarTitle>
+
                         </ToolbarGroup>
                         <ToolbarGroup float="right">
                             {this.renderAppBarIconMenu()}
                             <ToolbarSeparator />
                             <RaisedButton label="Create" icon={<ContentAdd />}/>
-                            <DropDownMenu value={1} onChange={this.handleChange} style={{color:'white'}}>
+                            <DropDownMenu value={1} onChange={this.handleChange} labelStyle={{color:'white'}}>
                                 <MenuItem value={1} primaryText="Project Summary" />
                                 <MenuItem value={2} primaryText="All Items" />
                                 <MenuItem value={3} primaryText="Backlog" />
@@ -146,9 +150,25 @@ ProjectPage = React.createClass({
         }
     },
 
+    renderProjectTypeIcon() {
+        if(this.data.currentItem) {
+            if(this.data.currentItem.subType == Ols.Item.ACTION_SUBTYPE_TASK) {
+                return <AlertError style={{position:'relative', top:'17px', marginRight:'5px'}} color={Colors.gray900}/>;
+            } else if(this.data.currentItem.subType == Ols.Item.ISSUE_SUBTYPE_BUG) {
+                return <ActionBugReport style={{position:'relative', top:'17px', marginRight:'5px'}} color={Colors.gray900}/>;
+            }
+        } else if(this.data.currentProject) {
+            if(this.data.currentProject.type == Ols.Project.PROJECT_TYPE_STANDARD) {
+                return <DeviceGraphicEq style={{position:'relative', top:'17px', marginRight:'5px'}} color={Colors.gray900}/>;
+            } else {
+                return <CommunicationChat style={{position:'relative', top:'17px', marginRight:'5px'}} color={Colors.gray900}/>;
+            }
+        }
+    },
+
     getProjectOrItemTitle() {
         if(this.data.currentItem) {
-            return this.data.currentItem.description;
+            return this.data.currentItem.projectKey + "-" + this.data.currentItem.seq + ": " + this.data.currentItem.description;
         } else if(this.data.currentProject ) {
             return this.data.currentProject.title;
         } else {
@@ -280,7 +300,7 @@ ProjectPage = React.createClass({
             <IconMenu
                 iconButtonElement={
                     <IconButton>
-                        <NavigationMoreVert />
+                        <NavigationMoreVert color={Colors.white}/>
                     </IconButton>
                 }>
                 <MenuItem primaryText="Rename Project" onClick={this.onRenameLinkClicked} />
@@ -295,6 +315,14 @@ ProjectPage = React.createClass({
                 <MenuItem primaryText="Sign out"/>
             </IconMenu>
         );
+    },
+
+    getToolbarClassName() {
+        if(this.data.currentProject && this.data.currentProject.type == Ols.Project.PROJECT_TYPE_STANDARD) {
+            return this.data.currentProject ? 'theme-' + this.data.currentProject.theme : "theme-blue";
+        } else {
+            return 'theme-conversation';
+        }
     },
 
     onBlueThemeLinkClicked() {

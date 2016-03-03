@@ -24,7 +24,8 @@ Package.onUse(function(api) {
     'activity-type-api.js',
     'release-type-api.js',
     'keys-api.js',
-    'counter-api.js'
+    'counter-api.js',
+    'router-api.js'
   ]);
   api.export(['Ols']);
 });

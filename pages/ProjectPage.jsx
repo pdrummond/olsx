@@ -16,16 +16,20 @@ ProjectPage = React.createClass({
         };
     },
 
+    componentWillUpdate: function () {
+        console.trace("ProjectPage.componentWillUpdate");
+    },
+
     componentDidMount: function () {
-        //console.trace("ProjectPage.componentDidMount");
+        console.trace("ProjectPage.componentDidMount");
     },
 
     componentDidUpdate: function () {
-        //console.trace("ProjectPage.componentDidUpdate");
+        console.trace("ProjectPage.componentDidUpdate");
     },
 
     getMeteorData() {
-        //console.trace("ProjectPage.getMeteorData");
+        console.trace("ProjectPage.getMeteorData");
         var data = {};
         data.projectList = [];
         data.currentProjectId = FlowRouter.getParam('projectId');
@@ -42,9 +46,9 @@ ProjectPage = React.createClass({
         if(projectsHandle.ready() && currentProjectHandleReady && usersHandle.ready() && userStatusHandle.ready()) {
             data.currentProject = Projects.findOne(data.currentProjectId);
             data.projectList = Projects.find({}, {sort: {updatedAt: -1}}).fetch();
-            data.authInProcess = Meteor.loggingIn();
             console.log("ProjectPage.getMeteorData: projects: " + data.projectList.length);
         }
+        console.trace("ProjectPage.getMeteorData: " + JSON.stringify(_.keys(data)));
         return data;
     },
 

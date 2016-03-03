@@ -65,6 +65,7 @@ MessageList = React.createClass({
     },
 
     scrollBottom(callback) {
+        console.log("scrollBottom");
         var self = this;
         setTimeout(function() {
             let node = ReactDOM.findDOMNode(self.refs.messageList);

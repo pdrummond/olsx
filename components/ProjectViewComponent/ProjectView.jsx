@@ -26,8 +26,8 @@ ProjectView = React.createClass({
 
             data.startMessageSeq = parseInt(FlowRouter.getParam('startMessageSeq')) || 0;
             data.messagesCountLimit = parseInt(FlowRouter.getParam('messagesCountLimit')) || Ols.DEFAULT_PAGE_SIZE;
-            data.doScrollBottom = FlowRouter.getQueryParam('scrollBottom') != null;
-            data.doScrollTop = FlowRouter.getQueryParam('scrollTop') != null;
+            data.doScrollBottom = FlowRouter.getQueryParam('scrollBottom') && FlowRouter.getQueryParam('scrollBottom') == "true";
+            data.doScrollTop = FlowRouter.getQueryParam('scrollTop') && FlowRouter.getQueryParam('scrollTop') == "true";
 
             data.currentItem = Items.findOne(data.currentItemId);
 
@@ -54,7 +54,7 @@ ProjectView = React.createClass({
         } else {
             return (
                 <div className={this.getProjectContainerClassName()}>
-                    {this.renderRightSidebar()}                    
+                    {this.renderRightSidebar()}
                     <MessageListContainer
                         ref="messageListContainer"
                         projectId={this.data.currentProject._id}

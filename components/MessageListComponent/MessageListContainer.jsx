@@ -115,7 +115,7 @@ MessageListContainer = React.createClass({
     },
 
     onIncomingMessageToastClicked: function() {
-        FlowRouter.go('projectPageLatest', {projectId: this.props.projectId}, {scrollBottom: true});
+        Ols.Router.showProjectPageLatest({projectId: this.props.projectId}, {scrollBottom: true});
         this.setState({'messages': this.state.messages.concat(this.state.newMessages), incomingMessageCount: 0});
         this.scrollBottom();
     },
@@ -124,10 +124,10 @@ MessageListContainer = React.createClass({
         var self = this;
         var newestMessage = this.state.messages[this.state.messages.length-1];
         if(newestMessage) {
-            FlowRouter.go('projectPageStartSeq', {
+            Ols.Router.showProjectPageFromMessage({
                 projectId: this.props.projectId,
                 startMessageSeq: newestMessage.seq + 1
-            });
+            }, {scrollBottom: false, scrollTop: false});
         }
     },
 
@@ -138,10 +138,10 @@ MessageListContainer = React.createClass({
             startMessageSeq = 1;
         }
         if(oldestMessage) {
-            FlowRouter.go('projectPageStartSeq', {
+            Ols.Router.showProjectPageFromMessage({
                 projectId: this.props.projectId,
                 startMessageSeq: startMessageSeq
-            });
+            }, {scrollBottom: false, scrollTop: false});
         }
     },
 

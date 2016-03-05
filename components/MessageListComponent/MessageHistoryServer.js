@@ -47,12 +47,16 @@ if(Meteor.isServer) {
                 item. Or, in the case of activity messages, we can simply query for the 'itemId' field.
              */
 
-            if (opts.currentItemId) {
-                var messageIds = Refs.find({itemId: opts.currentItemId}).map(function (ref) {
-                    return ref.messageId;
-                });
-                console.log("messageIds:" + JSON.stringify(messageIds));
-                query.$or = [{itemId: opts.currentItemId}, {_id: {$in: messageIds}}];
+            if (opts.currentItemSeq) {
+                var item = Items.findOne({seq: opts.currentItemSeq});
+                if(item != null) {
+                    var currentItemId = item._id;
+                    var messageIds = Refs.find({itemId: currentItemId}).map(function (ref) {
+                        return ref.messageId;
+                    });
+                    console.log("messageIds:" + JSON.stringify(messageIds));
+                    query.$or = [{itemId: currentItemId}, {_id: {$in: messageIds}}];
+                }
             } else {
                 /*
                     If an item isn't selected then we need to page the results.

@@ -57,8 +57,10 @@ ProjectView = React.createClass({
                     {this.renderRightSidebar()}
                     <MessageListContainer
                         ref="messageListContainer"
+                        messageFilter={this.props.messageFilter}
                         projectId={this.data.currentProject._id}
                         projectType={this.data.currentProject.type}
+                        projectKey={this.data.currentProject.key}
                         currentItem={this.data.currentItem}
                         startMessageSeq={this.data.startMessageSeq}
                         messagesCountLimit={this.data.messagesCountLimit}

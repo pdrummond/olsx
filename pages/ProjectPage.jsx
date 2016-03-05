@@ -1,4 +1,4 @@
-const { AppBar, IconButton, FontIcon, IconMenu, LeftNav, Snackbar, Divider, RaisedButton, FlatButton, Toolbar, ToolbarGroup, ToolbarSeparator, ToolbarTitle, DropDownMenu } = mui;
+const { AppBar, IconButton, FontIcon, IconMenu, LeftNav, Snackbar, Divider, RaisedButton, FlatButton, TextField, Toolbar, ToolbarGroup, ToolbarSeparator, ToolbarTitle, DropDownMenu } = mui;
 const { MenuItem } = mui.Menus;
 const { ActionBugReport, AlertError, DeviceGraphicEq, CommunicationChat, ContentAdd, ActionReorder, NavigationMoreVert, NavigationExpandMore } = mui.SvgIcons;
 const Styles = mui.Styles;
@@ -99,12 +99,13 @@ ProjectPage = React.createClass({
                         </ToolbarGroup>
                         <ToolbarGroup>{this.renderProjectTypeIcon()}</ToolbarGroup>
                         <ToolbarGroup>
-                                <ToolbarTitle text={this.getProjectOrItemTitle()} style={{color:'white'}}>
-
-                                </ToolbarTitle>
-
+                                <ToolbarTitle text={this.getProjectOrItemTitle()} style={{color:'white'}}/>
                         </ToolbarGroup>
+
                         <ToolbarGroup float="right">
+                            <ToolbarGroup>
+                                <TextField ref='messageFilterInput' onChange={this.onFilterInputChanged} hintText="Filter messages" style={{position:'relative', top:'5px'}}/>
+                            </ToolbarGroup>
                             {this.renderAppBarIconMenu()}
                             <ToolbarSeparator />
                             <RaisedButton label="Create" icon={<ContentAdd />}/>
@@ -136,6 +137,7 @@ ProjectPage = React.createClass({
                         projectList={this.data.projectList}
                         onProjectSelected={this.onProjectSelected}/>
                     <ProjectView
+                        messageFilter={this.state.messageFilter}
                         onAddItem={this.onAddItem}
                         onDeleteLinkClicked={this.onDeleteLinkClicked}
                         onOtherProjectNewMessage={this.onOtherProjectNewMessage}/>
@@ -148,6 +150,16 @@ ProjectPage = React.createClass({
                 </div>
             );
         }
+    },
+
+    onFilterInputChanged() {
+        var self = this;
+        if(this.filterInputKeyTimer) {
+            clearTimeout(this.filterInputKeyTimer);
+        }
+        this.filterInputKeyTimer = setTimeout(function() {
+            self.setState({'messageFilter': self.refs.messageFilterInput.getValue()});
+        }, 500);
     },
 
     renderProjectTypeIcon() {
@@ -167,9 +179,7 @@ ProjectPage = React.createClass({
     },
 
     getProjectOrItemTitle() {
-        if(this.data.currentItem) {
-            return this.data.currentItem.projectKey + "-" + this.data.currentItem.seq + ": " + this.data.currentItem.description;
-        } else if(this.data.currentProject ) {
+        if(this.data.currentProject ) {
             return this.data.currentProject.title;
         } else {
             return '';

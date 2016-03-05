@@ -149,15 +149,11 @@ MessageListContainer = React.createClass({
         console.log("loadMessages");
         var self = this;
 
-        var currentItemId;
-        if(this.props.currentItem) {
-            currentItemId = this.props.currentItem._id;
-        }
         Meteor.call('loadMessages', {
             projectId: this.props.projectId,
             startMessageSeq: this.props.startMessageSeq,
             messagesCountLimit: this.props.messagesCountLimit,
-            currentItemId: currentItemId
+            currentItemSeq: this.getItemSeqFilter()
         }, function (err, result) {
             if (err) {
                 toastr.error('Error loading messages', err.reason);
@@ -173,6 +169,24 @@ MessageListContainer = React.createClass({
                 }
             }
         });
+    },
+
+    getItemSeqFilter() {
+        var itemSeq = null;
+        if(this.props.messageFilter && this.props.messageFilter.length > 0) {
+
+            var re = new RegExp("#" + this.props.projectKey + "-(\\d+)", "g");
+            var match = re.exec(this.props.messageFilter);
+            if(match != null) {
+                var itemSeq = match[1].trim();
+                if(itemSeq && itemSeq.length > 0) {
+                    var seq = parseInt(itemSeq);
+                    itemSeq = seq;
+                }
+            }
+            console.log("getItemSeqFilter: " + itemSeq);
+        }
+        return itemSeq;
     },
 
     onUserIsTyping: function() {

@@ -27,6 +27,7 @@ MessageList = React.createClass({
                         case Ols.MESSAGE_TYPE_CHAT:
                             return <ChatMessage
                                 projectType={this.props.projectType}
+                                projectKey={this.props.projectKey}
                                 key={message._id}
                                 message={message}
                                 onAddItem={this.props.onAddItem}/>;
@@ -53,6 +54,7 @@ MessageList = React.createClass({
                     <a className={this.props.showForwardLink ? '':'hide'} href='' onClick={this.props.onLoadNewerLinkClicked}><i className="message-list-page-icon fa-2x fa fa-arrow-circle-o-down"></i></a>
                 </ul>
                 <MessageBox
+                    currentItem={this.props.currentItem}
                     onUserIsTyping={this.props.onUserIsTyping}
                     onMessageAdded={this.props.onMessageAdded} />
                 <UserIsTypingAlert projectId={this.props.projectId}/>

@@ -2,11 +2,20 @@ ChatMessage = React.createClass({
     mixins: [ReactMeteorData],
 
     getMeteorData() {
-        return {
-            selectStartMessage: FlowRouter.getQueryParam('selectStartMessage') == "true",
-            startMessageSeq: parseInt(FlowRouter.getParam('startMessageSeq')),
-            userProfileImage: Meteor.users.findOne(this.props.message.createdBy).profileImage
-        };
+        //console.trace("Item.getMeteorData");
+        var data = {};
+        data.selectStartMessage = FlowRouter.getQueryParam('selectStartMessage') == "true";
+        data.startMessageSeq = parseInt(FlowRouter.getParam('startMessageSeq'));
+        data.userProfileImage = Meteor.users.findOne(this.props.message.createdBy).profileImage;
+        var refsHandle = Meteor.subscribe('refs', this.props.message.projectId);
+        data.refList = [];
+        if(refsHandle.ready()) {
+            data.refList = Refs.find({
+                projectId: this.props.message.projectId,
+                messageId: this.props.message._id
+            }).fetch();
+        }
+        return data;
     },
 
     styles: {
@@ -29,6 +38,7 @@ ChatMessage = React.createClass({
                         <span className="message-created-at"> {moment(this.props.message.createdAt).fromNow()} </span>
                         {this.renderEditedLabel()}
                         {this.renderMessageDropdown()}
+                        {this.renderRefTags()}
                     </div>
                     <div className="message-content markdown-content"
                          style={this.getMessageContentStyle()}
@@ -37,6 +47,13 @@ ChatMessage = React.createClass({
                 </div>
             </li>
         );
+    },
+
+    renderRefTags() {
+        var self = this;
+        return this.data.refList.map(function(refItem) {
+            return <RefTag projectKey={self.props.projectKey} refItem={refItem} />;
+        });
     },
 
     renderEditedLabel() {

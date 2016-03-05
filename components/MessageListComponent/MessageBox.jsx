@@ -9,6 +9,7 @@ MessageBox = React.createClass({
         return (
             <div className="message-box">
                 <form>
+                    {this.renderSubjectRefs()}
                     <textarea onChange={this.onChange}
                               onKeyDown={this.onKeyDown}
                               type="text"
@@ -48,6 +49,20 @@ MessageBox = React.createClass({
             this.props.onMessageAdded(content);
         }
         this.setState({content: ''});
+    },
+
+    renderSubjectRefs() {
+        if(this.props.currentItem) {
+            return (
+                <div style={{marginLeft:'15px', marginBottom:'5px',  cursor:'pointer'}}>
+                    <span onClick={this.onSubjectRefClicked} className="label label-ref">#{this.props.currentItem.projectKey}-{this.props.currentItem.seq}</span>
+                </div>
+            );
+        }
+    },
+
+    onSubjectRefClicked() {
+        FlowRouter.setQueryParams({itemId: null});
     }
 
 })

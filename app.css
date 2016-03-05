@@ -799,3 +799,8 @@ header h2 {
 .bootbox.modal {
     top:100px;
 }
+
+.label-ref {
+    background-color:lightgray;
+    color:gray;
+}
